@@ -873,7 +873,10 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 /* ── Botão "Adicionar Gasto": centralizado, fora da lista ── */
 #pg-lanc{padding-bottom:96px}   /* o último lançamento rola para cima do botão flutuante */
 @media (max-width:899px){
-  .fab{margin-bottom:calc(var(--sb) + 80px);padding:12px 26px;font-size:13.5px}
+  :root{--tbp:max(6px,calc(var(--sb) - 16px))}  /* respiro sob a barra: encosta mais na borda inferior */
+  #tabs{padding-bottom:var(--tbp)}
+  #pages{margin-bottom:calc(var(--tbp) + 62px)}
+  .fab{margin-bottom:calc(var(--tbp) + 74px);padding:12px 26px;font-size:13.5px}
 }
 @media (min-width:900px){
   .fab{left:auto;right:clamp(24px,4vw,56px);margin:0 0 28px;width:auto}
