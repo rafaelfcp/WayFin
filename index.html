@@ -10,9 +10,9 @@
 <meta name="theme-color" content="#0C0C18"/>
 <meta name="apple-mobile-web-app-title" content="Wayfin"/>
 <link rel="manifest" href="/manifest.webmanifest"/>
-<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg"/>
-<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png"/>
-<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg?v=3"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=3"/>
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=3"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -670,6 +670,8 @@ button{min-height:44px}
 .auth-google-btn:hover:not(:disabled){background:#f7f7f8}
 .auth-google-btn:disabled{opacity:.45;cursor:default}
 .auth-google-btn .google-ic{width:18px;height:18px;flex-shrink:0}
+.auth-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--mut2);font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:8px 0;margin:-6px 0 10px;min-height:32px}
+.auth-back:hover{color:var(--txt)}
 .auth-divider{display:flex;align-items:center;gap:10px;margin:16px 0;font-size:12px;color:var(--mut2)}
 .auth-divider:before,.auth-divider:after{content:'';flex:1;height:1px;background:var(--bor)}
 #legal-screen{display:none;position:fixed;inset:0;z-index:3000;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -794,14 +796,13 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 <!-- LOGO WAYFIN (sprite): wordmark segue a cor do texto; ponto do "i" segue --wf-dot -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
     <linearGradient id="wfg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4ECDC4"/><stop offset="1" stop-color="#FFD166"/></linearGradient>
-    <mask id="wfh" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024"><rect width="1024" height="1024" fill="#fff"/><circle cx="762" cy="318" r="27" fill="#000"/></mask>
   </defs>
 <symbol id="wf-lockup" viewBox="-14 -14 582.0 188">
   <g transform="scale(0.15625)">
     <rect width="1024" height="1024" rx="225" fill="url(#wfg)"/>
-    <g mask="url(#wfh)" fill="none" stroke="#0C0C18" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="262,318 388,708 512,430 636,708 762,318" stroke-width="88"/>
-      <circle cx="762" cy="318" r="66" stroke="none" fill="#0C0C18"/>
+    <g fill="#0C0C18">
+      <path d="M262,318 L388,708 L512,430 L636,708 L762,318 Q775.8,275.2 791.2,228.1" fill="none" stroke="#0C0C18" stroke-width="88" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M46,-31.5 L28,-23.5 L1,-23.5 L15,-14.5 L-2,-6.5 L-2,-0.5 L20,-9.5 L26,10.5 L32,-16.5 Z" transform="translate(791.2,228.1) rotate(-25) scale(2.5)"/>
     </g>
   </g>
   <path d="M216.176 110.464 195.232 49.535999999999994H210.688L223.456 87.952L237.008 49.535999999999994H250.0L263.44 87.84L276.20799999999997 49.535999999999994H291.664L270.72 110.464H257.616L243.504 69.36L229.168 110.464Z M314.624 111.80799999999999Q308.24 111.80799999999999 303.536 109.67999999999999Q298.832 107.55199999999999 296.256 103.576Q293.68 99.6 293.68 94.336Q293.68 89.29599999999999 295.92 85.32Q298.16 81.344 302.86400000000003 78.65599999999999Q307.568 75.96799999999999 314.736 74.848L332.88 71.936V69.91999999999999Q332.88 66.0 329.8 63.367999999999995Q326.72 60.736 321.68 60.736Q316.976 60.736 313.336 63.256Q309.696 65.776 308.016 69.91999999999999L296.03200000000004 64.096Q297.824 59.279999999999994 301.688 55.751999999999995Q305.552 52.224 310.81600000000003 50.208Q316.08000000000004 48.192 322.24 48.192Q329.744 48.192 335.456 50.936Q341.168 53.68 344.36 58.552Q347.552 63.424 347.552 69.91999999999999V110.464H333.664V104.08Q332.544 105.312 331.2 106.32Q327.952 109.008 323.808 110.40799999999999Q319.664 111.80799999999999 314.624 111.80799999999999ZM332.88 83.136 317.536 85.712Q313.168 86.496 311.04 88.512Q308.91200000000003 90.52799999999999 308.91200000000003 93.776Q308.91200000000003 96.912 311.32000000000005 98.76Q313.728 100.608 317.312 100.608Q321.904 100.608 325.432 98.648Q328.96000000000004 96.688 330.92 93.21600000000001Q332.88 89.744 332.88 85.6Z M367.152 135.10399999999998Q364.688 135.10399999999998 362.336 134.712Q359.984 134.32 358.08 133.312V121.104Q359.536 121.44 361.608 121.776Q363.68 122.112 365.472 122.112Q370.512 122.112 372.808 119.816Q375.104 117.52 376.896 113.712L378.24 110.464L354.16 49.535999999999994H369.952L385.744 91.536L401.424 49.535999999999994H417.328L390.784 116.624Q388.432 122.448 385.072 126.59199999999998Q381.712 130.736 377.288 132.92Q372.864 135.10399999999998 367.152 135.10399999999998Z M431.104 110.464V62.64H420.35200000000003V49.535999999999994H431.104V47.519999999999996Q431.104 40.57599999999999 433.96000000000004 35.70399999999999Q436.81600000000003 30.831999999999994 441.968 28.255999999999993Q447.12 25.679999999999993 454.176 25.679999999999993Q455.52 25.679999999999993 457.144 25.847999999999992Q458.76800000000003 26.01599999999999 459.88800000000003 26.239999999999995V38.896Q458.76800000000003 38.672 457.81600000000003 38.616Q456.86400000000003 38.56 456.08000000000004 38.56Q451.152 38.56 448.464 40.744Q445.776 42.928 445.776 47.519999999999996V49.535999999999994H459.32800000000003V62.64H445.776V110.464Z M468.848 110.464V49.535999999999994H483.52000000000004V110.464Z M494.384 110.464V49.535999999999994H508.16V57.04Q510.288 53.232 514.096 50.992Q518.912 48.192 525.408 48.192Q532.128 48.192 537.336 51.104Q542.544 54.016 545.456 59.22399999999999Q548.368 64.43199999999999 548.368 71.264V110.464H533.696V74.73599999999999Q533.696 70.70400000000001 532.128 67.792Q530.5600000000001 64.88 527.816 63.256Q525.072 61.632 521.376 61.632Q517.792 61.632 514.992 63.256Q512.192 64.88 510.624 67.792Q509.05600000000004 70.70400000000001 509.05600000000004 74.73599999999999V110.464Z" fill="currentColor"/><circle cx="476.18" cy="21.69" r="8.80" fill="var(--wf-dot,#FFD166)"/>
@@ -978,6 +979,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 
 <main id="auth-screen" aria-labelledby="auth-title">
   <div class="auth-card">
+    <button class="auth-back" id="auth-back-btn" type="button">← Voltar ao site</button>
     <section class="auth-view" id="auth-login-view">
       <svg class="wf-logo" viewBox="-14 -14 582.0 188" role="img" aria-label="Wayfin"><use href="#wf-lockup"/></svg>
       <h1 id="auth-title">Sua viagem, só sua.</h1>
@@ -1619,6 +1621,7 @@ document.querySelectorAll('#auth-screen .wf-logo').forEach(l=>{
   l.style.cursor='pointer';
   l.onclick=()=>document.body.classList.add('show-landing');
 });
+$('auth-back-btn').onclick=()=>document.body.classList.add('show-landing');
 document.querySelectorAll('[data-ld-plan]').forEach(b=>{
   // qualquer plano pago também cria conta grátis primeiro — a assinatura acontece dentro do app
   b.onclick=()=>hideLanding('signup');
