@@ -970,7 +970,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <a href="#ld-pricing">Preços</a>
         <a href="#" id="ld-terms-link">Termos de Uso</a>
         <a href="#" id="ld-privacy-link">Política de Privacidade</a>
-        <a href="mailto:suporte@usewayfin.com">Suporte</a>
+        <a href="mailto:suporte@wayfin.com.br">Suporte</a>
       </div>
     </div>
   </footer>
@@ -1058,7 +1058,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       </ul>
 
       <h2>7. Exclusão de conta</h2>
-      <p>Você pode solicitar a exclusão da sua conta e dos seus dados a qualquer momento, enviando um e-mail para <a href="mailto:suporte@usewayfin.com">suporte@usewayfin.com</a>. A exclusão é permanente e irreversível, e os dados são removidos dos nossos servidores em até 30 dias.</p>
+      <p>Você pode solicitar a exclusão da sua conta e dos seus dados a qualquer momento, enviando um e-mail para <a href="mailto:suporte@wayfin.com.br">suporte@wayfin.com.br</a>. A exclusão é permanente e irreversível, e os dados são removidos dos nossos servidores em até 30 dias.</p>
 
       <h2>8. Alterações nos termos</h2>
       <p>Podemos atualizar estes termos periodicamente. Caso haja mudanças significativas, avisaremos por e-mail. O uso continuado do serviço após as alterações implica aceitação dos novos termos.</p>
@@ -1067,7 +1067,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       <p>Estes termos são regidos pelas leis brasileiras. Eventuais disputas serão resolvidas no foro da comarca de Jundiaí, SP.</p>
 
       <h2>10. Contato</h2>
-      <p>Dúvidas sobre estes termos: <a href="mailto:suporte@usewayfin.com">suporte@usewayfin.com</a></p>
+      <p>Dúvidas sobre estes termos: <a href="mailto:suporte@wayfin.com.br">suporte@wayfin.com.br</a></p>
     </article>
 
     <article class="legal-doc" id="legal-privacidade">
@@ -1092,7 +1092,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       <p>O Wayfin usa provedores de infraestrutura para funcionar: banco de dados e autenticação (Supabase), hospedagem (Cloudflare) e mapas (OpenStreetMap, Esri). Esses provedores processam dados em nosso nome, sob suas próprias políticas de segurança, apenas para viabilizar o funcionamento do app.</p>
 
       <h2>5. Seus direitos (LGPD)</h2>
-      <p>Você pode, a qualquer momento, solicitar acesso, correção, exportação ou exclusão dos seus dados, entrando em contato pelo e-mail <a href="mailto:suporte@usewayfin.com">suporte@usewayfin.com</a>. Atendemos esses pedidos em até 30 dias.</p>
+      <p>Você pode, a qualquer momento, solicitar acesso, correção, exportação ou exclusão dos seus dados, entrando em contato pelo e-mail <a href="mailto:suporte@wayfin.com.br">suporte@wayfin.com.br</a>. Atendemos esses pedidos em até 30 dias.</p>
 
       <h2>6. Retenção de dados</h2>
       <p>Mantemos seus dados enquanto sua conta estiver ativa. Após a exclusão da conta, os dados são removidos dos nossos servidores em até 30 dias, exceto quando a lei exigir retenção por prazo maior.</p>
@@ -1104,7 +1104,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       <p>Podemos atualizar esta política periodicamente. Caso haja mudanças significativas, avisaremos por e-mail.</p>
 
       <h2>9. Contato</h2>
-      <p>Dúvidas sobre privacidade: <a href="mailto:suporte@usewayfin.com">suporte@usewayfin.com</a></p>
+      <p>Dúvidas sobre privacidade: <a href="mailto:suporte@wayfin.com.br">suporte@wayfin.com.br</a></p>
     </article>
   </div>
 </main>
@@ -1851,9 +1851,18 @@ async function loadViagens(){
   const{data,error}=await sb.from('viagens').select('*').order('criado_em',{ascending:false});
   if(error){toast('Não foi possível carregar suas viagens ⚠️');return;}
   viagens=data||[];
-  if(!viagens.length)return;
-  vid=viagens[0].id;
-  drawChips();await loadGastos();
+  vid=viagens.length?viagens[0].id:null;
+  drawChips();
+  if(viagens.length)await loadGastos();
+}
+async function criarViagem(){
+  const podeCriar=isPremium()||viagens.length<planLimit('viagens');
+  if(!podeCriar){openPaywall('viagens');return;}
+  const n=prompt('Nome da viagem:');if(!n)return;
+  const o=parseFloat(prompt('Orçamento (R$):')||'0');
+  const{data,error}=await sb.from('viagens').insert({nome:n,orcamento:o,owner_id:currentUser.id}).select().single();
+  if(error){if(!handlePlanError(error))toast('Erro ao criar viagem ⚠️');return;}
+  viagens.unshift(data);vid=data.id;drawChips();await loadGastos();drawDash();
 }
 function drawChips(){
   const el=$('chips');el.innerHTML='';
@@ -1867,13 +1876,7 @@ function drawChips(){
   const a=document.createElement('div');a.className='chip add';
   const podeCriar=isPremium()||viagens.length<planLimit('viagens');
   a.textContent=podeCriar?'+ nova':'🔒 nova';
-  a.onclick=async()=>{
-    if(!podeCriar){openPaywall('viagens');return;}
-    const n=prompt('Nome:');if(!n)return;
-    const o=parseFloat(prompt('Orçamento:')||'0');
-    const{data,error}=await sb.from('viagens').insert({nome:n,orcamento:o,owner_id:currentUser.id}).select().single();
-    if(error){if(!handlePlanError(error))toast('Erro ao criar viagem ⚠️');return;}viagens.unshift(data);vid=data.id;drawChips();await loadGastos();
-  };el.appendChild(a);
+  a.onclick=criarViagem;el.appendChild(a);
 }
 $('tnm').onclick=()=>{
   const v=viagens.find(x=>x.id===vid);if(!v)return;
@@ -1982,6 +1985,11 @@ function drawReservasStrip(container){
 
 function drawDash(){
   const el=$('pg-dash');el.innerHTML='';
+  if(!viagens.length){
+    el.innerHTML='<div style="text-align:center;padding:64px 20px"><div style="font-size:44px;margin-bottom:14px">🧳</div><h2 style="margin-bottom:8px">Crie sua primeira viagem</h2><p style="color:var(--mut2);font-size:14px;line-height:1.55;margin:0 auto 22px;max-width:320px">Cadastre o nome e o orçamento pra começar a organizar gastos, roteiro e documentos.</p><button class="bok" id="dash-criar-viagem" type="button" style="padding:12px 30px">+ Criar viagem</button></div>';
+    $('dash-criar-viagem').onclick=criarViagem;
+    return;
+  }
   const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
   const bc=categorias.map(c=>({...c,tot:gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)}));
   const mx=Math.max(...bc.map(c=>c.tot),1);
@@ -2271,6 +2279,7 @@ $('fdt').value=new Date().toISOString().split('T')[0];
 function chkg(){$('gok').disabled=!($('fd').value.trim()&&$('fv').value>0);}
 ['fd','fv','fo'].forEach(id=>$(id).oninput=chkg);
 $('fab').onclick=()=>{
+  if(!vid){toast('Crie uma viagem primeiro pra lançar gastos ⚠️');return;}
   egid=null;$('ogt').textContent='Novo Gasto';
   $('fd').value='';$('fv').value='';$('fo').value='';
   $('fdt').value=new Date().toISOString().split('T')[0];
