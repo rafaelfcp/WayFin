@@ -338,8 +338,9 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 .mala-empty button{margin-top:14px}
 
 #m-map{flex-shrink:0;width:100%;height:min(42vh,360px);background:var(--sur);overflow:hidden;position:relative}
-#m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+64px)}
+#m-list{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px 16px}
 #m-map.h,#m-list.h{display:none!important}
+@media (max-width:899px){#m-map{height:min(34vh,320px)}}
 .m-status{padding:4px 0 8px;font-size:11px;color:var(--mut2);text-align:center;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
 .m-spin{width:11px;height:11px;border:2px solid var(--bor2);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -595,8 +596,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .rsv-sub{font-size:10px;color:var(--mut2);margin-top:2px}
 
 /* ── FASE 4: explorar arredores ── */
-.m-explore-btn{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:150;background:var(--grd);border:none;border-radius:99px;color:#fff;font-weight:700;font-size:13px;padding:10px 20px;box-shadow:var(--shadow-teal);transition:opacity .15s,transform .15s}
-.m-explore-btn.h{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(10px)}
+/* botão no fluxo do layout (antes: position:fixed, ficava por cima do botão "Abrir rota no Google Maps") */
+.m-explore-btn{flex-shrink:0;align-self:center;margin:6px 0 calc(var(--sb) + 10px);z-index:150;background:var(--grd);border:none;border-radius:99px;color:#fff;font-weight:700;font-size:13px;padding:10px 20px;box-shadow:var(--shadow-teal);cursor:pointer}
+.m-explore-btn.h{display:none}
 .m-explore-sheet{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--sur);border:1px solid var(--bor);border-bottom:none;border-radius:20px 20px 0 0;padding:16px;max-height:65vh;overflow-y:auto;z-index:160;box-shadow:0 -8px 30px rgba(0,0,0,.25)}
 .m-explore-sheet.on{display:block}
 .m-explore-sheet-hdl{width:34px;height:4px;background:var(--bor2);border-radius:99px;margin:0 auto 12px}
@@ -661,7 +663,26 @@ button{min-height:44px}
 @media (max-width:899px){#tabs{position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(var(--sb) + 8px);gap:5px;border-top:1px solid var(--bor);box-shadow:0 -8px 24px rgba(0,0,0,.18)}.tab{font-size:11px;border-radius:12px;padding:6px 3px;line-height:1.15}#pages{margin-bottom:68px}.pg{padding-bottom:22px}.fab{margin-bottom:calc(var(--sb) + 80px)}}
 @media (min-width:900px){#shell{display:grid;grid-template-columns:248px minmax(0,1fr);grid-template-rows:auto 1fr;padding:0}#topbar{grid-column:1;grid-row:1;padding:28px 18px 16px;border-right:1px solid var(--bor);min-height:210px}.tb-row{display:block}.bud-box{text-align:left;margin-top:22px}.bud-box button{margin-left:0!important}.chips{margin-top:8px}.prog{margin-top:20px}#tabs{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:stretch;padding:12px 14px 28px;border-right:1px solid var(--bor);gap:8px}.tab{flex:0;display:flex;align-items:center;justify-content:flex-start;padding:11px 14px;border-radius:10px;text-align:left}#pages{grid-column:2;grid-row:1 / span 2;background:var(--bg)}.pg{padding:32px clamp(28px,5vw,72px) 48px;max-width:1440px;margin:0 auto}.cat-grid{grid-template-columns:repeat(6,minmax(120px,1fr))}.sg{grid-template-columns:repeat(3,1fr)}.budget-kpis{grid-template-columns:repeat(3,1fr)}.budget-hero{padding:22px}.budget-hero h2{font-size:20px}.donut-w{max-width:720px}.sh{max-width:640px;border-radius:24px;margin-bottom:5vh;padding:24px}.ov{align-items:center}.hdl{display:none}#mapa-pg{padding-left:248px}.m-top,.m-dias,.m-switch,.m-style,#m-list{max-width:1200px;margin-left:auto;margin-right:auto}}
 .trip-nm{background:none;border:none;color:var(--txt);padding:0;min-height:44px;text-align:left}
-.user-menu{margin-top:14px;padding-top:12px;border-top:1px solid var(--bor)}.user-email{font-size:12px;color:var(--mut2);word-break:break-word;margin-bottom:6px}.logout-btn{background:none;border:1px solid var(--bor);border-radius:8px;color:var(--mut2);font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;min-height:44px;width:100%;text-align:left}.logout-btn:hover{border-color:var(--red);color:var(--red)}
+/* ── TOPBAR COMPACTO + POPOVER DE CONTA ── */
+#topbar{z-index:20}
+.tb-brand{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.tb-brand .wf-logo{margin:0 0 0 -3px;flex-shrink:0}
+.tb-actions{display:flex;align-items:center;gap:2px}
+.tb-ic{background:none;border:none;font-size:18px;line-height:1;cursor:pointer;min-width:40px;min-height:44px;padding:0;opacity:.8;border-radius:10px;color:var(--txt)}
+.tb-ic:active,.tb-ic[aria-expanded="true"]{opacity:1;background:var(--sur2)}
+.tb-ic:focus-visible{outline:3px solid var(--amber2);outline-offset:2px}
+.tb-trip{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tb-trip .trip-nm{flex:1;min-width:0}
+.tb-trip #tnmt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-trip .bud-box{text-align:right}
+.tb-row .chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 0 8px}
+.tb-row .chips::-webkit-scrollbar{display:none}
+.tb-row .chip{flex-shrink:0;white-space:nowrap}
+.tb-row{gap:2px}
+.user-menu{position:absolute;right:0;top:calc(100% + 4px);width:min(280px,calc(100vw - 32px));background:var(--sur);border:1px solid var(--bor2);border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow);z-index:30}
+.user-menu[hidden]{display:none}
+@media (min-width:900px){.tb-trip{display:block}.tb-trip .bud-box{text-align:left}.user-menu{left:0;right:auto;width:260px}.tb-row .chips{flex-wrap:wrap;overflow:visible}}
+.user-email{font-size:12px;color:var(--mut2);word-break:break-word;margin-bottom:6px}.logout-btn{background:none;border:1px solid var(--bor);border-radius:8px;color:var(--mut2);font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;min-height:44px;width:100%;text-align:left}.logout-btn:hover{border-color:var(--red);color:var(--red)}
 #auth-screen{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:20px;background:var(--bg)}body.auth-required #auth-screen{display:flex}body.auth-required #shell,body.auth-required .fab,body.auth-required #mapa-pg{display:none!important}.auth-card{width:min(100%,420px);background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:28px;box-shadow:var(--shadow)}.auth-card h1{font-size:25px;margin:10px 0 6px}.auth-card p{font-size:14px;line-height:1.55;color:var(--mut2);margin-bottom:20px}.auth-view[hidden]{display:none}.auth-status{min-height:22px;font-size:13px;color:var(--mut2);margin:8px 0}.auth-status.error{color:var(--red)}.auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.auth-actions button{width:100%}.auth-link{display:block;margin:14px auto 0;background:none;border:none;color:var(--teal);font:inherit;font-size:13px;font-weight:700;cursor:pointer;min-height:32px}
 .auth-terms{display:flex;align-items:flex-start;gap:8px;margin:4px 0 6px;font-size:12.5px;line-height:1.5;color:var(--mut2);cursor:pointer}
 .auth-terms input{margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--teal);cursor:pointer}
@@ -790,6 +811,17 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 .ad-tag{font-size:10px;color:var(--mut);flex-shrink:0;align-self:flex-start}
 .ad-cta{font-size:12px;font-weight:700;color:var(--teal);white-space:nowrap}
 .ad-slot:focus-visible,.pw-plan:focus-visible,.plan-up:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+/* ── MAPA NO DESKTOP: coluna única, largura fixa e centralizada, todos os dias visíveis ── */
+@media (min-width:900px){
+  #mapa-pg{padding-left:0}
+  .m-top,.m-dias,.m-switch,.m-style,#m-map,#m-list,.m-status{width:100%;max-width:1200px;margin-left:auto;margin-right:auto;align-self:center}
+  .m-top{justify-content:center}
+  .m-dias{flex-wrap:wrap;overflow-x:visible;justify-content:center;scroll-snap-type:none}
+  .m-switch,.m-style{max-width:420px}
+  .m-switch .m-sw-btn,.m-style .m-style-btn{flex-direction:row;white-space:nowrap}
+  #m-map{height:min(40vh,440px);border-radius:var(--r);margin-top:4px}
+  .m-explore-btn{margin-bottom:16px}
+}
 </style>
 </head>
 <body class="auth-required">
@@ -1114,19 +1146,25 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 <div id="shell">
   <div id="topbar">
     <div class="tb-row">
-      <div>
+      <div class="tb-brand">
         <svg class="wf-logo sm" viewBox="-14 -14 582.0 188" role="img" aria-label="Wayfin"><use href="#wf-lockup"/></svg>
+        <div class="tb-actions">
+          <button class="tb-ic" id="cfg-btn" type="button" aria-label="Configurações de categorias" title="Configurações de categorias">⚙️</button>
+          <button class="tb-ic" id="mem-btn" type="button" aria-label="Compartilhar viagem" title="Compartilhar viagem">🤝</button>
+          <button class="tb-ic" id="theme-btn" type="button" aria-label="Alternar tema" onclick="toggleTheme()">🌙</button>
+          <button class="tb-ic" id="acct-btn" type="button" aria-label="Minha conta" aria-haspopup="true" aria-expanded="false" aria-controls="user-menu" title="Minha conta">👤</button>
+        </div>
+        <!-- conta: popover fechado por padrão (antes ficava sempre aberto dentro do topbar e ocupava ~55% da tela no celular) -->
+        <div class="user-menu" id="user-menu" role="dialog" aria-label="Conta" hidden><div class="user-email" id="user-email"></div><div class="plan-badge" id="plan-badge"></div><button class="logout-btn" id="logout-btn" type="button" aria-label="Sair da conta">↪ Sair da conta</button></div>
+      </div>
+      <div class="tb-trip">
         <button class="trip-nm" id="tnm" type="button" aria-label="Editar viagem"><span id="tnmt">—</span><span aria-hidden="true" style="font-size:13px;opacity:.5">✏️</span></button>
-        <button id="cfg-btn" type="button" aria-label="Configurações de categorias" style="background:none;border:none;font-size:14px;opacity:.6;cursor:pointer;padding:2px 4px 2px 0" title="Configurações de categorias">⚙️</button>
-        <button id="mem-btn" type="button" aria-label="Compartilhar viagem" style="background:none;border:none;font-size:14px;opacity:.6;cursor:pointer;padding:2px 4px 2px 0" title="Compartilhar viagem">🤝</button>
-        <div class="chips" id="chips"></div>
+        <div class="bud-box">
+          <div class="bud-lbl">Orçamento</div>
+          <div class="bud-val" id="bval">—</div>
+        </div>
       </div>
-      <div class="bud-box">
-        <div class="bud-lbl">Orçamento</div>
-        <div class="bud-val" id="bval">—</div>
-        <button id="theme-btn" type="button" aria-label="Alternar tema" onclick="toggleTheme()" style="margin-top:6px;background:none;border:none;font-size:18px;cursor:pointer;display:block;margin-left:auto">🌙</button>
-        <div class="user-menu" aria-label="Conta"><div class="user-email" id="user-email"></div><div class="plan-badge" id="plan-badge"></div><button class="logout-btn" id="logout-btn" type="button" aria-label="Sair da conta">↪ Sair da conta</button></div>
-      </div>
+      <div class="chips" id="chips"></div>
     </div>
     <div class="prog"><div class="prog-b" id="pb" style="width:0%"></div></div>
     <div class="prog-inf">
@@ -1488,7 +1526,7 @@ function renderPlanBadge(){
   el.appendChild(lbl);
   if(!isPremium()){
     const b=document.createElement('button');b.type='button';b.className='plan-up';b.textContent='⭐ Upgrade';
-    b.onclick=()=>openPaywall('geral');el.appendChild(b);
+    b.onclick=()=>{setAcctMenu(false);openPaywall('geral');};el.appendChild(b);
   }
 }
 function handlePlanError(error){
@@ -1677,7 +1715,18 @@ $('auth-signup-form').addEventListener('submit',async e=>{
   if(error){authMessage(error.message,true,'signup-status');return;}
   authMessage(data.session?'Conta criada. Bem-vindo!':'Conta criada. Confirme o e-mail para entrar.',false,'signup-status');
 });
-$('logout-btn').onclick=async()=>{await sb.auth.signOut();};
+// popover de conta (fechado por padrão): botão 👤 abre/fecha; clique fora, Esc ou troca de aba fecham
+function setAcctMenu(open){
+  const m=$('user-menu'),btn=$('acct-btn');if(!m||!btn)return;
+  m.hidden=!open;btn.setAttribute('aria-expanded',String(!!open));
+}
+$('acct-btn').onclick=e=>{e.stopPropagation();setAcctMenu($('user-menu').hidden);};
+document.addEventListener('click',e=>{
+  const m=$('user-menu');
+  if(m&&!m.hidden&&!e.target.closest('#user-menu'))setAcctMenu(false);
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')setAcctMenu(false);});
+$('logout-btn').onclick=async()=>{setAcctMenu(false);await sb.auth.signOut();};
 
 (async()=>{
   sb=supabase.createClient(
@@ -3663,6 +3712,7 @@ async function drawMDia(dia){
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=async()=>{
     const t=tab.dataset.t;
+    setAcctMenu(false);
     document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('on');x.removeAttribute('aria-current');});tab.classList.add('on');tab.setAttribute('aria-current','page');
     if(t==='mapa'){
       $('mapa-pg').classList.add('on');
