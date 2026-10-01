@@ -10,9 +10,9 @@
 <meta name="theme-color" content="#0C0C18"/>
 <meta name="apple-mobile-web-app-title" content="Wayfin"/>
 <link rel="manifest" href="/manifest.webmanifest"/>
-<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg?v=3"/>
-<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=3"/>
-<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=3"/>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg?v=4"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=4"/>
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=4"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -261,7 +261,13 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
   border-bottom:1px solid var(--bor);
   background:var(--bg);
 }
-.m-dias{flex-shrink:0;display:flex;gap:6px;padding:10px 16px;overflow-x:auto;border-bottom:1px solid var(--bor);scroll-snap-type:x proximity}
+.m-dias{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--bor)}
+.m-dia-nav{flex-shrink:0;width:44px;height:44px;min-height:44px;border-radius:50%;background:var(--sur);border:1px solid var(--bor);color:var(--txt);font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 3px;font-family:inherit}
+.m-dia-nav:active:not(:disabled){background:var(--sur2)}
+.m-dia-nav:disabled{opacity:.3;cursor:default}
+.m-dia-sel{flex:1;min-width:0;height:44px;min-height:44px;border-radius:99px;background:var(--sur);border:1px solid var(--teal2);color:var(--txt);font:700 14px 'Plus Jakarta Sans',sans-serif;padding:0 38px 0 16px;cursor:pointer;-webkit-appearance:none;appearance:none;text-overflow:ellipsis;color-scheme:dark;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%234ECDC4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+body.light .m-dia-sel{color-scheme:light}
+.m-dia-sel:focus-visible,.m-dia-nav:focus-visible{outline:3px solid var(--amber2);outline-offset:2px}
 .m-dias::-webkit-scrollbar{display:none}
 .m-btn{
   flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;
@@ -816,7 +822,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   #mapa-pg{padding-left:0}
   .m-top,.m-dias,.m-switch,.m-style,#m-map,#m-list,.m-status{width:100%;max-width:1200px;margin-left:auto;margin-right:auto;align-self:center}
   .m-top{justify-content:center}
-  .m-dias{flex-wrap:wrap;overflow-x:visible;justify-content:center;scroll-snap-type:none}
+  .m-dias{max-width:560px;justify-content:center}
   .m-switch,.m-style{max-width:420px}
   .m-switch .m-sw-btn,.m-style .m-style-btn{flex-direction:row;white-space:nowrap}
   #m-map{height:min(40vh,440px);border-radius:var(--r);margin-top:4px}
@@ -3134,10 +3140,7 @@ async function selectDia(diaOrAll){
   mSelDia=diaOrAll;
   lastDiaId=diaOrAll==='all'?lastDiaId:diaOrAll.id;
   fecharExploreSheet();
-  document.querySelectorAll('.m-btn').forEach(x=>x.classList.remove('on'));
-  const key=diaOrAll==='all'?'all':diaOrAll.id;
-  const btn=document.querySelector(`.m-btn[data-key="${key}"]`);
-  if(btn)btn.classList.add('on');
+  syncDiaSelector();
   renderSkeleton();
   if(diaOrAll==='all')await drawTodosDias();
   else await drawMDia(diaOrAll);
@@ -3157,20 +3160,40 @@ function renderSkeleton(){
   $('mst').innerHTML='<span class="m-spin"></span> Carregando paradas...';
 }
 
+// seletor de dia: lista nativa (boa no celular e no PC, escala para qualquer nº de dias) + ‹ › para navegar
+function diaOptLabel(dia){
+  const dt=dia.data?new Date(dia.data+'T12:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}).replace('.',''):'';
+  return `Dia ${dia.numero} · ${dia.titulo}${dt?' — '+dt:''}`;
+}
 function drawMDias(){
   const w=$('mdias');w.innerHTML='';
-  // "Ver todos os dias" — opção explícita; padrão é dia único, evita confundir contextos
-  const all=document.createElement('div');all.className='m-btn all';all.dataset.key='all';
-  all.textContent='Todos os dias';
-  all.onclick=()=>selectDia('all');
-  w.appendChild(all);
-  rDias.forEach((dia)=>{
-    const isActive=lastDiaId?dia.id===lastDiaId:rDias.indexOf(dia)===0;
-    const b=document.createElement('div');b.className='m-btn'+(isActive?' on':'');b.dataset.key=dia.id;
-    b.textContent=`Dia ${dia.numero} · ${dia.titulo.split('—')[0].split('&')[0].trim().slice(0,20)}`;
-    b.onclick=()=>selectDia(dia);
-    w.appendChild(b);
-  });
+  const mk=(id,txt,label)=>{const b=document.createElement('button');b.type='button';b.id=id;b.className='m-dia-nav';b.textContent=txt;b.setAttribute('aria-label',label);return b;};
+  const prev=mk('mdia-prev','‹','Dia anterior');
+  const next=mk('mdia-next','›','Próximo dia');
+  const sel=document.createElement('select');sel.id='mdia-sel';sel.className='m-dia-sel';sel.setAttribute('aria-label','Selecionar dia');
+  // "Todos os dias" — opção explícita; padrão é dia único, evita confundir contextos
+  const oAll=document.createElement('option');oAll.value='all';oAll.textContent='🗺️ Todos os dias';sel.appendChild(oAll);
+  rDias.forEach(dia=>{const o=document.createElement('option');o.value=String(dia.id);o.textContent=diaOptLabel(dia);sel.appendChild(o);});
+  sel.onchange=()=>{
+    if(sel.value==='all')selectDia('all');
+    else{const d=rDias.find(x=>String(x.id)===sel.value);if(d)selectDia(d);}
+  };
+  const step=dir=>{
+    const cur=mSelDia&&mSelDia!=='all'?rDias.findIndex(x=>x.id===mSelDia.id):-1;
+    const ni=cur+dir;
+    if(ni>=0&&ni<rDias.length)selectDia(rDias[ni]);
+  };
+  prev.onclick=()=>step(-1);next.onclick=()=>step(1);
+  w.append(prev,sel,next);
+  syncDiaSelector();
+}
+function syncDiaSelector(){
+  const sel=$('mdia-sel');if(!sel)return;
+  const key=mSelDia==='all'?'all':(mSelDia?String(mSelDia.id):(lastDiaId?String(lastDiaId):(rDias[0]?String(rDias[0].id):'all')));
+  sel.value=key;
+  const idx=key==='all'?-1:rDias.findIndex(x=>String(x.id)===key);
+  $('mdia-prev').disabled=idx<=0;
+  $('mdia-next').disabled=idx===-1?!rDias.length:idx>=rDias.length-1;
 }
 
 // ── TOGGLE MAPA / LISTA ────────────────────────────────
