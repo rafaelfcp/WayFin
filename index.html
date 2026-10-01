@@ -816,6 +816,18 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 .pw-tag{font-size:10px;font-weight:700;background:var(--grd);color:#000;border-radius:4px;padding:1px 6px;margin-left:6px}
 .pw-status{font-size:12px;color:var(--mut2);min-height:16px;margin-bottom:6px}
 .pw-status.error{color:var(--red)}
+.shr-opts{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 10px}
+.shr-opt{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--txt);min-height:36px;cursor:pointer}
+.shr-opt input{width:18px;height:18px;accent-color:var(--teal);margin:0}
+.shr-txt{width:100%;min-height:200px;height:38dvh;max-height:46dvh;resize:vertical;box-sizing:border-box;background:var(--bg);color:var(--txt);border:1px solid var(--bor2);border-radius:12px;padding:12px;font:13px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;white-space:pre-wrap}
+.shr-txt:focus{outline:2px solid var(--teal);outline-offset:1px}
+.shr-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.shr-acts button{flex:1 1 30%;min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:12px;padding:10px 8px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--bor2);background:var(--sur);color:var(--txt)}
+.shr-acts .shr-main{background:var(--grd);border-color:transparent;color:#0C0C18}
+.shr-acts .shr-wa{background:#25D366;border-color:transparent;color:#0b2e17}
+.shr-acts button[hidden]{display:none}
+.shr-hint{font-size:11px;color:var(--mut2);margin-top:8px;min-height:14px}
+@media (min-width:900px){#osh{align-items:center}#osh .sh{max-width:560px;border-radius:24px;padding-bottom:22px}}
 .ad-slot{display:flex;align-items:center;gap:12px;background:var(--sur);border:1px solid var(--bor);border-radius:var(--r-sm);padding:12px 14px;margin:14px 0;text-decoration:none;color:var(--txt);cursor:pointer;width:100%;text-align:left}
 .ad-body{flex:1;min-width:0}
 .ad-ttl{font-size:13px;font-weight:700}
@@ -834,6 +846,29 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   #m-map{height:min(40vh,440px);border-radius:var(--r);margin-top:4px}
   .m-explore-btn{margin-bottom:16px}
 }
+
+/* ── Instalar app (guia PWA) ── */
+[data-install][hidden]{display:none!important}
+#oin{z-index:3000}
+#oin .sh{max-width:480px;padding-bottom:calc(var(--sb) + 20px)}
+@media (min-width:600px){#oin{align-items:center}#oin .sh{border-radius:24px;border:1px solid var(--bor2)}}
+.in-lede{font-size:13.5px;line-height:1.55;color:var(--mut2);margin:-6px 0 14px}
+.in-native{width:100%;margin-bottom:14px;border:0;border-radius:12px;padding:12px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;background:var(--grd);color:#0C0C18}
+.in-native[hidden]{display:none}
+.in-tabs{display:flex;gap:6px;background:var(--bg);border:1px solid var(--bor);border-radius:12px;padding:4px;margin-bottom:6px}
+.in-tab{flex:1;min-height:40px;border:0;border-radius:9px;background:transparent;color:var(--mut2);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.in-tab.on{background:var(--sur);color:var(--txt);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.in-tab:focus-visible,.in-native:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.in-panel{display:none}.in-panel.on{display:block}
+.in-step{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--bor)}
+.in-step:last-child{border-bottom:0}
+.in-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--bg);border:1px solid var(--bor2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--teal)}
+.in-step h4{margin:2px 0 3px;font-size:14px;font-weight:700}
+.in-step p{margin:0;font-size:12.5px;line-height:1.5;color:var(--mut2)}
+.in-warn{display:none;margin:8px 0 0;padding:10px 12px;border-radius:10px;font-size:12.5px;line-height:1.5;background:color-mix(in srgb,var(--amber) 14%,transparent);border:1px solid color-mix(in srgb,var(--amber) 40%,transparent);color:var(--txt)}
+.in-warn.on{display:block}
+.in-note{margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--bor);font-size:12.5px;line-height:1.55;color:var(--mut2)}
+.in-note b{color:var(--txt)}
 </style>
 </head>
 <body class="auth-required">
@@ -852,6 +887,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <a href="#ld-how">Como funciona</a>
         <a href="#ld-pricing">Preços</a>
         <a href="#ld-story">Como surgiu</a>
+        <a href="#" id="ld-install-nav" data-install>Instalar app</a>
       </div>
       <div class="ld-nav-actions">
         <button class="ld-btn ld-btn-ghost sm" type="button" id="ld-nav-entrar">Entrar</button>
@@ -1004,6 +1040,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <a href="#ld-features">Funcionalidades</a>
         <a href="#ld-how">Como funciona</a>
         <a href="#ld-pricing">Preços</a>
+        <a href="#" id="ld-install-link" data-install>Instalar app</a>
         <a href="#" id="ld-terms-link">Termos de Uso</a>
         <a href="#" id="ld-privacy-link">Política de Privacidade</a>
         <a href="mailto:suporte@wayfin.com.br">Suporte</a>
@@ -1158,7 +1195,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
           <button class="tb-ic" id="acct-btn" type="button" aria-label="Minha conta" aria-haspopup="true" aria-expanded="false" aria-controls="user-menu" title="Minha conta">👤</button>
         </div>
         <!-- conta: popover fechado por padrão (antes ficava sempre aberto dentro do topbar e ocupava ~55% da tela no celular) -->
-        <div class="user-menu" id="user-menu" role="dialog" aria-label="Conta" hidden><div class="user-email" id="user-email"></div><div class="plan-badge" id="plan-badge"></div><button class="logout-btn" id="logout-btn" type="button" aria-label="Sair da conta">↪ Sair da conta</button></div>
+        <div class="user-menu" id="user-menu" role="dialog" aria-label="Conta" hidden><div class="user-email" id="user-email"></div><div class="plan-badge" id="plan-badge"></div><button class="logout-btn" id="install-menu-btn" data-install type="button" style="margin-bottom:6px">📲 Instalar app</button><button class="logout-btn" id="logout-btn" type="button" aria-label="Sair da conta">↪ Sair da conta</button></div>
       </div>
       <div class="tb-trip">
         <button class="trip-nm" id="tnm" type="button" aria-label="Editar viagem"><span id="tnmt">—</span><span aria-hidden="true" style="font-size:13px;opacity:.5">✏️</span></button>
@@ -1425,6 +1462,49 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   <div class="pw-plans" id="opw-plans" role="radiogroup" aria-label="Escolha um plano"></div>
   <div class="pw-status" id="opw-status" role="status" aria-live="polite"></div>
   <div class="br"><button class="bc" id="opw-cancel" type="button">Agora não</button><button class="bok" id="opw-go" type="button">Continuar</button></div>
+</div></div>
+
+<div class="ov" id="oin" role="dialog" aria-modal="true" aria-labelledby="oin-t"><div class="sh">
+  <div class="hdl"></div>
+  <div class="mtit" id="oin-t">📲 Instalar o Wayfin</div>
+  <p class="in-lede">Sem loja de apps e sem ocupar espaço extra. Leva menos de 30 segundos.</p>
+  <button type="button" class="in-native" id="oin-native" hidden>📲 Instalar agora</button>
+  <div class="in-tabs" role="tablist" aria-label="Seu celular">
+    <button type="button" class="in-tab on" id="oin-tab-android" role="tab" aria-selected="true" aria-controls="oin-panel-android">Android (Chrome)</button>
+    <button type="button" class="in-tab" id="oin-tab-ios" role="tab" aria-selected="false" aria-controls="oin-panel-ios">iPhone (Safari)</button>
+  </div>
+  <div class="in-panel on" id="oin-panel-android" role="tabpanel" aria-labelledby="oin-tab-android">
+    <div class="in-step"><div class="in-num">1</div><div><h4>Abra o Wayfin no Chrome</h4><p>Acesse wayfin.com.br no Chrome. A opção de instalar só aparece nele.</p></div></div>
+    <div class="in-step"><div class="in-num">2</div><div><h4>Toque no menu ⋮</h4><p>Os três pontinhos, no canto superior direito da tela.</p></div></div>
+    <div class="in-step"><div class="in-num">3</div><div><h4>Toque em "Instalar aplicativo"</h4><p>Pode aparecer como "Adicionar à tela inicial", conforme a versão do Chrome.</p></div></div>
+    <div class="in-step"><div class="in-num">4</div><div><h4>Confirme em "Instalar"</h4><p>O Wayfin aparece na tela inicial com ícone próprio e sem a barra do navegador.</p></div></div>
+  </div>
+  <div class="in-panel" id="oin-panel-ios" role="tabpanel" aria-labelledby="oin-tab-ios">
+    <div class="in-warn" id="oin-ios-warn" role="note">Você parece estar em outro navegador. No iPhone só o <b>Safari</b> instala o app: abra wayfin.com.br por ele.</div>
+    <div class="in-step"><div class="in-num">1</div><div><h4>Abra o Wayfin no Safari</h4><p>No iPhone esse recurso só funciona pelo Safari, e não pelo Chrome ou outros navegadores.</p></div></div>
+    <div class="in-step"><div class="in-num">2</div><div><h4>Toque em Compartilhar</h4><p>O ícone do quadrado com a seta para cima, na barra inferior (ou superior, em alguns modelos).</p></div></div>
+    <div class="in-step"><div class="in-num">3</div><div><h4>Toque em "Adicionar à Tela de Início"</h4><p>A opção fica um pouco mais abaixo na lista de ações do Safari.</p></div></div>
+    <div class="in-step"><div class="in-num">4</div><div><h4>Toque em "Adicionar"</h4><p>No canto superior direito. O Wayfin abre em tela cheia, como um app.</p></div></div>
+  </div>
+  <div class="in-note"><b>Isso já é um app de verdade.</b> A tela abre mesmo sem internet, embora os dados precisem de conexão para sincronizar. Os apps nativos para Google Play e App Store estão a caminho.</div>
+  <div class="br" style="margin-top:12px"><button class="bc" id="oin-close" type="button">Fechar</button></div>
+</div></div>
+
+<div class="ov" id="osh" role="dialog" aria-modal="true" aria-labelledby="osh-t" style="z-index:650"><div class="sh">
+  <div class="hdl"></div>
+  <div class="mtit" id="osh-t">📤 Compartilhar roteiro</div>
+  <div class="shr-opts">
+    <label class="shr-opt"><input type="checkbox" id="osh-obs" checked> Incluir observações</label>
+    <label class="shr-opt"><input type="checkbox" id="osh-lnk" checked> Incluir links do Maps</label>
+  </div>
+  <textarea class="shr-txt" id="osh-txt" aria-label="Texto do roteiro (você pode editar antes de enviar)"></textarea>
+  <div class="shr-hint" id="osh-hint" role="status" aria-live="polite">Você pode editar o texto antes de enviar.</div>
+  <div class="shr-acts">
+    <button type="button" class="shr-main" id="osh-share">📤 Compartilhar</button>
+    <button type="button" class="shr-wa" id="osh-wa">💬 WhatsApp</button>
+    <button type="button" id="osh-copy">📋 Copiar</button>
+  </div>
+  <div class="br" style="margin-top:12px"><button class="bc" id="osh-close" type="button">Fechar</button></div>
 </div></div>
 
 <script>
@@ -2612,10 +2692,17 @@ async function loadRot(){
 }
 function drawRot(){
   const el=$('rw');el.innerHTML='';
+  const bar=document.createElement('div');bar.style.cssText='display:flex;gap:8px;margin-bottom:12px';
   const ab=document.createElement('button');ab.className='bs';
-  ab.style.cssText='width:100%;margin-bottom:12px;padding:10px;color:var(--teal);border-color:var(--teal);font-size:13px;font-weight:600';
-  ab.textContent='+ Adicionar Dia';ab.onclick=()=>openDia(null);el.appendChild(ab);
-  if(!rDias.length){el.innerHTML+='<div style="text-align:center;padding:40px 0;color:#444"><div style="font-size:36px;margin-bottom:10px">🗺️</div><div>Nenhum dia</div></div>';return;}
+  ab.style.cssText='flex:1;min-width:0;padding:10px;color:var(--teal);border-color:var(--teal);font-size:13px;font-weight:600';
+  ab.textContent='+ Adicionar Dia';ab.onclick=()=>openDia(null);bar.appendChild(ab);
+  if(rDias.length){
+    const sb3=document.createElement('button');sb3.className='bs';sb3.type='button';
+    sb3.style.cssText='flex:1;min-width:0;padding:10px;color:var(--amber2);border-color:var(--amber2);font-size:13px;font-weight:600';
+    sb3.textContent='📤 Compartilhar';sb3.onclick=openShare;bar.appendChild(sb3);
+  }
+  el.appendChild(bar);
+  if(!rDias.length){const em=document.createElement('div');em.style.cssText='text-align:center;padding:40px 0;color:#444';em.innerHTML='<div style="font-size:36px;margin-bottom:10px">🗺️</div><div>Nenhum dia</div>';el.appendChild(em);return;}
   rDias.forEach(dia=>{
     const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
     const ab2=dopen[dia.id]===true;
@@ -2809,6 +2896,77 @@ async function moverP(diaId,parId,dir){
     rPars[iA].ordem=oA;rPars[iB].ordem=oB;drawRot();toast('Erro ao salvar ⚠️');
   }else toast('Ordem atualizada ✓');
 }
+
+// ── COMPARTILHAR ROTEIRO ──────────────────────────────
+// Gera um texto formatado (negrito estilo WhatsApp) com os dias e paradas da viagem atual.
+function gerarTextoRoteiro({obs=true,links=true}={}){
+  const v=viagens.find(x=>x.id===vid);
+  const L=[];
+  L.push('✈️ *'+(v?v.nome:'Roteiro')+'*');
+  const datas=rDias.map(d=>d.data).filter(Boolean).sort();
+  const fmt=(d,o)=>new Date(d+'T12:00').toLocaleDateString('pt-BR',o);
+  let sub=rDias.length+' dia'+(rDias.length!==1?'s':'');
+  if(datas.length)sub=fmt(datas[0],{day:'2-digit',month:'short'}).replace('.','')+(datas.length>1&&datas[datas.length-1]!==datas[0]?' – '+fmt(datas[datas.length-1],{day:'2-digit',month:'short'}).replace('.',''):'')+' · '+sub;
+  L.push('🗓️ '+sub);
+  const dias=[...rDias].sort((a,b)=>(a.numero||0)-(b.numero||0));
+  dias.forEach(dia=>{
+    L.push('');
+    const dt=dia.data?' — '+fmt(dia.data,{weekday:'short',day:'2-digit',month:'short'}).replace(/\./g,''):'';
+    L.push('*Dia '+dia.numero+' · '+dia.titulo+'*'+dt);
+    if(dia.descricao)L.push('_'+dia.descricao.trim()+'_');
+    const pars=rPars.filter(p=>p.dia_id===dia.id).sort((a,b)=>a.ordem-b.ordem);
+    if(!pars.length)L.push('(sem paradas)');
+    pars.forEach((p,i)=>{
+      const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
+      L.push((i+1)+'. '+(p.horario?p.horario+' · ':'')+t.e+' '+p.nome);
+      if(p.endereco)L.push('    📍 '+p.endereco);
+      if(obs&&p.observacao)L.push('    💬 '+p.observacao.trim().replace(/\s*\n\s*/g,' '));
+      if(links){
+        const hasLink=p.gmaps_link&&/^https?:/.test(p.gmaps_link);
+        const url=hasLink?p.gmaps_link:(p.endereco?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.endereco):'');
+        if(url)L.push('    🔗 '+url);
+      }
+    });
+  });
+  L.push('');L.push('Feito com Wayfin · wayfin.com.br');
+  return L.join('\n');
+}
+function refreshShareText(){
+  $('osh-txt').value=gerarTextoRoteiro({obs:$('osh-obs').checked,links:$('osh-lnk').checked});
+}
+function openShare(){
+  if(!rDias.length){toast('Adicione ao menos um dia ao roteiro');return;}
+  refreshShareText();
+  $('osh-share').hidden=!navigator.share;
+  $('osh-hint').textContent='Você pode editar o texto antes de enviar.';
+  $('osh').classList.add('on');
+}
+function closeShare(){$('osh').classList.remove('on');}
+async function copyShare(){
+  const txt=$('osh-txt').value;
+  try{await navigator.clipboard.writeText(txt);}
+  catch(e){const ta=$('osh-txt');ta.focus();ta.select();try{document.execCommand('copy');}catch(_){toast('Não foi possível copiar ⚠️');return false;}}
+  return true;
+}
+$('osh-obs').onchange=refreshShareText;
+$('osh-lnk').onchange=refreshShareText;
+$('osh-close').onclick=closeShare;
+$('osh').onclick=e=>{if(e.target===$('osh'))closeShare();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('osh').classList.contains('on'))closeShare();});
+$('osh-copy').onclick=async()=>{if(await copyShare()){$('osh-hint').textContent='✓ Roteiro copiado — é só colar onde quiser.';toast('Roteiro copiado ✓');}};
+$('osh-share').onclick=async()=>{
+  const v=viagens.find(x=>x.id===vid);
+  try{await navigator.share({title:'Roteiro — '+(v?v.nome:'Wayfin'),text:$('osh-txt').value});}
+  catch(e){if(e&&e.name!=='AbortError')toast('Não foi possível compartilhar ⚠️');}
+};
+$('osh-wa').onclick=async()=>{
+  const txt=$('osh-txt').value,enc=encodeURIComponent(txt);
+  if(enc.length>6000){ // URL grande demais para o wa.me: copia e abre o WhatsApp vazio
+    await copyShare();toast('Roteiro longo: copiado — cole no WhatsApp');
+    window.open('https://wa.me/','_blank','noopener');return;
+  }
+  window.open('https://wa.me/?text='+enc,'_blank','noopener');
+};
 
 async function togReal(id,atual){
   const i=rPars.findIndex(p=>p.id===id);if(i===-1)return;
@@ -3817,6 +3975,46 @@ function toast(msg,dur=2000){
 })();
 
 // ── PWA ───────────────────────────────────────────────
+// ── INSTALAR APP (guia PWA) ───────────────────────────
+let deferredInstall=null;
+const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){return false;}};
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function syncInstallUI(){
+  const hide=isStandalone();
+  document.querySelectorAll('[data-install]').forEach(el=>{el.hidden=hide;});
+  const n=$('oin-native');if(n)n.hidden=!deferredInstall;
+}
+function installTab(which){
+  const a=which==='android';
+  $('oin-tab-android').classList.toggle('on',a);$('oin-tab-android').setAttribute('aria-selected',String(a));
+  $('oin-tab-ios').classList.toggle('on',!a);$('oin-tab-ios').setAttribute('aria-selected',String(!a));
+  $('oin-panel-android').classList.toggle('on',a);$('oin-panel-ios').classList.toggle('on',!a);
+}
+function openInstall(){
+  try{setAcctMenu(false);}catch(e){}
+  const ios=isIOS();installTab(ios?'ios':'android');
+  $('oin-ios-warn').classList.toggle('on',ios&&/crios|fxios|edgios|opios/i.test(navigator.userAgent));
+  syncInstallUI();$('oin').classList.add('on');
+  setTimeout(()=>$('oin-close').focus(),50);
+}
+function closeInstall(){$('oin').classList.remove('on');}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;syncInstallUI();});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;closeInstall();syncInstallUI();toast('Wayfin instalado ✓');});
+$('oin-native').onclick=async()=>{
+  if(!deferredInstall)return;
+  deferredInstall.prompt();
+  try{await deferredInstall.userChoice;}catch(e){}
+  deferredInstall=null;syncInstallUI();
+};
+$('oin-tab-android').onclick=()=>installTab('android');
+$('oin-tab-ios').onclick=()=>installTab('ios');
+$('oin-close').onclick=closeInstall;
+$('oin').onclick=e=>{if(e.target===$('oin'))closeInstall();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('oin').classList.contains('on'))closeInstall();});
+$('install-menu-btn').onclick=openInstall;
+['ld-install-nav','ld-install-link'].forEach(id=>{$(id).onclick=e=>{e.preventDefault();openInstall();};});
+syncInstallUI();
+
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 }
