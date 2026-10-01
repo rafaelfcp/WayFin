@@ -117,7 +117,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 
 /* ── PAGES ── */
 #pages{flex:1;overflow:hidden;position:relative;min-height:0}
-.pg{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 16px calc(var(--sb)+84px);display:none}
+.pg{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 16px calc(var(--sb) + 84px);display:none}
 .pg.on{display:block}
 
 /* ── SECTION LABEL ── */
@@ -323,7 +323,7 @@ body.light .m-dia-sel{color-scheme:light}
 #m-map[data-map-style="sat"] .leaflet-control-attribution a{color:#2b6cb0!important}
 
 /* checklist de mala */
-#pg-mala{padding:14px 16px calc(var(--sb)+90px)}
+#pg-mala{padding:14px 16px calc(var(--sb) + 90px)}
 .mala-hdr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
 .mala-prog-txt{font-size:12px;color:var(--mut2);font-weight:600}
 .mala-actions{display:flex;flex-wrap:wrap;gap:8px}
@@ -407,7 +407,7 @@ body.light .m-dia-sel{color-scheme:light}
 /* ── FAB ── */
 .fab{
   position:fixed;bottom:0;left:0;right:0;
-  margin:0 auto calc(var(--sb)+18px);
+  margin:0 auto calc(var(--sb) + 18px);
   width:fit-content;
   background:var(--grd);
   border:none;border-radius:99px;
@@ -428,7 +428,7 @@ body.light .m-dia-sel{color-scheme:light}
 .ov.on{display:flex}
 .sh{
   background:var(--sur);border-radius:24px 24px 0 0;
-  padding:18px 16px calc(var(--sb)+22px);
+  padding:18px 16px calc(var(--sb) + 22px);
   width:100%;max-height:92dvh;overflow-y:auto;
   animation:sup .28s cubic-bezier(.4,0,.2,1);
   border-top:1px solid var(--bor2);
@@ -489,7 +489,7 @@ body.light .m-dia-sel{color-scheme:light}
 .tg-sw.on::after{left:21px}
 .cov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:600;align-items:flex-end;justify-content:center}
 .cov.on{display:flex}
-.csh{background:var(--sur);border-radius:24px 24px 0 0;padding:18px 16px calc(var(--sb)+18px);width:100%;max-height:80dvh;display:flex;flex-direction:column;animation:sup .28s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--bor2)}
+.csh{background:var(--sur);border-radius:24px 24px 0 0;padding:18px 16px calc(var(--sb) + 18px);width:100%;max-height:80dvh;display:flex;flex-direction:column;animation:sup .28s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--bor2)}
 .csh-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .csh-t{font-size:12px;color:var(--mut2);margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--bor);font-weight:500}
 .csh-l{overflow-y:auto;flex:1}
@@ -499,7 +499,7 @@ body.light .m-dia-sel{color-scheme:light}
 .ebox{background:var(--sur);border-radius:20px;padding:24px;width:100%;max-width:360px;animation:zin .22s ease;border:1px solid var(--bor2)}
 .ebox h3{font-size:16px;font-weight:800;margin-bottom:18px;letter-spacing:-0.3px}
 .toast{
-  position:fixed;bottom:calc(var(--sb)+94px);left:50%;
+  position:fixed;bottom:calc(var(--sb) + 94px);left:50%;
   transform:translateX(-50%) translateY(16px);
   background:var(--sur2);border:1px solid var(--bor2);
   border-radius:99px;padding:10px 20px;font-size:12px;font-weight:600;
@@ -672,7 +672,7 @@ button{min-height:44px}
 .bi{min-width:44px;min-height:44px}.chip{min-height:38px;display:inline-flex;align-items:center}.pill{min-height:44px;font-size:13px}
 .tab:focus-visible,.chip:focus-visible,.pill:focus-visible,.bi:focus-visible,.bs:focus-visible,.bc:focus-visible,.bok:focus-visible,.fab:focus-visible,.m-btn:focus-visible,.m-sw-btn:focus-visible,.m-style-btn:focus-visible,.lf-btn:focus-visible,.lanc-mode-btn:focus-visible{outline:3px solid var(--amber2);outline-offset:3px}
 .budget-hero{background:var(--sur);border:1px solid var(--bor2);border-radius:var(--r);padding:16px;margin:0 0 18px;position:relative;overflow:hidden}.budget-hero:before{content:'';position:absolute;inset:0;background:var(--grd-subtle);pointer-events:none}.budget-hero>*{position:relative}.budget-hero h2{font-size:16px;margin-bottom:4px}.budget-hero p{font-size:13px;color:var(--mut2);line-height:1.5}.budget-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.budget-kpi{background:color-mix(in srgb,var(--bg) 78%,transparent);border-radius:10px;padding:10px}.budget-kpi span{display:block;font-size:12px;color:var(--mut2);margin-bottom:4px}.budget-kpi strong{font-size:17px}.budget-status{margin-top:12px;font-size:13px;font-weight:700;color:var(--teal)}
-@media (max-width:899px){#tabs{position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(var(--sb) + 8px);gap:5px;border-top:1px solid var(--bor);box-shadow:0 -8px 24px rgba(0,0,0,.18)}.tab{font-size:11px;border-radius:12px;padding:6px 3px;line-height:1.15}#pages{margin-bottom:68px}.pg{padding-bottom:22px}.fab{margin-bottom:calc(var(--sb) + 80px)}}
+@media (max-width:899px){#tabs{position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(var(--sb) + 8px);gap:5px;border-top:1px solid var(--bor);box-shadow:0 -8px 24px rgba(0,0,0,.18)}.tab{font-size:11px;border-radius:12px;padding:6px 3px;line-height:1.15}#pages{margin-bottom:calc(var(--sb) + 68px)}.pg{padding-bottom:22px}.fab{margin-bottom:calc(var(--sb) + 80px)}}
 @media (min-width:900px){#shell{display:grid;grid-template-columns:248px minmax(0,1fr);grid-template-rows:auto 1fr;padding:0}#topbar{grid-column:1;grid-row:1;padding:28px 18px 16px;border-right:1px solid var(--bor);min-height:210px}.tb-row{display:block}.bud-box{text-align:left;margin-top:22px}.bud-box button{margin-left:0!important}.chips{margin-top:8px}.prog{margin-top:20px}#tabs{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:stretch;padding:12px 14px 28px;border-right:1px solid var(--bor);gap:8px}.tab{flex:0;display:flex;align-items:center;justify-content:flex-start;padding:11px 14px;border-radius:10px;text-align:left}#pages{grid-column:2;grid-row:1 / span 2;background:var(--bg)}.pg{padding:32px clamp(28px,5vw,72px) 48px;max-width:1440px;margin:0 auto}.cat-grid{grid-template-columns:repeat(6,minmax(120px,1fr))}.sg{grid-template-columns:repeat(3,1fr)}.budget-kpis{grid-template-columns:repeat(3,1fr)}.budget-hero{padding:22px}.budget-hero h2{font-size:20px}.donut-w{max-width:720px}.sh{max-width:640px;border-radius:24px;margin-bottom:5vh;padding:24px}.ov{align-items:center}.hdl{display:none}#mapa-pg{padding-left:248px}.m-top,.m-dias,.m-switch,.m-style,#m-list{max-width:1200px;margin-left:auto;margin-right:auto}}
 .trip-nm{background:none;border:none;color:var(--txt);padding:0;min-height:44px;text-align:left}
 /* ── TOPBAR COMPACTO + POPOVER DE CONTA ── */
@@ -869,6 +869,19 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 .in-warn.on{display:block}
 .in-note{margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--bor);font-size:12.5px;line-height:1.55;color:var(--mut2)}
 .in-note b{color:var(--txt)}
+
+/* ── Botão "Adicionar Gasto": centralizado, fora da lista ── */
+#pg-lanc{padding-bottom:96px}   /* o último lançamento rola para cima do botão flutuante */
+@media (max-width:899px){
+  .fab{margin-bottom:calc(var(--sb) + 80px);padding:12px 26px;font-size:13.5px}
+}
+@media (min-width:900px){
+  .fab{left:auto;right:clamp(24px,4vw,56px);margin:0 0 28px;width:auto}
+}
+/* ── Convite: avisar a pessoa ── */
+.mem-tell{flex-shrink:0;min-height:36px;padding:0 12px;border-radius:99px;border:1px solid var(--amber);background:none;color:var(--amber);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.mem-tell:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.mem-hint{font-size:11.5px;line-height:1.5;color:var(--mut2);margin:-4px 0 12px}
 </style>
 </head>
 <body class="auth-required">
@@ -1446,6 +1459,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       <select class="fi" id="mempapel"><option value="editor" selected>Editor</option><option value="leitor">Leitor</option></select>
     </div>
     <button class="bs" id="memaddbtn" style="width:100%;color:var(--teal);border-color:var(--teal);font-weight:600;margin-bottom:12px">+ Convidar</button>
+    <div class="mem-hint">O Wayfin não envia e-mail. Depois de convidar, use <b>📤 Avisar</b> para mandar o convite pelo WhatsApp. O acesso é liberado automaticamente quando a pessoa entrar com este e-mail.</div>
   </div>
   <div id="mem-readonly" style="display:none;font-size:12px;color:var(--mut2);margin-top:10px">Somente o dono da viagem pode convidar ou remover pessoas.</div>
   <div class="br"><button class="bc" id="memcnc" style="width:100%">Fechar</button></div>
@@ -1903,6 +1917,19 @@ async function loadMembros(){
   const{data,error}=await sb.from('viagem_membros').select('*').eq('viagem_id',vid).order('criado_em');
   membros=error?[]:(data||[]);
 }
+// O app não envia e-mail: quem convida avisa a pessoa (WhatsApp / compartilhar / copiar).
+function textoConvite(m){
+  const v=viagens.find(x=>x.id===vid);
+  return 'Oi! Te convidei para a viagem "'+(v?v.nome:'')+'" no Wayfin, para ver e organizar roteiro e gastos juntos.\n\n1. Acesse https://wayfin.com.br\n2. Entre com este e-mail: '+m.email+' (se for Gmail, use "Continuar com o Google")\n\nAssim que você entrar, a viagem aparece pra você.';
+}
+async function avisarConvite(m){
+  const txt=textoConvite(m);
+  if(navigator.share){
+    try{await navigator.share({title:'Convite Wayfin',text:txt});return;}catch(e){if(e&&e.name==='AbortError')return;}
+  }
+  try{await navigator.clipboard.writeText(txt);toast('Convite copiado — cole no WhatsApp ou e-mail ✓');}
+  catch(e){window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank','noopener');}
+}
 function drawMembros(){
   const v=viagens.find(x=>x.id===vid);if(!v)return;
   const souDono=v.owner_id===currentUser.id;
@@ -1917,6 +1944,11 @@ function drawMembros(){
       const meta=document.createElement('div');meta.className='mem-meta'+(m.status==='pendente'?' pendente':'');
       meta.textContent=(m.papel==='editor'?'Editor':'Leitor')+' · '+(m.status==='aceito'?'Acesso ativo':'Aguardando cadastro');
       info.appendChild(meta);row.appendChild(info);
+      if(souDono&&m.status==='pendente'){
+        const tell=document.createElement('button');tell.type='button';tell.className='mem-tell';tell.textContent='📤 Avisar';
+        tell.setAttribute('aria-label','Avisar '+m.email+' sobre o convite');
+        tell.onclick=()=>avisarConvite(m);row.appendChild(tell);
+      }
       if(souDono){
         const del=document.createElement('button');del.className='bi';del.textContent='🗑️';del.style.fontSize='14px';
         del.onclick=()=>removerMembro(m);row.appendChild(del);
@@ -1952,7 +1984,7 @@ $('memaddbtn').onclick=async()=>{
   $('memaddbtn').disabled=false;
   if(error){toast(friendlyMemberError(error.message));return;}
   $('meminput').value='';
-  toast(data.status==='aceito'?'Convite aceito — acesso liberado ✓':'Convite enviado — ativa quando a pessoa criar a conta ✓');
+  toast(data.status==='aceito'?'Acesso liberado ✓':'Convite registrado — toque em 📤 Avisar para mandar a ela ✓');
   await loadMembros();drawMembros();
 };
 
