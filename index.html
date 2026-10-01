@@ -381,6 +381,12 @@ body.light .m-dia-sel{color-scheme:light}
 .mr-n.start,.mr-n.end{border-color:rgba(255,255,255,.85)}
 .mr-ln{width:2px;flex:1;min-height:16px;background:linear-gradient(180deg,var(--bor2),transparent);margin-top:3px}
 .mr-info{flex:1;min-width:0}
+.mr-ck{position:relative;flex-shrink:0;align-self:flex-start;width:44px;height:44px;min-width:44px;min-height:44px;margin:-8px -10px 0 2px;padding:0;border:0;background:none;color:#fff;font:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.mr-ck::before{content:'';position:absolute;top:50%;left:50%;width:28px;height:28px;margin:-14px 0 0 -14px;box-sizing:border-box;border-radius:50%;border:2px solid var(--bor2);transition:all .15s}
+.mr-ck:hover::before{border-color:var(--teal)}
+.mr-ck.done::before{background:var(--grd);border-color:transparent;box-shadow:0 2px 8px rgba(78,205,196,.4)}
+.mr-ck span{position:relative;font-size:14px;font-weight:700;line-height:1}
+.mr-ck:focus-visible{outline:2px solid var(--teal);outline-offset:-4px;border-radius:50%}
 .mr-nm{font-size:13px;font-weight:700;margin-bottom:2px;letter-spacing:-0.1px}
 .mr-mt{font-size:11px;color:var(--mut2);font-weight:500}
 .mr-obs{
@@ -3554,7 +3560,29 @@ function renderParadaRow(container,p,i,total,corOverride){
   const url=hasLink?p.gmaps_link:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((p.endereco||p.nome)+', Portugal')}`;
   const lk=document.createElement('a');lk.className='btn-gm';lk.href=url;lk.target='_blank';lk.rel='noopener';
   lk.innerHTML=hasLink?'📍 Abrir no Maps':'🔍 Buscar no Maps';info.appendChild(lk);
-  item.appendChild(info);container.appendChild(item);
+  item.appendChild(info);
+  // marcar / desmarcar como realizada (mesma coluna roteiro_paradas.realizado da tela Plano)
+  const ck=document.createElement('button');ck.type='button';ck.className='mr-ck'+(p.realizado?' done':'');
+  ck.innerHTML=p.realizado?'<span>✓</span>':'';ck.setAttribute('aria-pressed',String(!!p.realizado));
+  const ckLbl=(p.realizado?'Desmarcar como feito: ':'Marcar como feito: ')+p.nome;ck.setAttribute('aria-label',ckLbl);ck.title=ckLbl;
+  ck.onclick=()=>toggleParadaMapa(p.id);
+  item.appendChild(ck);container.appendChild(item);
+}
+
+// alterna "realizado" direto da lista do Mapa: atualiza na hora, grava no banco e reverte se falhar
+async function toggleParadaMapa(id){
+  const i=rPars.findIndex(p=>p.id===id);if(i===-1)return;
+  if(/^t\d+$/.test(String(id))){toast('Aguarde o salvamento da parada ⏳');return;}
+  const novo=!rPars[i].realizado;
+  rPars[i].realizado=novo;refreshMapaLista();
+  const{error}=await sb.from('roteiro_paradas').update({realizado:novo}).eq('id',id);
+  if(error){rPars[i].realizado=!novo;refreshMapaLista();toast('Erro ao atualizar parada ⚠️');}
+}
+// redesenha lista + mapa do dia (ou de todos) mantendo a posição de rolagem; mantém a tela Plano em sincronia
+function refreshMapaLista(){
+  const el=$('m-list'),sc=el.scrollTop,sel=mSelDia;
+  if(sel){if(sel==='all')drawTodosDias();else drawMDia(sel);el.scrollTop=sc;}
+  try{drawRot();}catch(e){}
 }
 
 // ── VISÃO "TODOS OS DIAS" ──────────────────────────────
