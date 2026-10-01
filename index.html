@@ -881,6 +881,10 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 @media (min-width:900px){
   .fab{left:auto;right:clamp(24px,4vw,56px);margin:0 0 28px;width:auto}
 }
+/* ── Suporte ── */
+.auth-help{margin:14px 0 0;text-align:center;font-size:12.5px;color:var(--mut2)}
+.auth-help a{color:var(--teal,var(--txt));font-weight:600;text-decoration:none}
+.auth-help a:hover{text-decoration:underline}
 /* ── Convite: avisar a pessoa ── */
 .mem-tell{flex-shrink:0;min-height:36px;padding:0 12px;border-radius:99px;border:1px solid var(--amber);background:none;color:var(--amber);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
 .mem-tell:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
@@ -1083,6 +1087,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <button class="bok" id="auth-login" type="submit" style="width:100%">Entrar</button>
       </form>
       <button class="auth-link" id="auth-show-signup" type="button">Ainda não tenho conta — criar agora</button>
+      <p class="auth-help">Precisa de ajuda? <a href="mailto:suporte@wayfin.com.br">suporte@wayfin.com.br</a></p>
     </section>
     <section class="auth-view" id="auth-signup-view" hidden aria-labelledby="signup-title">
       <svg class="wf-logo" viewBox="0 0 592 281" role="img" aria-label="Wayfin"><use href="#wf-lockup"/></svg>
@@ -1105,6 +1110,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <button class="bok" id="auth-signup" type="submit" style="width:100%" disabled>Criar conta</button>
       </form>
       <button class="auth-link" id="auth-back-login" type="button">← Já tenho uma conta</button>
+      <p class="auth-help">Dúvidas? <a href="mailto:suporte@wayfin.com.br">suporte@wayfin.com.br</a></p>
     </section>
   </div>
 </main>
@@ -1211,7 +1217,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
           <button class="tb-ic" id="acct-btn" type="button" aria-label="Minha conta" aria-haspopup="true" aria-expanded="false" aria-controls="user-menu" title="Minha conta">👤</button>
         </div>
         <!-- conta: popover fechado por padrão (antes ficava sempre aberto dentro do topbar e ocupava ~55% da tela no celular) -->
-        <div class="user-menu" id="user-menu" role="dialog" aria-label="Conta" hidden><div class="user-email" id="user-email"></div><div class="plan-badge" id="plan-badge"></div><button class="logout-btn" id="install-menu-btn" data-install type="button" style="margin-bottom:6px">📲 Instalar app</button><button class="logout-btn" id="logout-btn" type="button" aria-label="Sair da conta">↪ Sair da conta</button></div>
+        <div class="user-menu" id="user-menu" role="dialog" aria-label="Conta" hidden><div class="user-email" id="user-email"></div><div class="plan-badge" id="plan-badge"></div><button class="logout-btn" id="install-menu-btn" data-install type="button" style="margin-bottom:6px">📲 Instalar app</button><a class="logout-btn menu-help" href="mailto:suporte@wayfin.com.br?subject=Wayfin%20-%20Suporte" style="margin-bottom:6px;display:flex;align-items:center;justify-content:center;text-decoration:none">💬 Falar com o suporte</a><button class="logout-btn" id="logout-btn" type="button" aria-label="Sair da conta">↪ Sair da conta</button></div>
       </div>
       <div class="tb-trip">
         <button class="trip-nm" id="tnm" type="button" aria-label="Editar viagem"><span id="tnmt">—</span><span aria-hidden="true" style="font-size:13px;opacity:.5">✏️</span></button>
