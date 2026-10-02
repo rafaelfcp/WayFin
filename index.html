@@ -1233,7 +1233,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       <p>Quando você compartilha uma viagem, a pessoa convidada passa a ver os gastos, roteiro, reservas e documentos daquela viagem específica. Ela não tem acesso às suas outras viagens nem aos seus dados de cadastro (e-mail, senha).</p>
 
       <h2>4. Provedores que usamos</h2>
-      <p>O Wayfin usa provedores de infraestrutura para funcionar: banco de dados e autenticação (Supabase), hospedagem (Cloudflare), mapas (OpenStreetMap, Esri) e, quando você usa o roteiro com IA, geração de sugestões (Anthropic). Para o roteiro com IA enviamos apenas as respostas do questionário (destino, datas, preferências e valor previsto), sem seu e-mail ou nome. Esses provedores processam dados em nosso nome, sob suas próprias políticas de segurança, apenas para viabilizar o funcionamento do app.</p>
+      <p>O Wayfin usa provedores de infraestrutura para funcionar: banco de dados e autenticação (Supabase), hospedagem (Cloudflare), mapas (OpenStreetMap, Esri) e, quando você usa o roteiro com IA, geração de sugestões (Google Gemini). Para o roteiro com IA enviamos apenas as respostas do questionário (destino, datas, preferências e valor previsto), sem seu e-mail, nome ou dados de gastos; conforme os termos do Google, esse conteúdo pode ser usado por ele para melhorar seus serviços. Esses provedores processam dados em nosso nome, sob suas próprias políticas de segurança, apenas para viabilizar o funcionamento do app.</p>
 
       <h2>5. Seus direitos (LGPD)</h2>
       <p>Você pode, a qualquer momento, solicitar acesso, correção, exportação ou exclusão dos seus dados, entrando em contato pelo e-mail <a href="mailto:suporte@wayfin.com.br">suporte@wayfin.com.br</a>. Atendemos esses pedidos em até 30 dias.</p>
@@ -1528,7 +1528,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   <div class="mtit" id="oia-t">✨ Roteiro com IA</div>
 
   <section id="ia-v-form">
-    <p class="ia-lede">Responda o básico e a IA sugere lugares por cidade. Depois você escolhe, edita e só então montamos os dias.</p>
+    <p class="ia-lede">Responda o básico e a IA sugere lugares por cidade. Depois você escolhe, edita e só então montamos os dias. As respostas são enviadas ao Google Gemini — não inclua dados pessoais.</p>
     <label class="fl" for="ia-destino">DESTINO DA VIAGEM</label>
     <input class="fi" id="ia-destino" type="text" maxlength="80" autocomplete="off" placeholder="Ex: Lisboa, Portugal"/>
     <div class="g2">
