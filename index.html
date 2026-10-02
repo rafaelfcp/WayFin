@@ -15,6 +15,7 @@
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=3"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -111,6 +112,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
   transition:all .2s;
 }
 .tab:active{transform:scale(.96)}
+.tab-lbl-s{display:none}
 .tab.on{
   background:var(--grd);border-color:transparent;
   color:#fff;font-weight:700;
@@ -662,7 +664,7 @@ button{min-height:44px}
 .bi{min-width:44px;min-height:44px}.chip{min-height:38px;display:inline-flex;align-items:center}.pill{min-height:44px;font-size:13px}
 .tab:focus-visible,.chip:focus-visible,.pill:focus-visible,.bi:focus-visible,.bs:focus-visible,.bc:focus-visible,.bok:focus-visible,.fab:focus-visible,.m-btn:focus-visible,.m-sw-btn:focus-visible,.m-style-btn:focus-visible,.lf-btn:focus-visible,.lanc-mode-btn:focus-visible{outline:3px solid var(--amber2);outline-offset:3px}
 .budget-hero{background:var(--sur);border:1px solid var(--bor2);border-radius:var(--r);padding:16px;margin:0 0 18px;position:relative;overflow:hidden}.budget-hero:before{content:'';position:absolute;inset:0;background:var(--grd-subtle);pointer-events:none}.budget-hero>*{position:relative}.budget-hero h2{font-size:16px;margin-bottom:4px}.budget-hero p{font-size:13px;color:var(--mut2);line-height:1.5}.budget-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.budget-kpi{background:color-mix(in srgb,var(--bg) 78%,transparent);border-radius:10px;padding:10px}.budget-kpi span{display:block;font-size:12px;color:var(--mut2);margin-bottom:4px}.budget-kpi strong{font-size:17px}.budget-status{margin-top:12px;font-size:13px;font-weight:700;color:var(--teal)}
-@media (max-width:899px){#tabs{position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(var(--sb) + 8px);gap:5px;border-top:1px solid var(--bor);box-shadow:0 -8px 24px rgba(0,0,0,.18)}.tab{font-size:11px;border-radius:12px;padding:6px 3px;line-height:1.15}#pages{margin-bottom:68px}.pg{padding-bottom:22px}.fab{margin-bottom:calc(var(--sb) + 80px)}
+@media (max-width:899px){#tabs{position:fixed;left:0;right:0;bottom:0;padding:6px 8px calc(var(--sb) + 6px);gap:4px;border-top:1px solid var(--bor);box-shadow:0 -8px 24px rgba(0,0,0,.18)}.tab{font-size:11px;border-radius:12px;padding:5px 3px;line-height:1.1;white-space:nowrap}.tab-lbl-l{display:none}.tab-lbl-s{display:inline}#pages{margin-bottom:54px}.pg{padding-bottom:22px}.fab{margin-bottom:calc(var(--sb) + 66px)}
   .acc-toggle{display:flex!important;margin:0!important}
   .user-menu{display:none;width:100%}
   .user-menu.open{display:block;margin-bottom:4px}
@@ -697,6 +699,31 @@ body.show-legal #legal-screen{display:block}
 .legal-doc ul{margin:0 0 10px 20px;padding:0}
 .legal-doc li{font-size:14px;line-height:1.65;color:var(--mut2);margin-bottom:4px}
 .legal-doc a{color:var(--teal)}
+#install-screen{display:none;position:fixed;inset:0;z-index:3000;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
+body.show-install #install-screen{display:block}
+.inst-head{margin-bottom:22px}
+.inst-head h1{font-size:22px;margin:0 0 8px}
+.inst-lede{font-size:14px;color:var(--mut2);line-height:1.6;margin:0;max-width:44ch}
+.inst-qr-card{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:18px;display:flex;gap:16px;align-items:center;margin-bottom:22px}
+.inst-qr-box{flex-shrink:0;width:88px;height:88px;background:#fff;border-radius:10px;padding:6px;display:flex;align-items:center;justify-content:center}
+.inst-qr-box canvas,.inst-qr-box img{width:100%;height:100%}
+.inst-qr-info b{display:block;font-size:13px;margin-bottom:4px}
+.inst-qr-info .inst-url{font-family:ui-monospace,monospace;font-size:12px;color:var(--teal);word-break:break-all;display:inline-block;margin-bottom:8px}
+.inst-copy-btn{font:inherit;font-size:12px;font-weight:600;background:var(--sur2);border:1px solid var(--bor);color:var(--txt);border-radius:8px;padding:6px 10px;cursor:pointer}
+.inst-copy-btn:active{transform:scale(.97)}
+.inst-tabs{display:flex;gap:6px;background:var(--sur2);border:1px solid var(--bor);border-radius:12px;padding:4px;margin-bottom:20px;max-width:420px}
+.inst-tab{flex:1;text-align:center;font:inherit;font-weight:600;font-size:13px;padding:9px 6px;border-radius:9px;border:none;background:transparent;color:var(--mut2);cursor:pointer}
+.inst-tab.on{background:var(--sur);color:var(--txt);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.inst-steps{display:flex;flex-direction:column;gap:0;max-width:460px}
+.inst-step{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--bor)}
+.inst-step:last-child{border-bottom:none}
+.inst-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--sur2);border:1px solid var(--bor);display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:var(--teal)}
+.inst-step-body h3{margin:1px 0 5px;font-size:14px;font-weight:700}
+.inst-step-body p{margin:0;font-size:13px;line-height:1.55;color:var(--mut2)}
+.inst-panel{display:none}
+.inst-panel.on{display:block}
+.inst-note{margin-top:24px;max-width:460px;background:var(--sur);border:1px solid var(--bor);border-radius:var(--r-sm);padding:14px 16px;font-size:12.5px;line-height:1.6;color:var(--mut2)}
+.inst-note b{color:var(--txt)}
 
 /* ── LANDING (página pública, antes do login) ───────────── */
 #landing-screen{display:none;position:fixed;inset:0;z-index:2500;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
@@ -864,7 +891,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <div class="ld-card"><span class="ld-ic">📎</span><span class="ld-tag">Documentos e reservas</span><h3>Comprovantes e reservas anexados</h3><p>Guarde o comprovante de cada gasto e os dados de cada reserva junto da viagem — sem procurar e-mail ou print.</p></div>
         <div class="ld-card"><span class="ld-ic">🤝</span><span class="ld-tag">Compartilhamento</span><h3>Viaje em dupla, casal ou grupo</h3><p>Convide quem for com você por e-mail. Cada um vê e lança na mesma viagem, com permissões de editor ou leitor.</p></div>
         <div class="ld-card"><span class="ld-ic">🎒</span><span class="ld-tag">Checklist de mala</span><h3>Monte a mala com seu modelo salvo</h3><p>Crie sua lista de itens uma vez e reaproveite em toda viagem nova — só marcar o que já foi pra dentro da mala.</p></div>
-        <div class="ld-card"><span class="ld-ic">📲</span><span class="ld-tag">App instalável</span><h3>Direto no celular, sem loja de apps</h3><p>Instale o Wayfin como um PWA na tela inicial do celular — mais leve e mais rápido que baixar um app tradicional.</p></div>
+        <div class="ld-card"><span class="ld-ic">📲</span><span class="ld-tag">App instalável</span><h3>Direto no celular, sem loja de apps</h3><p>Instale o Wayfin como um PWA na tela inicial do celular — mais leve e mais rápido que baixar um app tradicional.</p><button class="bs" id="ld-install-link" type="button" style="margin-top:12px;padding:8px 12px;font-size:12px">Ver como instalar →</button></div>
       </div>
     </div>
   </section>
@@ -981,6 +1008,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <a href="#ld-pricing">Preços</a>
         <a href="#" id="ld-terms-link">Termos de Uso</a>
         <a href="#" id="ld-privacy-link">Política de Privacidade</a>
+        <a href="#" id="ld-install-footer-link">Instalar app</a>
         <a href="mailto:suporte@wayfin.com.br">Suporte</a>
       </div>
     </div>
@@ -1121,6 +1149,99 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   </div>
 </main>
 
+<main id="install-screen">
+  <div class="legal-wrap">
+    <button class="legal-back" id="install-back" type="button">← Voltar</button>
+
+    <div class="inst-head">
+      <h1>Instale o Wayfin no seu celular</h1>
+      <p class="inst-lede">Sem loja de apps, sem ocupar espaço extra. Escaneie o QR code ou abra o link, e siga os passos abaixo — leva menos de 30 segundos.</p>
+    </div>
+
+    <div class="inst-qr-card">
+      <div class="inst-qr-box" id="inst-qrbox"></div>
+      <div class="inst-qr-info">
+        <b>Abra no seu celular</b>
+        <span class="inst-url" id="inst-url">wayfin.com.br</span>
+        <div><button class="inst-copy-btn" id="inst-copy-btn" type="button">Copiar link</button></div>
+      </div>
+    </div>
+
+    <div class="inst-tabs" role="tablist">
+      <button class="inst-tab on" id="inst-tab-android" type="button" role="tab" aria-selected="true">Android (Chrome)</button>
+      <button class="inst-tab" id="inst-tab-ios" type="button" role="tab" aria-selected="false">iPhone (Safari)</button>
+    </div>
+
+    <div class="inst-panel on" id="inst-panel-android">
+      <div class="inst-steps">
+        <div class="inst-step">
+          <div class="inst-num">1</div>
+          <div class="inst-step-body">
+            <h3>Abra o link no Chrome</h3>
+            <p>Cole ou digite o endereço na barra do navegador Chrome — precisa ser o Chrome para essa opção aparecer.</p>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">2</div>
+          <div class="inst-step-body">
+            <h3>Toque no menu ⋮</h3>
+            <p>No canto superior direito da tela, toque nos três pontinhos verticais.</p>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">3</div>
+          <div class="inst-step-body">
+            <h3>Toque em "Instalar aplicativo"</h3>
+            <p>Pode aparecer como "Instalar aplicativo" ou "Adicionar à tela inicial", dependendo da versão do Chrome.</p>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">4</div>
+          <div class="inst-step-body">
+            <h3>Confirme em "Instalar"</h3>
+            <p>O Wayfin aparece como um app de verdade na sua tela inicial, com ícone próprio e sem a barra do navegador.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inst-panel" id="inst-panel-ios">
+      <div class="inst-steps">
+        <div class="inst-step">
+          <div class="inst-num">1</div>
+          <div class="inst-step-body">
+            <h3>Abra o link no Safari</h3>
+            <p>No iPhone, esse recurso só funciona pelo Safari — não aparece no Chrome ou em outros navegadores.</p>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">2</div>
+          <div class="inst-step-body">
+            <h3>Toque em Compartilhar</h3>
+            <p>Na barra inferior (ou superior, em alguns modelos), toque no ícone de compartilhar.</p>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">3</div>
+          <div class="inst-step-body">
+            <h3>Role e toque em "Adicionar à Tela de Início"</h3>
+            <p>A opção fica um pouco mais abaixo na lista de ações do Safari.</p>
+          </div>
+        </div>
+        <div class="inst-step">
+          <div class="inst-num">4</div>
+          <div class="inst-step-body">
+            <h3>Toque em "Adicionar"</h3>
+            <p>No canto superior direito. O ícone do Wayfin aparece na tela inicial, abrindo em tela cheia como um app.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inst-note"><b>Isso já é um app de verdade</b> — funciona offline (a tela do app abre mesmo sem internet, embora os dados precisem de conexão pra sincronizar) e não ocupa espaço de loja. Os apps nativos na Google Play e App Store estão a caminho.</div>
+  </div>
+</main>
+
 <div id="shell">
   <div id="topbar">
     <div class="tb-row">
@@ -1149,7 +1270,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   </div>
 
   <div id="tabs">
-    <button class="tab on" type="button" data-t="dash" aria-current="page">📊 <span>Visão geral</span></button>
+    <button class="tab on" type="button" data-t="dash" aria-current="page" aria-label="Visão geral">📊 <span class="tab-lbl-l">Visão geral</span><span class="tab-lbl-s" aria-hidden="true">Visão</span></button>
     <button class="tab" type="button" data-t="lanc">💳 <span>Gastos</span></button>
     <button class="tab" type="button" data-t="rot">🗺️ <span>Plano</span></button>
     <button class="tab" type="button" data-t="mala">🎒 <span>Mala</span></button>
@@ -1698,6 +1819,48 @@ $('signup-terms-link').onclick=e=>{e.preventDefault();openLegal('termos');};
 $('signup-privacy-link').onclick=e=>{e.preventDefault();openLegal('privacidade');};
 $('ld-terms-link').onclick=e=>{e.preventDefault();openLegal('termos');};
 $('ld-privacy-link').onclick=e=>{e.preventDefault();openLegal('privacidade');};
+
+// ── GUIA DE INSTALAÇÃO PWA ──────────────────────────────
+let instQrDone=false;
+function openInstallGuide(){
+  document.body.classList.add('show-install');
+  $('install-screen').scrollTop=0;
+  if(!instQrDone){
+    instQrDone=true;
+    try{
+      new QRCode($('inst-qrbox'),{
+        text:'https://wayfin.com.br', width:160, height:160,
+        colorDark:'#0c0c18', colorLight:'#ffffff',
+        correctLevel:QRCode.CorrectLevel.M
+      });
+    }catch(e){$('inst-qrbox').textContent='—';}
+  }
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent))showInstallTab('ios');
+}
+function closeInstallGuide(){document.body.classList.remove('show-install');}
+function showInstallTab(which){
+  const isAndroid=which==='android';
+  $('inst-tab-android').classList.toggle('on',isAndroid);$('inst-tab-android').setAttribute('aria-selected',String(isAndroid));
+  $('inst-tab-ios').classList.toggle('on',!isAndroid);$('inst-tab-ios').setAttribute('aria-selected',String(!isAndroid));
+  $('inst-panel-android').classList.toggle('on',isAndroid);
+  $('inst-panel-ios').classList.toggle('on',!isAndroid);
+}
+$('install-back').onclick=closeInstallGuide;
+$('ld-install-footer-link').onclick=e=>{e.preventDefault();openInstallGuide();};
+$('ld-install-link').onclick=()=>openInstallGuide();
+$('inst-tab-android').onclick=()=>showInstallTab('android');
+$('inst-tab-ios').onclick=()=>showInstallTab('ios');
+$('inst-copy-btn').onclick=async()=>{
+  const btn=$('inst-copy-btn');
+  try{
+    await navigator.clipboard.writeText('https://wayfin.com.br');
+    btn.textContent='Copiado ✓';
+    setTimeout(()=>btn.textContent='Copiar link',1600);
+  }catch(e){
+    const r=document.createRange();r.selectNodeContents($('inst-url'));
+    const sel=window.getSelection();sel.removeAllRanges();sel.addRange(r);
+  }
+};
 function updateSignupGate(){
   const aceitou=$('signup-terms').checked;
   $('auth-signup').disabled=!aceitou;
