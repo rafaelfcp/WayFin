@@ -1873,7 +1873,12 @@ function drawChips(){
     const c=document.createElement('div');c.className='chip'+(v.id===vid?' on':'');
     c.textContent=v.nome;
     if(v.owner_id!==currentUser.id){const b=document.createElement('span');b.className='chip-shared';b.textContent='👥';b.title='Compartilhada com você';c.appendChild(b);}
-    c.onclick=async()=>{vid=v.id;drawChips();await loadGastos();};
+    c.onclick=async()=>{
+      vid=v.id;drawChips();await loadGastos();
+      const t=document.querySelector('.tab.on')?.dataset.t;
+      if(t==='rot'){await loadRot();drawRot();}
+      else if(t==='mala'){await loadMala();drawMala();}
+    };
     el.appendChild(c);
   });
   const a=document.createElement('div');a.className='chip add';
