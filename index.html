@@ -889,6 +889,52 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 .mem-tell{flex-shrink:0;min-height:36px;padding:0 12px;border-radius:99px;border:1px solid var(--amber);background:none;color:var(--amber);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
 .mem-tell:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 .mem-hint{font-size:11.5px;line-height:1.5;color:var(--mut2);margin:-4px 0 12px}
+/* ── FREE SOMENTE LEITURA ── */
+.free-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:0 0 12px;padding:10px 14px;border-radius:var(--r-sm);border:1px dashed color-mix(in srgb,var(--amber) 55%,transparent);background:color-mix(in srgb,var(--amber) 8%,transparent);color:var(--txt);font:inherit;font-size:12.5px;text-align:left;cursor:pointer}
+.free-banner strong{color:var(--amber);font-size:12px;white-space:nowrap}
+.gm-meter{display:block;width:100%;margin:0 0 14px;padding:10px 14px;border-radius:var(--r-sm);border:1px solid var(--bor);background:var(--sur);color:var(--txt);font:inherit;text-align:left;cursor:pointer}
+.gm-top{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mut2);margin-bottom:7px}
+.gm-top strong{color:var(--teal);font-size:12px}
+.gm-bar{height:5px;border-radius:99px;background:var(--sur2);overflow:hidden}
+.gm-bar div{height:100%;border-radius:99px;background:var(--grd);transition:width .4s}
+.gm-meter.warn .gm-top strong{color:var(--amber)}
+.gm-meter.full{border-color:var(--amber)}
+.gm-meter.full .gm-bar div{background:var(--amber)}
+/* ── ROTEIRO COM IA ── */
+.ia-cta{display:block;width:100%;margin:0 0 12px;padding:14px 16px;border:0;border-radius:var(--r);background:var(--grd-subtle);outline:1px solid var(--bor2);color:var(--txt);font:inherit;text-align:left;cursor:pointer;position:relative;overflow:hidden}
+.ia-cta:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grd)}
+.ia-cta strong{display:block;font-size:14px;margin-bottom:3px}
+.ia-cta span{display:block;font-size:12px;color:var(--mut2);line-height:1.45}
+.ia-cta:focus-visible{outline:3px solid var(--amber2);outline-offset:2px}
+#oia section[hidden]{display:none}
+.ia-lede{font-size:13px;color:var(--mut2);line-height:1.5;margin:-8px 0 14px}
+#ia-int{gap:6px}
+#ia-int .pill{min-height:38px;font-size:12px;padding:6px 11px}
+.ia-cred{font-size:12px;color:var(--mut2);margin:2px 0 6px;min-height:16px}
+.ia-load{display:flex;align-items:center;justify-content:center;gap:10px;padding:56px 0;font-size:13px;color:var(--mut2)}
+.ia-resumo{font-size:13px;line-height:1.55;color:var(--mut2);margin:-6px 0 14px}
+.ia-resumo ul{margin:8px 0 0 18px}
+.ia-resumo li{margin-bottom:3px}
+.ia-city{background:var(--bg);border:1px solid var(--bor);border-radius:var(--r);padding:12px 12px 6px;margin-bottom:12px}
+.ia-city-h{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ia-city-h strong{flex:1;font-size:15px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ia-dias{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--mut2)}
+.ia-dias input{width:52px;margin:0;padding:6px 8px;font-size:13px;text-align:center}
+.ia-lug{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-top:1px solid var(--bor)}
+.ia-lug.off{opacity:.45}
+.ia-lug input[type=checkbox]{width:20px;height:20px;margin-top:3px;accent-color:var(--teal);flex-shrink:0}
+.ia-lug-b{flex:1;min-width:0}
+.ia-lug-nm{width:100%;background:none;border:0;border-bottom:1px dashed transparent;color:var(--txt);font:inherit;font-size:13.5px;font-weight:700;padding:2px 0}
+.ia-lug-nm:focus{outline:none;border-bottom-color:var(--teal)}
+.ia-lug-d{font-size:11.5px;color:var(--mut2);line-height:1.45;margin-top:2px}
+.ia-lug-m{font-size:10.5px;color:var(--mut);margin-top:3px}
+.ia-lug-x{background:none;border:0;color:var(--mut2);font-size:14px;cursor:pointer;min-height:36px;min-width:36px}
+.ia-add{display:flex;gap:6px;padding:8px 0 6px;border-top:1px solid var(--bor)}
+.ia-add input{flex:1;margin:0;padding:9px 11px;font-size:13px}
+.ia-add button{min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--teal);background:none;color:var(--teal);font:inherit;font-weight:700;cursor:pointer}
+.ia-foot{position:sticky;bottom:calc(-22px - var(--sb));background:var(--sur);padding:10px 0 4px;margin-top:4px;border-top:1px solid var(--bor)}
+.ia-cnt{font-size:12px;color:var(--mut2);margin-bottom:6px;min-height:16px}
+.ia-cnt.warn{color:var(--amber)}
 </style>
 </head>
 <body class="auth-required">
@@ -976,10 +1022,9 @@ body.light .wf-logo{--wf-dot:var(--amber)}
           <div class="ld-price-sub">para sempre</div>
           <ul>
             <li>1 viagem por vez</li>
-            <li>Até 3 anexos por viagem</li>
-            <li>Até 2 reservas por viagem</li>
-            <li>Roteiro, mapa e mala sem limite</li>
-            <li>Compartilhamento de viagem incluso</li>
+            <li>Até 15 lançamentos de gastos</li>
+            <li>Orçamento e painel de gastos</li>
+            <li>Ver roteiro, mapa e mala compartilhados com você</li>
           </ul>
           <button class="ld-btn ld-btn-ghost" type="button" data-ld-plan="free">Criar conta grátis</button>
         </div>
@@ -988,11 +1033,12 @@ body.light .wf-logo{--wf-dot:var(--amber)}
           <div class="ld-price">R$69<small>,90/ano</small></div>
           <div class="ld-price-sub">≈ R$ 5,83 por mês</div>
           <ul>
-            <li>Viagens e anexos ilimitados</li>
-            <li>Reservas ilimitadas por viagem</li>
-            <li>Categorias de gasto personalizadas</li>
-            <li>Otimizar rota do dia</li>
-            <li>Mais sugestões ao explorar arredores</li>
+            <li>✨ Roteiro personalizado com IA (5/mês)</li>
+            <li>Roteiro, mapa e checklist de mala</li>
+            <li>Reservas e anexos ilimitados</li>
+            <li>Viagens e lançamentos ilimitados</li>
+            <li>Compartilhar viagem com quem vai junto</li>
+            <li>Otimizar rota e categorias personalizadas</li>
           </ul>
           <button class="ld-btn ld-btn-primary" type="button" data-ld-plan="annual">Assinar Anual</button>
         </div>
@@ -1013,6 +1059,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
           <div class="ld-price-sub">30 dias, sem renovação</div>
           <ul>
             <li>Tudo do Premium por 30 dias</li>
+            <li>✨ 2 roteiros com IA inclusos</li>
             <li>Não renova sozinho</li>
             <li>Perfeito pra uma viagem específica</li>
           </ul>
@@ -1142,13 +1189,14 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       </ul>
 
       <h2>5. Plano gratuito e assinatura</h2>
-      <p>O Wayfin oferece um plano Free permanente, com uso limitado (1 viagem ativa, com limites de anexos e reservas por viagem). Para viagens ilimitadas e recursos adicionais (otimização de rota, categorias personalizadas, anexos e reservas ilimitados, sem anúncios), os planos pagos disponíveis são: Mensal (R$ 9,90/mês), Anual (R$ 69,90/ano, equivalente a ≈ R$ 5,83/mês) e Passe de viagem (R$ 19,90 por 30 dias, sem renovação automática). Valores e condições podem ser atualizados e são sempre exibidos na tela de assinatura no momento da contratação. O cancelamento de qualquer plano pago pode ser feito a qualquer momento, sem perda de acesso ao plano Free.</p>
+      <p>O Wayfin oferece um plano Free permanente, com uso limitado (1 viagem ativa e até 15 lançamentos de gastos por viagem). No plano Free, roteiro, mapa, checklist de mala, reservas e anexos ficam disponíveis apenas para visualização, edição e exclusão do que já existe ou foi compartilhado com você; incluir novos itens nesses recursos, anexar documentos e compartilhar a viagem exigem um plano pago. Para viagens e lançamentos ilimitados e recursos adicionais (roteiro, mapa, mala, reservas, anexos, compartilhamento, roteiro personalizado com IA, otimização de rota, categorias personalizadas, sem anúncios), os planos pagos disponíveis são: Mensal (R$ 9,90/mês), Anual (R$ 69,90/ano, equivalente a ≈ R$ 5,83/mês) e Passe de viagem (R$ 19,90 por 30 dias, sem renovação automática). Valores e condições podem ser atualizados e são sempre exibidos na tela de assinatura no momento da contratação. O cancelamento de qualquer plano pago pode ser feito a qualquer momento, sem perda de acesso ao plano Free.</p>
 
       <h2>6. Limitação de responsabilidade</h2>
       <p>O Wayfin não se responsabiliza por:</p>
       <ul>
         <li>Decisões de viagem (reservas, compras, roteiro) tomadas com base nas informações do aplicativo</li>
         <li>Imprecisões em mapas, distâncias ou locais fornecidos por provedores de terceiros</li>
+        <li>Sugestões do roteiro com IA: são geradas automaticamente e podem conter locais fechados, horários desatualizados ou imprecisões — confirme antes de ir</li>
         <li>Perda de dados por falha do usuário (senha esquecida, exclusão intencional de lançamentos)</li>
         <li>Indisponibilidade temporária do serviço por manutenção ou falhas técnicas</li>
       </ul>
@@ -1185,7 +1233,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       <p>Quando você compartilha uma viagem, a pessoa convidada passa a ver os gastos, roteiro, reservas e documentos daquela viagem específica. Ela não tem acesso às suas outras viagens nem aos seus dados de cadastro (e-mail, senha).</p>
 
       <h2>4. Provedores que usamos</h2>
-      <p>O Wayfin usa provedores de infraestrutura para funcionar: banco de dados e autenticação (Supabase), hospedagem (Cloudflare) e mapas (OpenStreetMap, Esri). Esses provedores processam dados em nosso nome, sob suas próprias políticas de segurança, apenas para viabilizar o funcionamento do app.</p>
+      <p>O Wayfin usa provedores de infraestrutura para funcionar: banco de dados e autenticação (Supabase), hospedagem (Cloudflare), mapas (OpenStreetMap, Esri) e, quando você usa o roteiro com IA, geração de sugestões (Anthropic). Para o roteiro com IA enviamos apenas as respostas do questionário (destino, datas, preferências e valor previsto), sem seu e-mail ou nome. Esses provedores processam dados em nosso nome, sob suas próprias políticas de segurança, apenas para viabilizar o funcionamento do app.</p>
 
       <h2>5. Seus direitos (LGPD)</h2>
       <p>Você pode, a qualquer momento, solicitar acesso, correção, exportação ou exclusão dos seus dados, entrando em contato pelo e-mail <a href="mailto:suporte@wayfin.com.br">suporte@wayfin.com.br</a>. Atendemos esses pedidos em até 30 dias.</p>
@@ -1474,6 +1522,61 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   <div class="br"><button class="bc" id="memcnc" style="width:100%">Fechar</button></div>
 </div></div>
 
+<!-- MODAL ROTEIRO COM IA: questionário → sugestões editáveis → montar dias -->
+<div class="ov" id="oia" role="dialog" aria-modal="true" aria-labelledby="oia-t"><div class="sh">
+  <div class="hdl"></div>
+  <div class="mtit" id="oia-t">✨ Roteiro com IA</div>
+
+  <section id="ia-v-form">
+    <p class="ia-lede">Responda o básico e a IA sugere lugares por cidade. Depois você escolhe, edita e só então montamos os dias.</p>
+    <label class="fl" for="ia-destino">DESTINO DA VIAGEM</label>
+    <input class="fi" id="ia-destino" type="text" maxlength="80" autocomplete="off" placeholder="Ex: Lisboa, Portugal"/>
+    <div class="g2">
+      <div><label class="fl" for="ia-ini">INÍCIO</label><input class="fi" id="ia-ini" type="date" style="color-scheme:dark"/></div>
+      <div><label class="fl" for="ia-fim">FIM</label><input class="fi" id="ia-fim" type="date" style="color-scheme:dark"/></div>
+    </div>
+    <label class="fl" for="ia-cidades">OUTRAS CIDADES (OPCIONAL)</label>
+    <input class="fi" id="ia-cidades" type="text" maxlength="200" autocomplete="off" placeholder="Ex: Sintra, Porto"/>
+    <label class="fl">COMO VAI SE LOCOMOVER?</label>
+    <div class="tpills" id="ia-transp">
+      <button type="button" class="pill" data-v="carro" style="--pc:var(--teal)">🚗 Alugar carro</button>
+      <button type="button" class="pill on" data-v="publico" style="--pc:var(--teal)">🚇 Transporte público</button>
+      <button type="button" class="pill" data-v="ambos" style="--pc:var(--teal)">🔀 Um pouco de cada</button>
+    </div>
+    <div class="g2">
+      <div><label class="fl" for="ia-din">DINHEIRO PREVISTO (R$)</label><input class="fi" id="ia-din" type="number" min="0" step="50" inputmode="decimal" placeholder="0"/></div>
+      <div><label class="fl" for="ia-pax">PESSOAS</label><input class="fi" id="ia-pax" type="number" min="1" max="20" value="2" inputmode="numeric"/></div>
+    </div>
+    <div class="tg-r" id="ia-kids" role="switch" aria-checked="false" tabindex="0"><span style="font-size:13px">👶 Viajando com crianças</span><div class="tg-sw"></div></div>
+    <label class="fl">RITMO</label>
+    <div class="tpills" id="ia-ritmo">
+      <button type="button" class="pill" data-v="tranquilo" style="--pc:var(--amber2)">🌿 Tranquilo</button>
+      <button type="button" class="pill on" data-v="moderado" style="--pc:var(--amber2)">🚶 Moderado</button>
+      <button type="button" class="pill" data-v="intenso" style="--pc:var(--amber2)">⚡ Intenso</button>
+    </div>
+    <label class="fl">INTERESSES</label>
+    <div class="pills" id="ia-int"></div>
+    <label class="fl" for="ia-desejos">LUGARES QUE QUER CONHECER</label>
+    <textarea class="fi" id="ia-desejos" rows="3" maxlength="500" style="resize:none;line-height:1.5;font-size:14px" placeholder="Ex: Torre de Belém, um fado em Alfama, Pastéis de Belém"></textarea>
+    <div class="ia-cred" id="ia-cred" role="status" aria-live="polite"></div>
+    <div class="pw-status" id="ia-msg" role="alert"></div>
+    <div class="br"><button class="bc" id="ia-cnc" type="button">Cancelar</button><button class="bok" id="ia-go" type="button">✨ Gerar sugestões</button></div>
+  </section>
+
+  <section id="ia-v-load" hidden>
+    <div class="ia-load"><span class="m-spin"></span><span id="ia-load-txt">Montando sugestões para a sua viagem…</span></div>
+  </section>
+
+  <section id="ia-v-sel" hidden>
+    <div class="ia-resumo" id="ia-resumo"></div>
+    <div id="ia-cidades-sel"></div>
+    <div class="ia-foot">
+      <div class="ia-cnt" id="ia-cnt" role="status" aria-live="polite"></div>
+      <div class="br"><button class="bc" id="ia-back" type="button">← Ajustar respostas</button><button class="bok" id="ia-build" type="button">Montar roteiro</button></div>
+    </div>
+  </section>
+</div></div>
+
 <div class="toast" id="toast"></div>
 
 <!-- MODAL PLANOS / PAYWALL -->
@@ -1581,10 +1684,14 @@ let mView='map';            // 'map' | 'list' — toggle de visualização
 let mSelDia=null;           // 'all' ou objeto dia atualmente selecionado
 
 // ── WAYFIN · PLANOS, LIMITES E MONETIZAÇÃO ─────────────
-// Gating no cliente é só UX. A trava real está no banco (supabase/001_planos.sql).
+// Gating no cliente é só UX. A trava real está no banco (supabase/002_free_leitura_e_ia.sql).
+// Free = somente leitura nos recursos Premium: pode ver, editar e excluir o que já existe,
+// mas não pode INCLUIR reservas, anexos, roteiro, itens de mala nem convidar pessoas.
 const PLAN_LIMITS={
-  free:{viagens:1,anexos_por_viagem:3,reservas_por_viagem:2,explore_itens:5,categorias_custom:false,otimizar_rota:false},
-  premium:{viagens:Infinity,anexos_por_viagem:Infinity,reservas_por_viagem:Infinity,explore_itens:15,categorias_custom:true,otimizar_rota:true}
+  free:{viagens:1,gastos_por_viagem:15,explore_itens:5,categorias_custom:false,otimizar_rota:false,
+        reservas:false,anexos:false,roteiro:false,mala:false,compartilhar:false,roteiro_ia:false},
+  premium:{viagens:Infinity,gastos_por_viagem:Infinity,explore_itens:15,categorias_custom:true,otimizar_rota:true,
+        reservas:true,anexos:true,roteiro:true,mala:true,compartilhar:true,roteiro_ia:true}
 };
 const PRICING=[ // hipótese inicial: validar com teste de preço antes de fixar
   {id:'annual',nome:'Anual',preco:'R$ 69,90',sub:'≈ R$ 5,83 por mês',destaque:true},
@@ -1593,14 +1700,19 @@ const PRICING=[ // hipótese inicial: validar com teste de preço antes de fixar
 ];
 const PAYWALL_REASONS={
   viagens:'O plano Free inclui 1 viagem.',
-  anexos:'O plano Free inclui até 3 anexos por viagem.',
-  reservas:'O plano Free inclui até 2 reservas por viagem.',
+  gastos:'O plano Free inclui até 15 lançamentos por viagem.',
+  anexos:'Anexar documentos é um recurso Premium.',
+  reservas:'Cadastrar reservas é um recurso Premium.',
+  roteiro:'Montar o roteiro e o mapa do dia é um recurso Premium.',
+  mala:'O checklist de mala é um recurso Premium.',
+  compartilhar:'Compartilhar a viagem é um recurso Premium.',
+  ia:'Gere seu roteiro personalizado com IA no Premium.',
   rota:'A otimização de rota é exclusiva do Premium.',
   categorias:'Categorias personalizadas são exclusivas do Premium.',
   explore:'Veja todos os locais próximos com o Premium.',
   geral:''
 };
-const PREMIUM_BENEFITS=['Viagens ilimitadas','Anexos e reservas ilimitados','Otimização de rota','Categorias personalizadas','Explorar arredores completo','Sem anúncios'];
+const PREMIUM_BENEFITS=['Roteiro personalizado com IA','Roteiro, mapa e checklist de mala','Reservas e anexos ilimitados','Lançamentos e viagens ilimitados','Compartilhar a viagem com quem vai junto','Sem anúncios'];
 // Patrocinados/afiliados: preencha href com seus links. Itens sem href são ignorados.
 // Sem nenhum patrocinador ativo, o espaço mostra o convite ao Premium.
 const SPONSORS=[
@@ -1611,6 +1723,29 @@ let pwPlan='annual';
 const isPremium=()=>currentPlan.tier==='premium';
 const planLimit=k=>PLAN_LIMITS[currentPlan.tier][k];
 const hasFeature=k=>{const v=planLimit(k);return v===true||(typeof v==='number'&&v>0);};
+
+// Plano que vale para a VIAGEM é o do DONO (mesma regra do trigger no banco):
+// convidado Free numa viagem de dono Premium pode incluir normalmente.
+let tripPremium=false;
+async function loadTripPlan(){
+  const v=viagens.find(x=>x.id===vid);
+  if(!v){tripPremium=false;return;}
+  if(v.owner_id===currentUser.id){tripPremium=isPremium();return;}
+  try{const{data,error}=await sb.rpc('is_premium',{p_user:v.owner_id});tripPremium=!error&&data===true;}
+  catch(e){tripPremium=false;}
+}
+const tripPro=()=>tripPremium;
+// Uso: if(!gate('roteiro'))return;  → abre o paywall e devolve false quando a viagem é Free.
+function gate(feature){if(tripPro())return true;openPaywall(feature);return false;}
+const lockTxt=(txt)=>(tripPro()?'':'🔒 ')+txt;
+// faixa "somente leitura" no topo das telas Premium quando a viagem é Free
+function freeBanner(container,feature,texto){
+  if(tripPro())return;
+  const b=document.createElement('button');b.type='button';b.className='free-banner';
+  const t=document.createElement('span');t.textContent='🔒 '+texto;
+  const c=document.createElement('strong');c.textContent='Desbloquear';
+  b.append(t,c);b.onclick=()=>openPaywall(feature);container.appendChild(b);
+}
 
 async function loadPlan(){
   currentPlan={tier:'free',plan:null,expires:null};
@@ -1638,6 +1773,7 @@ function renderPlanBadge(){
 function handlePlanError(error){
   const m=/limite_plano_free:(\w+)/.exec(error?.message||'');
   if(!m)return false;
+  tripPremium=false; // o banco disse que a viagem é Free: alinha a UI
   openPaywall(m[1]);return true;
 }
 function drawPlans(){
@@ -1966,6 +2102,7 @@ function drawMembros(){
     });
   }
   $('mem-invite').style.display=souDono?'block':'none';
+  $('memaddbtn').textContent=lockTxt('+ Convidar');
   $('mem-readonly').style.display=souDono?'none':'block';
 }
 async function removerMembro(m){
@@ -1985,13 +2122,14 @@ $('mem-btn').onclick=async()=>{
 $('memcnc').onclick=()=>$('omem').classList.remove('on');
 $('omem').onclick=e=>{if(e.target===$('omem'))$('omem').classList.remove('on');};
 $('memaddbtn').onclick=async()=>{
+  if(!gate('compartilhar'))return;
   const email=$('meminput').value.trim();
   const papel=$('mempapel').value;
   if(!email){toast('Digite um e-mail ⚠️');return;}
   $('memaddbtn').disabled=true;
   const{data,error}=await sb.rpc('convidar_membro',{p_viagem_id:vid,p_email:email,p_papel:papel});
   $('memaddbtn').disabled=false;
-  if(error){toast(friendlyMemberError(error.message));return;}
+  if(error){if(!handlePlanError(error))toast(friendlyMemberError(error.message));return;}
   $('meminput').value='';
   toast(data.status==='aceito'?'Acesso liberado ✓':'Convite registrado — toque em 📤 Avisar para mandar a ela ✓');
   await loadMembros();drawMembros();
@@ -2076,6 +2214,7 @@ async function loadGastos(){
   $('tnmt').textContent=v.nome;
   const{data}=await sb.from('gastos').select('*').eq('viagem_id',vid).order('data',{ascending:false});
   gastos=data||[];
+  await loadTripPlan();
   await loadGastosComAnexo();
   await loadReservas();
   await loadReservasComAnexo();
@@ -2149,7 +2288,7 @@ function drawReservasStrip(container){
   const wrap=document.createElement('div');wrap.className='rsv-wrap';
   const hdr=document.createElement('div');hdr.className='sec';hdr.style.cssText='display:flex;justify-content:space-between;align-items:center';
   hdr.innerHTML='<span>Reservas</span>';
-  const addBtn=document.createElement('button');addBtn.className='rsv-add';addBtn.textContent='+ Adicionar';
+  const addBtn=document.createElement('button');addBtn.className='rsv-add';addBtn.textContent=lockTxt('+ Adicionar');
   addBtn.onclick=()=>openReserva(null);
   hdr.appendChild(addBtn);wrap.appendChild(hdr);
 
@@ -2327,14 +2466,29 @@ function buildLancFilter(){
 }
 
 // ── LIST ──────────────────────────────────────────────
+// medidor "X de 15 lançamentos" do Free — o limite aparece antes de bater, não de surpresa
+function drawGastosMeter(el){
+  if(tripPro()||!vid)return;
+  const max=planLimit('gastos_por_viagem'),n=Math.min(gastos.length,max);
+  const box=document.createElement('button');box.type='button';box.className='gm-meter'+(n>=max?' full':n>=max-3?' warn':'');
+  box.onclick=()=>openPaywall('gastos');
+  const top=document.createElement('div');top.className='gm-top';
+  const a=document.createElement('span');a.textContent=`${n} de ${max} lançamentos no plano Free`;
+  const b=document.createElement('strong');b.textContent=n>=max?'Liberar ilimitado':'Premium';
+  top.append(a,b);
+  const bar=document.createElement('div');bar.className='gm-bar';
+  const f=document.createElement('div');f.style.width=Math.round(n/max*100)+'%';bar.appendChild(f);
+  box.append(top,bar);el.appendChild(box);
+}
 function drawList(){
   const el=$('gl');el.innerHTML='';
+  drawGastosMeter(el);
   const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
   const maxCat=Math.max(...categorias.map(c=>gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)),1);
 
   if(lancMode==='group'){
     // ── MODO AGRUPADO ──────────────────────────────────
-    $('lc').textContent=`${gastos.length} lançamento${gastos.length!==1?'s':', '} · ${R(tot)}`;
+    $('lc').textContent=`${gastos.length} lançamento${gastos.length!==1?'s':''} · ${R(tot)}`;
     $('fcl').style.display='none';
     $('lanc-filter').style.display='none';
     const cats=categorias.map(c=>{
@@ -2456,6 +2610,7 @@ function chkg(){$('gok').disabled=!($('fd').value.trim()&&$('fv').value>0);}
 ['fd','fv','fo'].forEach(id=>$(id).oninput=chkg);
 $('fab').onclick=()=>{
   if(!vid){toast('Crie uma viagem primeiro pra lançar gastos ⚠️');return;}
+  if(!tripPro()&&gastos.length>=planLimit('gastos_por_viagem')){openPaywall('gastos');return;}
   egid=null;$('ogt').textContent='Novo Gasto';
   $('fd').value='';$('fv').value='';$('fo').value='';
   $('fdt').value=new Date().toISOString().split('T')[0];
@@ -2475,6 +2630,7 @@ function editG(id){
   $('fo').value=g.observacao||'';$('fdt').value=g.data;
   renderCatPills(g.categoria);
   anexoAlvo={tipo:'gasto',id};
+  syncDocBtns();
   docBind={list:'doclist',pills:'dpills',file:'docfile',btn:'docupbtn',section:'doc-section',disabled:'doc-disabled-msg'};
   $('doc-section').style.display='block';$('doc-disabled-msg').style.display='none';
   loadDocumentos(id,'gasto');
@@ -2495,7 +2651,7 @@ $('gok').onclick=async()=>{
     gastos.unshift({id:tmp,viagem_id:vid,descricao,valor,observacao,data,categoria});
     drawTop();drawDash();drawList();$('og').classList.remove('on');toast('Adicionado ✓');
     const{data:ins,error}=await sb.from('gastos').insert({viagem_id:vid,descricao,valor,observacao,data,categoria}).select().single();
-    if(error){gastos=gastos.filter(g=>g.id!==tmp);drawTop();drawDash();drawList();toast('Erro ⚠️');}
+    if(error){gastos=gastos.filter(g=>g.id!==tmp);drawTop();drawDash();drawList();if(!handlePlanError(error))toast('Erro ⚠️');}
     else{const i=gastos.findIndex(g=>g.id===tmp);if(i!==-1)gastos[i]=ins;egid=ins.id;}
   }
 };
@@ -2614,10 +2770,7 @@ async function uploadDocumento(file){
   if(file.type!=='application/pdf'){toast('Apenas arquivos PDF ⚠️');return;}
   const MAX_BYTES=20*1024*1024;
   if(file.size>MAX_BYTES){toast('Arquivo acima de 20MB ⚠️');return;}
-  if(!isPremium()){
-    const{count}=await sb.from('documentos').select('id',{count:'exact',head:true}).eq('viagem_id',vid);
-    if((count||0)>=planLimit('anexos_por_viagem')){openPaywall('anexos');return;}
-  }
+  if(!gate('anexos'))return;
   const tipo_doc=document.querySelector('#'+docBind.pills+' .pill.on')?.dataset.id||'outro';
   const docId=(crypto.randomUUID?crypto.randomUUID():'d'+Date.now()+Math.random().toString(16).slice(2));
   const path=`${vid}/${docId}.pdf`;
@@ -2637,13 +2790,15 @@ async function uploadDocumento(file){
   if(anexoAlvo.tipo==='reserva'){reservasComAnexo.add(anexoAlvo.id);drawDash();}
   else{gastosComAnexo.add(anexoAlvo.id);drawList();}
 }
-$('docupbtn').onclick=()=>$('docfile').click();
+// botão de anexar: no Free abre o paywall em vez do seletor de arquivo
+function syncDocBtns(){['docupbtn','docupbtn2'].forEach(id=>{const b=$(id);if(b)b.textContent=lockTxt('+ Anexar PDF');});}
+$('docupbtn').onclick=()=>{if(gate('anexos'))$('docfile').click();};
 $('docfile').onchange=(e)=>{
   const file=e.target.files[0];
   if(file)uploadDocumento(file);
   e.target.value='';
 };
-$('docupbtn2').onclick=()=>$('docfile2').click();
+$('docupbtn2').onclick=()=>{if(gate('anexos'))$('docfile2').click();};
 $('docfile2').onchange=(e)=>{
   const file=e.target.files[0];
   if(file)uploadDocumento(file);
@@ -2661,7 +2816,8 @@ document.querySelectorAll('#rvpills .pill').forEach(p=>{
   };
 });
 function openReserva(id){
-  if(!id&&!isPremium()&&reservas.length>=planLimit('reservas_por_viagem')){openPaywall('reservas');return;}
+  if(!id&&!gate('reservas'))return;
+  syncDocBtns();
   ervid=id;
   const r=id?reservas.find(x=>x.id===id):null;
   $('orvt').textContent=r?'Editar Reserva':'Nova Reserva';
@@ -2733,17 +2889,33 @@ async function loadRot(){
 }
 function drawRot(){
   const el=$('rw');el.innerHTML='';
+  // chamada do roteiro com IA (Premium) — sempre visível, é o argumento de venda
+  const ia=document.createElement('button');ia.type='button';ia.className='ia-cta';
+  const iaT=document.createElement('div');
+  // créditos de IA são do USUÁRIO logado (não do dono da viagem) → olha isPremium()
+  const iaH=document.createElement('strong');iaH.textContent=(isPremium()?'✨ ':'🔒 ✨ ')+'Montar roteiro com IA';
+  const iaS=document.createElement('span');iaS.textContent='Responda 8 perguntas e escolha os lugares sugeridos para cada cidade.';
+  iaT.append(iaH,iaS);ia.appendChild(iaT);
+  ia.onclick=()=>{if(!isPremium()){openPaywall('ia');return;}if(gate('roteiro'))openIA();};
+  el.appendChild(ia);
+  freeBanner(el,'roteiro','Plano Free: roteiro só para visualizar.');
   const bar=document.createElement('div');bar.style.cssText='display:flex;gap:8px;margin-bottom:12px';
   const ab=document.createElement('button');ab.className='bs';
   ab.style.cssText='flex:1;min-width:0;padding:10px;color:var(--teal);border-color:var(--teal);font-size:13px;font-weight:600';
-  ab.textContent='+ Adicionar Dia';ab.onclick=()=>openDia(null);bar.appendChild(ab);
+  ab.textContent=lockTxt('+ Adicionar Dia');ab.onclick=()=>{if(gate('roteiro'))openDia(null);};bar.appendChild(ab);
   if(rDias.length){
     const sb3=document.createElement('button');sb3.className='bs';sb3.type='button';
     sb3.style.cssText='flex:1;min-width:0;padding:10px;color:var(--amber2);border-color:var(--amber2);font-size:13px;font-weight:600';
     sb3.textContent='📤 Compartilhar';sb3.onclick=openShare;bar.appendChild(sb3);
   }
   el.appendChild(bar);
-  if(!rDias.length){const em=document.createElement('div');em.style.cssText='text-align:center;padding:40px 0;color:#444';em.innerHTML='<div style="font-size:36px;margin-bottom:10px">🗺️</div><div>Nenhum dia</div>';el.appendChild(em);return;}
+  if(!rDias.length){
+    const em=document.createElement('div');em.style.cssText='text-align:center;padding:40px 0;color:var(--mut)';
+    em.innerHTML='<div style="font-size:36px;margin-bottom:10px">🗺️</div>';
+    const t=document.createElement('div');
+    t.textContent=tripPro()?'Nenhum dia ainda — adicione um dia ou use a IA acima.':'Com o Premium você monta o roteiro dia a dia, vê tudo no mapa e otimiza a rota.';
+    em.appendChild(t);el.appendChild(em);return;
+  }
   rDias.forEach(dia=>{
     const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
     const ab2=dopen[dia.id]===true;
@@ -2816,8 +2988,8 @@ function drawRot(){
       }
       body.appendChild(pw);
       const acts=document.createElement('div');acts.className='da';
-      const bp=document.createElement('button');bp.className='bs';bp.style.cssText='color:var(--teal);border-color:var(--teal);font-weight:600';bp.textContent='+ Parada';
-      bp.onclick=e=>{e.stopPropagation();openPar(dia.id,null);};acts.appendChild(bp);
+      const bp=document.createElement('button');bp.className='bs';bp.style.cssText='color:var(--teal);border-color:var(--teal);font-weight:600';bp.textContent=lockTxt('+ Parada');
+      bp.onclick=e=>{e.stopPropagation();if(gate('roteiro'))openPar(dia.id,null);};acts.appendChild(bp);
       const be=document.createElement('button');be.className='bs';be.textContent='✏️ Dia';be.onclick=e=>{e.stopPropagation();openDia(dia.id);};acts.appendChild(be);
       const bd=document.createElement('button');bd.className='bs';bd.style.color='var(--red)';bd.textContent='🗑️';bd.onclick=e=>{e.stopPropagation();delDia(dia.id);};acts.appendChild(bd);
       if(pars.filter(p=>!p.realizado).length>=2){
@@ -3038,7 +3210,7 @@ $('dok').onclick=async()=>{
     const tmp='t'+Date.now();rDias.push({id:tmp,viagem_id:vid,titulo,numero,data,descricao});
     rDias.sort((a,b)=>a.numero-b.numero);drawRot();toast('Dia adicionado ✓');
     const{data:ins,error}=await sb.from('roteiro_dias').insert({viagem_id:vid,titulo,numero,data,descricao}).select().single();
-    if(error){rDias=rDias.filter(d=>d.id!==tmp);drawRot();toast('Erro ⚠️');}
+    if(error){rDias=rDias.filter(d=>d.id!==tmp);drawRot();if(!handlePlanError(error))toast('Erro ⚠️');}
     else{const i=rDias.findIndex(d=>d.id===tmp);if(i!==-1){rDias[i]=ins;drawRot();}}
   }
 };
@@ -3142,7 +3314,7 @@ $('pok').onclick=async()=>{
     rPars.push({id:tmp,dia_id:daid,nome,horario,endereco,observacao,tipo,realizado,gmaps_link,ordem});
     drawRot();toast('Parada adicionada ✓');
     const{data:ins,error}=await sb.from('roteiro_paradas').insert({dia_id:daid,nome,horario,endereco,observacao,tipo,realizado,gmaps_link,ordem}).select().single();
-    if(error){rPars=rPars.filter(p=>p.id!==tmp);drawRot();toast('Erro ⚠️');}
+    if(error){rPars=rPars.filter(p=>p.id!==tmp);drawRot();if(!handlePlanError(error))toast('Erro ⚠️');}
     else{
       const i=rPars.findIndex(p=>p.id===tmp);if(i!==-1)rPars[i]=ins;
       if(coordsPreCache)geoCache.set(ins.id,coordsPreCache);
@@ -3182,19 +3354,21 @@ function drawMala(){
   const hdr=document.createElement('div');hdr.className='mala-hdr';
   hdr.innerHTML=`<span class="mala-prog-txt">${malaProgresso()}</span>`;
   const actions=document.createElement('div');actions.className='mala-actions';
-  const bPad=document.createElement('button');bPad.type='button';bPad.textContent='✨ Usar checklist padrão';bPad.onclick=usarChecklistPadrao;
-  const bDup=document.createElement('button');bDup.type='button';bDup.textContent='⤵ Duplicar do meu modelo';bDup.onclick=duplicarDoModelo;
-  const bSave=document.createElement('button');bSave.type='button';bSave.textContent='💾 Salvar como modelo';bSave.onclick=salvarComoModelo;
+  const bPad=document.createElement('button');bPad.type='button';bPad.textContent=lockTxt('✨ Usar checklist padrão');bPad.onclick=usarChecklistPadrao;
+  const bDup=document.createElement('button');bDup.type='button';bDup.textContent=lockTxt('⤵ Duplicar do meu modelo');bDup.onclick=duplicarDoModelo;
+  const bSave=document.createElement('button');bSave.type='button';bSave.textContent=(isPremium()?'':'🔒 ')+'💾 Salvar como modelo';bSave.onclick=salvarComoModelo;
   actions.append(bPad,bDup,bSave);hdr.appendChild(actions);el.appendChild(hdr);
 
   if(!vid){
     const e=document.createElement('div');e.className='mala-empty';e.textContent='Selecione uma viagem para montar a mala.';el.appendChild(e);return;
   }
+  freeBanner(el,'mala','Plano Free: mala só para visualizar.');
 
   const add=document.createElement('div');add.className='mala-add';
-  const inp=document.createElement('input');inp.type='text';inp.placeholder='Adicionar item (ex: Carregador de celular)';inp.maxLength=120;
+  const inp=document.createElement('input');inp.type='text';inp.placeholder=tripPro()?'Adicionar item (ex: Carregador de celular)':'🔒 Adicionar itens é Premium';inp.maxLength=120;
   const bAdd=document.createElement('button');bAdd.type='button';bAdd.textContent='+';
-  const doAdd=()=>{const t=inp.value.trim();if(!t)return;inp.value='';addMalaItem(t);};
+  const doAdd=()=>{if(!gate('mala'))return;const t=inp.value.trim();if(!t)return;inp.value='';addMalaItem(t);};
+  if(!tripPro())inp.onfocus=()=>{inp.blur();openPaywall('mala');};
   bAdd.onclick=doAdd;inp.onkeydown=e=>{if(e.key==='Enter')doAdd();};
   add.append(inp,bAdd);el.appendChild(add);
 
@@ -3220,7 +3394,7 @@ async function addMalaItem(texto){
   const optimistic={id:'tmp_'+Date.now(),viagem_id:vid,texto,feito:false,ordem};
   malaItens.push(optimistic);drawMala();
   const{data,error}=await sb.from('mala_itens').insert({viagem_id:vid,texto,ordem}).select().single();
-  if(error){malaItens=malaItens.filter(i=>i.id!==optimistic.id);drawMala();toast('Erro ao adicionar item ⚠️');return;}
+  if(error){malaItens=malaItens.filter(i=>i.id!==optimistic.id);drawMala();if(!handlePlanError(error))toast('Erro ao adicionar item ⚠️');return;}
   malaItens=malaItens.map(i=>i.id===optimistic.id?data:i);drawMala();
 }
 async function toggleMalaItem(item){
@@ -3234,16 +3408,16 @@ async function removerMalaItem(item){
   if(error){malaItens=bk;drawMala();toast('Erro ao remover item ⚠️');}
 }
 async function usarChecklistPadrao(){
-  if(!vid)return;
+  if(!vid||!gate('mala'))return;
   if(malaItens.length&&!confirm('Isso adiciona os itens do checklist padrão à lista atual. Continuar?'))return;
   let ordem=malaItens.length?Math.max(...malaItens.map(i=>i.ordem)):0;
   const payload=MALA_PADRAO.map(texto=>({viagem_id:vid,texto,ordem:++ordem}));
   const{data:ins,error}=await sb.from('mala_itens').insert(payload).select();
-  if(error){toast('Erro ao aplicar checklist padrão ⚠️');return;}
+  if(error){if(!handlePlanError(error))toast('Erro ao aplicar checklist padrão ⚠️');return;}
   malaItens=[...malaItens,...(ins||[])];drawMala();toast('Checklist padrão aplicado ✓');
 }
 async function duplicarDoModelo(){
-  if(!vid)return;
+  if(!vid||!gate('mala'))return;
   const{data,error}=await sb.from('mala_template_itens').select('*').order('ordem');
   if(error){toast('Erro ao carregar seu modelo ⚠️');return;}
   if(!data||!data.length){toast('Você ainda não salvou um modelo de mala ⚠️');return;}
@@ -3251,10 +3425,12 @@ async function duplicarDoModelo(){
   let ordem=malaItens.length?Math.max(...malaItens.map(i=>i.ordem)):0;
   const payload=data.map(t=>({viagem_id:vid,texto:t.texto,ordem:++ordem}));
   const{data:ins,error:err2}=await sb.from('mala_itens').insert(payload).select();
-  if(err2){toast('Erro ao duplicar modelo ⚠️');return;}
+  if(err2){if(!handlePlanError(err2))toast('Erro ao duplicar modelo ⚠️');return;}
   malaItens=[...malaItens,...(ins||[])];drawMala();toast('Modelo aplicado ✓');
 }
 async function salvarComoModelo(){
+  // o modelo é do USUÁRIO (não da viagem) → vale o plano dele. Checa ANTES de apagar o modelo antigo.
+  if(!isPremium()){openPaywall('mala');return;}
   if(!malaItens.length){toast('Adicione itens antes de salvar como modelo ⚠️');return;}
   if(!confirm('Isso substitui seu modelo pessoal pela lista atual desta viagem. Continuar?'))return;
   const{data:atuais,error:e0}=await sb.from('mala_template_itens').select('id');
@@ -3417,6 +3593,9 @@ function extractCoordsFromGmaps(url){
   if(m)return{lat:+m[1],lng:+m[2]};
   // ?q=lat,lng
   m=url.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if(m)return{lat:+m[1],lng:+m[2]};
+  // ?api=1&query=lat,lng — formato que o próprio app grava (autocomplete, Explorar, IA)
+  m=url.match(/[?&]query=(-?\d+\.\d+),(-?\d+\.\d+)/);
   if(m)return{lat:+m[1],lng:+m[2]};
   // /maps/place/.../@lat,lng
   m=url.match(/maps\/place\/[^/@]*\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
@@ -3671,6 +3850,7 @@ async function loadExploreCat(catId){
 }
 async function adicionarParadaDeExplore(r){
   if(!mSelDia||mSelDia==='all')return;
+  if(!gate('roteiro'))return;
   const tipoMap={restaurante:'restaurante',cafe:'restaurante',atracao:'atração',bar:'restaurante'};
   const ordem=rPars.filter(p=>p.dia_id===mSelDia.id).length+1;
   const gmaps_link=`https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}`;
@@ -3681,7 +3861,7 @@ async function adicionarParadaDeExplore(r){
   rPars.push({id:tmp,...payload});
   toast(`✓ ${r.nome} adicionado ao roteiro`);
   const{data:ins,error}=await sb.from('roteiro_paradas').insert(payload).select().single();
-  if(error){rPars=rPars.filter(p=>p.id!==tmp);toast('Erro ⚠️');}
+  if(error){rPars=rPars.filter(p=>p.id!==tmp);if(!handlePlanError(error))toast('Erro ⚠️');}
   else{const i=rPars.findIndex(p=>p.id===tmp);if(i!==-1)rPars[i]=ins;}
   await drawMDia(mSelDia);
 }
@@ -3995,6 +4175,246 @@ if(localStorage.getItem('theme')==='light'){
   document.addEventListener('DOMContentLoaded',()=>{const b=$('theme-btn');if(b)b.textContent='☀️';});
 }
 
+// ── ROTEIRO COM IA ────────────────────────────────────
+// A IA sugere LUGARES; quem monta os DIAS é o código (vizinho mais próximo, já usado no
+// "Otimizar"). Lugar não localizado no OSM entra marcado como "não verificado" — nunca
+// com coordenada inventada pelo modelo.
+const IA_INTERESSES=['🍽️ Gastronomia','🏛️ Museus e história','🌳 Natureza','🏖️ Praias','🛍️ Compras','🌙 Vida noturna','🏰 Arquitetura','🎨 Arte','👨‍👩‍👧 Família'];
+const IA_POR_DIA={tranquilo:3,moderado:4,intenso:5};
+const IA_EMOJI={'atração':'🎡',restaurante:'🍽️',compras:'🛍️',outro:'📍'};
+const IA_ERROS={
+  sem_creditos:'Seus créditos de roteiro com IA acabaram neste período.',
+  datas_invalidas:'Confira as datas de início e fim.',
+  periodo_invalido:'A viagem precisa ter entre 1 e 30 dias.',
+  destino_obrigatorio:'Informe o destino da viagem.',
+  viagem_sem_acesso:'Você não tem acesso a esta viagem.',
+  ia_nao_configurada:'O roteiro com IA ainda não está disponível. Tente mais tarde.',
+  ia_falhou:'A IA não conseguiu responder agora. Tente de novo — não consumiu crédito.'
+};
+let iaSt={inp:null,cidades:[],resumo:'',dicas:[]};
+let iaKids=false;
+
+const iaView=v=>['form','load','sel'].forEach(x=>{$('ia-v-'+x).hidden=x!==v;});
+const iaPill=id=>document.querySelector('#'+id+' .pill.on')?.dataset.v;
+function iaMsg(t){$('ia-msg').className='pw-status'+(t?' error':'');$('ia-msg').textContent=t||'';}
+function iaCreditos(n){
+  $('ia-cred').textContent=typeof n==='number'?(n>0?`Você tem ${n} ${n!==1?'gerações disponíveis':'geração disponível'} de roteiro.`:'Sem créditos de IA neste período.'):'';
+  $('ia-go').disabled=n===0;
+}
+async function iaToken(){const{data:{session}}=await sb.auth.getSession();return session?.access_token||'';}
+
+// pills de escolha única (transporte, ritmo)
+['ia-transp','ia-ritmo'].forEach(id=>document.querySelectorAll('#'+id+' .pill').forEach(p=>{
+  p.onclick=()=>{document.querySelectorAll('#'+id+' .pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');};
+}));
+IA_INTERESSES.forEach(t=>{
+  const p=document.createElement('button');p.type='button';p.className='pill';p.textContent=t;p.style.setProperty('--pc','var(--teal)');
+  p.onclick=()=>p.classList.toggle('on');$('ia-int').appendChild(p);
+});
+function iaSetKids(v){iaKids=v;$('ia-kids').querySelector('.tg-sw').classList.toggle('on',v);$('ia-kids').setAttribute('aria-checked',String(v));}
+$('ia-kids').onclick=()=>iaSetKids(!iaKids);
+$('ia-kids').onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();iaSetKids(!iaKids);}};
+
+async function openIA(){
+  const v=viagens.find(x=>x.id===vid);if(!v)return;
+  iaView('form');iaMsg('');
+  if(!$('ia-destino').value)$('ia-destino').value=v.nome||'';
+  if(!$('ia-ini').value)$('ia-ini').value=v.data_inicio||'';
+  if(!$('ia-fim').value)$('ia-fim').value=v.data_fim||'';
+  if(!$('ia-din').value&&Number(v.orcamento))$('ia-din').value=Number(v.orcamento);
+  $('ia-cred').textContent='Consultando seus créditos…';$('ia-go').disabled=false;
+  $('oia').classList.add('on');setTimeout(()=>$('ia-destino').focus(),120);
+  try{
+    const r=await fetch('/api/roteiro-ia',{headers:{Authorization:'Bearer '+await iaToken()}});
+    iaCreditos(r.ok?Number((await r.json()).restantes):undefined);
+  }catch(e){iaCreditos(undefined);}
+}
+function closeIA(){$('oia').classList.remove('on');}
+$('ia-cnc').onclick=closeIA;
+$('oia').onclick=e=>{if(e.target===$('oia'))closeIA();};
+$('ia-back').onclick=()=>{iaView('form');iaMsg('');};
+
+function iaColetar(){
+  return{
+    viagem_id:vid,
+    destino:$('ia-destino').value.trim(),
+    data_inicio:$('ia-ini').value,data_fim:$('ia-fim').value,
+    outras_cidades:$('ia-cidades').value.trim(),
+    transporte:iaPill('ia-transp')||'publico',
+    orcamento:parseFloat($('ia-din').value)||0,
+    viajantes:parseInt($('ia-pax').value)||1,
+    criancas:iaKids,
+    ritmo:iaPill('ia-ritmo')||'moderado',
+    interesses:[...document.querySelectorAll('#ia-int .pill.on')].map(p=>p.textContent.replace(/^\S+\s/,'')),
+    desejos:$('ia-desejos').value.trim()
+  };
+}
+function iaDiasEntre(a,b){return Math.round((Date.parse(b)-Date.parse(a))/864e5)+1;}
+
+$('ia-go').onclick=async()=>{
+  const inp=iaColetar();
+  if(inp.destino.length<2){iaMsg(IA_ERROS.destino_obrigatorio);$('ia-destino').focus();return;}
+  if(!inp.data_inicio||!inp.data_fim){iaMsg(IA_ERROS.datas_invalidas);return;}
+  const nd=iaDiasEntre(inp.data_inicio,inp.data_fim);
+  if(!(nd>=1&&nd<=30)){iaMsg(IA_ERROS.periodo_invalido);return;}
+  iaMsg('');iaView('load');$('ia-load-txt').textContent='Montando sugestões para a sua viagem…';
+  try{
+    const r=await fetch('/api/roteiro-ia',{method:'POST',
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+await iaToken()},body:JSON.stringify(inp)});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok){iaView('form');if(r.status===402)iaCreditos(0);iaMsg(IA_ERROS[j.error]||'Não foi possível gerar agora. Tente de novo.');return;}
+    iaSt={inp,resumo:j.sugestao.resumo,dicas:j.sugestao.dicas||[],
+      cidades:(j.sugestao.cidades||[]).map(c=>({...c,lugares:c.lugares.map(l=>({...l,sel:true}))}))};
+    iaAjustarDias(iaSt.cidades,nd);
+    iaCreditos(j.restantes);drawIASel();iaView('sel');
+  }catch(e){iaView('form');iaMsg('Sem conexão com o servidor. Tente de novo.');}
+};
+
+// Garante que a soma dos dias por cidade bate com a duração (o modelo às vezes erra a conta).
+function iaAjustarDias(cidades,total){
+  if(!cidades.length)return;
+  let soma=cidades.reduce((s,c)=>s+c.dias,0);
+  while(soma>total){const c=[...cidades].sort((a,b)=>b.dias-a.dias)[0];if(c.dias<=1)break;c.dias--;soma--;}
+  while(soma<total){cidades[0].dias++;soma++;}
+}
+
+function drawIASel(){
+  const r=$('ia-resumo');r.textContent='';
+  if(iaSt.resumo){const p=document.createElement('p');p.textContent=iaSt.resumo;r.appendChild(p);}
+  if(iaSt.dicas.length){const ul=document.createElement('ul');iaSt.dicas.forEach(d=>{const li=document.createElement('li');li.textContent='💡 '+d;ul.appendChild(li);});r.appendChild(ul);}
+  const box=$('ia-cidades-sel');box.textContent='';
+  iaSt.cidades.forEach((c,ci)=>{
+    const card=document.createElement('div');card.className='ia-city';
+    const h=document.createElement('div');h.className='ia-city-h';
+    const nm=document.createElement('strong');nm.textContent='📍 '+c.nome;
+    const dw=document.createElement('label');dw.className='ia-dias';
+    const di=document.createElement('input');di.type='number';di.min='0';di.max='30';di.className='fi';di.value=c.dias;
+    di.setAttribute('aria-label','Dias em '+c.nome);
+    di.onchange=()=>{c.dias=Math.max(0,Math.min(30,parseInt(di.value)||0));di.value=c.dias;iaContar();};
+    dw.append(di,document.createTextNode('dias'));
+    h.append(nm,dw);card.appendChild(h);
+    c.lugares.forEach((l,li)=>{
+      const row=document.createElement('div');row.className='ia-lug'+(l.sel?'':' off');
+      const ck=document.createElement('input');ck.type='checkbox';ck.checked=l.sel;ck.setAttribute('aria-label','Incluir '+l.nome);
+      ck.onchange=()=>{l.sel=ck.checked;row.classList.toggle('off',!l.sel);iaContar();};
+      const b=document.createElement('div');b.className='ia-lug-b';
+      const ni=document.createElement('input');ni.className='ia-lug-nm';ni.value=(IA_EMOJI[l.categoria]||'📍')+' '+l.nome;ni.maxLength=110;
+      ni.setAttribute('aria-label','Nome do lugar');
+      ni.onchange=()=>{const v=ni.value.replace(/^\p{Extended_Pictographic}️?\s*/u,'').trim();if(v)l.nome=v;else ni.value=(IA_EMOJI[l.categoria]||'📍')+' '+l.nome;};
+      const d=document.createElement('div');d.className='ia-lug-d';d.textContent=l.descricao||'';
+      const m=document.createElement('div');m.className='ia-lug-m';
+      m.textContent=[`~${Math.round(l.duracao_min/15)*15} min`,l.custo==='gratis'?'grátis':l.custo,l.motivo].filter(Boolean).join(' · ');
+      b.append(ni,d,m);
+      const x=document.createElement('button');x.type='button';x.className='ia-lug-x';x.textContent='✕';x.setAttribute('aria-label','Remover '+l.nome);
+      x.onclick=()=>{c.lugares.splice(li,1);drawIASel();};
+      row.append(ck,b,x);card.appendChild(row);
+    });
+    const add=document.createElement('div');add.className='ia-add';
+    const ai=document.createElement('input');ai.className='fi';ai.placeholder='Adicionar outro lugar em '+c.nome;ai.maxLength=100;
+    const ab=document.createElement('button');ab.type='button';ab.textContent='+';ab.setAttribute('aria-label','Adicionar lugar em '+c.nome);
+    const doAdd=()=>{const t=ai.value.trim();if(!t)return;c.lugares.push({nome:t,categoria:'atração',descricao:'Adicionado por você',duracao_min:90,custo:'$',motivo:'',sel:true});drawIASel();};
+    ab.onclick=doAdd;ai.onkeydown=e=>{if(e.key==='Enter')doAdd();};
+    add.append(ai,ab);card.appendChild(add);
+    box.appendChild(card);
+  });
+  iaContar();
+}
+function iaContar(){
+  const n=iaSt.cidades.reduce((s,c)=>s+c.lugares.filter(l=>l.sel).length,0);
+  const dias=iaSt.cidades.reduce((s,c)=>s+(c.lugares.some(l=>l.sel)?c.dias:0),0);
+  const cap=IA_POR_DIA[iaSt.inp?.ritmo||'moderado'];
+  const el=$('ia-cnt');
+  const porDia=dias?n/dias:0;
+  el.className='ia-cnt'+(porDia>cap+1?' warn':'');
+  el.textContent=!n?'Selecione ao menos um lugar.':
+    `${n} lugar${n!==1?'es':''} em ${dias} dia${dias!==1?'s':''} (~${porDia.toFixed(1).replace('.',',')}/dia)`+(porDia>cap+1?` — acima do ritmo ${iaSt.inp.ritmo}, considere desmarcar alguns.`:'');
+  $('ia-build').disabled=!n||!dias;
+}
+
+// Distribuição PURA (sem DOM/IO) — testada em tests/roteiro_ia_distribuir.js.
+// cidades: [{nome,dias,lugares:[{...,lat,lng,ok}]}] já filtradas pelos selecionados.
+// Por cidade: ordena pelo vizinho mais próximo e fatia em `dias` blocos equilibrados.
+function iaDistribuir(cidades,dataIni){
+  const out=[];let offset=0;
+  const addD=(iso,n)=>{if(!iso)return null;const d=new Date(iso+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
+  cidades.forEach(c=>{
+    const dias=Math.max(0,c.dias|0);if(!dias||!c.lugares.length)return;
+    const ordem=nearestNeighborOrder(c.lugares.map(l=>({ok:!!l.ok,lat:l.lat,lng:l.lng}))).map(i=>c.lugares[i]);
+    const base=Math.floor(ordem.length/dias),extra=ordem.length%dias;
+    let k=0;
+    for(let d=0;d<dias;d++){
+      const qtd=base+(d<extra?1:0);
+      out.push({cidade:c.nome,dia:d+1,totalDias:dias,data:addD(dataIni,offset),paradas:ordem.slice(k,k+qtd)});
+      k+=qtd;offset++;
+    }
+  });
+  return out;
+}
+
+async function iaGeocode(l,c){
+  const ps=new URLSearchParams({format:'json',limit:'1','accept-language':'pt-BR',q:`${l.nome}, ${c.nome}${c.pais?', '+c.pais:''}`});
+  try{
+    const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),8000);
+    const r=await fetch(`https://nominatim.openstreetmap.org/search?${ps}`,{signal:ctrl.signal});clearTimeout(t);
+    const d=await r.json();
+    if(d.length)return{ok:true,lat:+d[0].lat,lng:+d[0].lon,endereco:d[0].display_name};
+  }catch(e){}
+  return{ok:false};
+}
+
+$('ia-build').onclick=async()=>{
+  const cidades=iaSt.cidades.map(c=>({...c,lugares:c.lugares.filter(l=>l.sel)})).filter(c=>c.lugares.length&&c.dias>0);
+  if(!cidades.length)return;
+  if(rDias.length&&!confirm('Esta viagem já tem dias no roteiro. Os novos dias serão adicionados depois deles. Continuar?'))return;
+  iaView('load');
+  // 1) valida no OpenStreetMap — 1 requisição/segundo (política de uso do Nominatim)
+  const todos=cidades.flatMap(c=>c.lugares.map(l=>({l,c})));
+  for(let i=0;i<todos.length;i++){
+    $('ia-load-txt').textContent=`Localizando no mapa ${i+1} de ${todos.length}…`;
+    Object.assign(todos[i].l,await iaGeocode(todos[i].l,todos[i].c));
+    if(i<todos.length-1)await new Promise(r=>setTimeout(r,1100));
+  }
+  // 2) distribui e grava
+  $('ia-load-txt').textContent='Salvando o roteiro…';
+  const plano=iaDistribuir(cidades,iaSt.inp.data_inicio);
+  let numero=rDias.length?Math.max(...rDias.map(d=>d.numero||0))+1:1;
+  let semMapa=0;
+  try{
+    for(const dia of plano){
+      const titulo=dia.totalDias>1?`${dia.cidade} — dia ${dia.dia}`:dia.cidade;
+      const{data:dRow,error:dErr}=await sb.from('roteiro_dias').insert({viagem_id:vid,numero:numero++,titulo,data:dia.data,descricao:dia.paradas.length?null:'Dia livre'}).select().single();
+      if(dErr)throw dErr;
+      if(!dia.paradas.length)continue;
+      const payload=dia.paradas.map((l,i)=>{
+        if(!l.ok)semMapa++;
+        const obs=[l.descricao,l.motivo?'💡 '+l.motivo:null,`⏱️ ~${Math.round(l.duracao_min/15)*15} min`,l.ok?null:'⚠️ Não localizado no mapa — confirme o endereço'].filter(Boolean).join(' · ');
+        return{dia_id:dRow.id,ordem:i+1,nome:l.nome,tipo:['atração','restaurante','compras','outro'].includes(l.categoria)?l.categoria:'atração',
+          endereco:l.ok?l.endereco.slice(0,300):null,observacao:obs.slice(0,1000),realizado:false,
+          gmaps_link:l.ok?`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`
+                        :`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome+', '+dia.cidade)}`};
+      });
+      const{data:pRows,error:pErr}=await sb.from('roteiro_paradas').insert(payload).select('id,nome');
+      if(pErr)throw pErr;
+      (pRows||[]).forEach((p,i)=>{const l=dia.paradas[i];if(l&&l.ok&&p.nome===l.nome)geoCache.set(p.id,{lat:l.lat,lng:l.lng,ok:true,src:'ia'});});
+    }
+    // aproveita as respostas: preenche datas e orçamento da viagem se estavam vazios
+    const v=viagens.find(x=>x.id===vid),upd={};
+    if(v&&!v.data_inicio)upd.data_inicio=iaSt.inp.data_inicio;
+    if(v&&!v.data_fim)upd.data_fim=iaSt.inp.data_fim;
+    if(v&&!Number(v.orcamento)&&iaSt.inp.orcamento>0)upd.orcamento=iaSt.inp.orcamento;
+    if(v&&Object.keys(upd).length){Object.assign(v,upd);drawTop();await sb.from('viagens').update(upd).eq('id',vid);}
+  }catch(err){
+    iaView('sel');
+    if(!handlePlanError(err))toast('Erro ao salvar o roteiro ⚠️ — o que já foi salvo continua no Plano');
+    await loadRot();drawRot();return;
+  }
+  closeIA();
+  await loadRot();
+  plano.forEach((_,i)=>{const d=rDias[rDias.length-plano.length+i];if(d&&i===0)dopen[d.id]=true;});
+  drawRot();
+  toast(semMapa?`Roteiro criado ✓ — ${semMapa} lugar${semMapa!==1?'es':''} sem localização, confira ⚠️`:'Roteiro criado ✓',3500);
+};
+
 // ── TOAST ─────────────────────────────────────────────
 function toast(msg,dur=2000){
   const el=$('toast');el.textContent=msg;el.classList.add('show');
@@ -4012,7 +4432,7 @@ function toast(msg,dur=2000){
     await new Promise(r=>setTimeout(r,3000));
     if(currentUser)await loadPlan();
   }
-  if(isPremium()){toast('Premium ativado ✓');drawChips();drawDash();}
+  if(isPremium()){toast('Premium ativado ✓');await loadTripPlan();drawChips();drawDash();drawList();}
 })();
 
 // ── PWA ───────────────────────────────────────────────
