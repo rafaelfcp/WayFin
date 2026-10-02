@@ -2775,7 +2775,7 @@ function openDia(id){
 $('dcnc').onclick=()=>$('od').classList.remove('on');
 $('od').onclick=e=>{if(e.target===$('od'))$('od').classList.remove('on');};
 $('dok').onclick=async()=>{
-  const titulo=$('dt').value.trim();if(!titulo)return;
+  const titulo=$('dt').value.trim();if(!titulo){toast('Preencha o título do dia');$('dt').focus();return;}
   const numero=parseInt($('dn').value)||0;
   const data=$('dd').value||null,descricao=$('ddc').value.trim()||null;
   $('od').classList.remove('on');
@@ -2787,7 +2787,7 @@ $('dok').onclick=async()=>{
     const tmp='t'+Date.now();rDias.push({id:tmp,viagem_id:vid,titulo,numero,data,descricao});
     rDias.sort((a,b)=>a.numero-b.numero);drawRot();toast('Dia adicionado ✓');
     const{data:ins,error}=await sb.from('roteiro_dias').insert({viagem_id:vid,titulo,numero,data,descricao}).select().single();
-    if(error){rDias=rDias.filter(d=>d.id!==tmp);drawRot();toast('Erro ⚠️');}
+    if(error){rDias=rDias.filter(d=>d.id!==tmp);drawRot();if(!handlePlanError(error))toast('Erro ⚠️');}
     else{const i=rDias.findIndex(d=>d.id===tmp);if(i!==-1){rDias[i]=ins;drawRot();}}
   }
 };
@@ -2872,7 +2872,7 @@ function drawSugestoesNome(results){
 $('pcnc').onclick=()=>$('op').classList.remove('on');
 $('op').onclick=e=>{if(e.target===$('op'))$('op').classList.remove('on');};
 $('pok').onclick=async()=>{
-  const nome=$('pn').value.trim();if(!nome)return;
+  const nome=$('pn').value.trim();if(!nome){toast('Preencha o nome da parada');$('pn').focus();return;}
   const horario=$('ph').value||null,endereco=$('pe').value.trim()||null;
   const observacao=$('po').value.trim()||null,realizado=rmod;
   const gmaps_link=$('pg').value.trim()||null;
@@ -2891,7 +2891,7 @@ $('pok').onclick=async()=>{
     rPars.push({id:tmp,dia_id:daid,nome,horario,endereco,observacao,tipo,realizado,gmaps_link,ordem});
     drawRot();toast('Parada adicionada ✓');
     const{data:ins,error}=await sb.from('roteiro_paradas').insert({dia_id:daid,nome,horario,endereco,observacao,tipo,realizado,gmaps_link,ordem}).select().single();
-    if(error){rPars=rPars.filter(p=>p.id!==tmp);drawRot();toast('Erro ⚠️');}
+    if(error){rPars=rPars.filter(p=>p.id!==tmp);drawRot();if(!handlePlanError(error))toast('Erro ⚠️');}
     else{
       const i=rPars.findIndex(p=>p.id===tmp);if(i!==-1)rPars[i]=ins;
       if(coordsPreCache)geoCache.set(ins.id,coordsPreCache);
