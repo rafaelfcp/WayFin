@@ -6,8 +6,10 @@
 // modelo: sai mais barato e evita "bairro do outro lado da cidade no mesmo dia".
 //
 // Variáveis de ambiente (Cloudflare Pages → Settings → Environment variables):
-//   ANTHROPIC_API_KEY          → chave da API da Anthropic (console.anthropic.com)
-//   IA_MODEL (opcional)        → padrão: claude-haiku-4-5-20251001
+//   GEMINI_API_KEY             → chave do Google AI Studio (aistudio.google.com → Get API key)  ← padrão
+//   ANTHROPIC_API_KEY          → alternativa paga (console.anthropic.com)
+//   IA_PROVIDER (opcional)     → gemini | anthropic. Sem ela: usa a que tiver chave, Gemini primeiro
+//   IA_MODEL (opcional)        → padrão Gemini: gemini-2.5-flash · padrão Anthropic: claude-haiku-4-5-20251001
 //   SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY → as mesmas do checkout/webhook
 //
 // Contrato:
@@ -16,7 +18,8 @@
 //   200  { sugestao: {resumo, dicas[], cidades[{nome,pais,dias,lugares[...]}]}, restantes }
 //   402  { error:'sem_creditos' } · 401 sessão · 403 viagem · 400 entrada · 502 modelo
 
-const MODEL_PADRAO = 'claude-haiku-4-5-20251001';
+const GEMINI_PADRAO = 'gemini-2.5-flash';
+const ANTHROPIC_PADRAO = 'claude-haiku-4-5-20251001';
 const CATEGORIAS = ['atração', 'restaurante', 'compras', 'outro'];
 const CUSTOS = ['gratis', '$', '$$', '$$$'];
 
@@ -63,7 +66,8 @@ const TOOL = {
 
 export async function onRequestPost({ request, env }) {
   try {
-    if (!env.ANTHROPIC_API_KEY || !env.SUPABASE_URL || !env.SUPABASE_ANON_KEY || !env.SUPABASE_SERVICE_ROLE_KEY) {
+    const prov = provedor(env);
+    if (!prov || !env.SUPABASE_URL || !env.SUPABASE_ANON_KEY || !env.SUPABASE_SERVICE_ROLE_KEY) {
       return json({ error: 'ia_nao_configurada' }, 500);
     }
     const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
@@ -92,39 +96,96 @@ export async function onRequestPost({ request, env }) {
     const restantes = cr.ok ? Number(await cr.json()) : 0;
     if (!(restantes > 0)) return json({ error: 'sem_creditos', restantes: 0 }, 402);
 
-    const modelo = env.IA_MODEL || MODEL_PADRAO;
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: modelo,
-        max_tokens: 4096,
-        system: SYSTEM,
-        tools: [TOOL],
-        tool_choice: { type: 'tool', name: TOOL.name },
-        messages: [{ role: 'user', content: montarPedido(inp) }]
-      })
-    });
-    const data = await r.json().catch(() => ({}));
-    const bloco = (data.content || []).find(b => b.type === 'tool_use');
-    if (!r.ok || !bloco) {
-      await log(env, { user_id: user.id, viagem_id: inp.viagem_id, entrada: inp, saida: data, status: 'erro', modelo });
+    const res = await (prov === 'gemini' ? gerarGemini : gerarAnthropic)(env, inp);
+    if (!res.ok) {
+      await log(env, { user_id: user.id, viagem_id: inp.viagem_id, entrada: inp, saida: res.bruto, status: 'erro', modelo: res.modelo });
       return json({ error: 'ia_falhou' }, 502);
     }
-    const sugestao = sanitizarSaida(bloco.input);
+    const sugestao = sanitizarSaida(res.saida);
+    if (!sugestao.cidades.length) {
+      await log(env, { user_id: user.id, viagem_id: inp.viagem_id, entrada: inp, saida: res.bruto, status: 'erro', modelo: res.modelo });
+      return json({ error: 'ia_falhou' }, 502);
+    }
     await log(env, {
-      user_id: user.id, viagem_id: inp.viagem_id, entrada: inp, saida: sugestao, status: 'ok', modelo,
-      tokens_in: data.usage?.input_tokens ?? null, tokens_out: data.usage?.output_tokens ?? null
+      user_id: user.id, viagem_id: inp.viagem_id, entrada: inp, saida: sugestao, status: 'ok', modelo: res.modelo,
+      tokens_in: res.tokens_in, tokens_out: res.tokens_out
     });
     return json({ sugestao, restantes: restantes - 1 });
   } catch (e) {
     console.error('roteiro_ia_erro', e);
     return json({ error: 'erro_interno' }, 500);
   }
+}
+
+// ── Provedores ──────────────────────────────────────────────────────────────
+// IA_PROVIDER = gemini | anthropic. Sem a variável: usa o que tiver chave (Gemini primeiro).
+function provedor(env) {
+  const p = (env.IA_PROVIDER || '').toLowerCase();
+  if (p === 'gemini') return env.GEMINI_API_KEY ? 'gemini' : null;
+  if (p === 'anthropic') return env.ANTHROPIC_API_KEY ? 'anthropic' : null;
+  return env.GEMINI_API_KEY ? 'gemini' : env.ANTHROPIC_API_KEY ? 'anthropic' : null;
+}
+
+// Gemini · generateContent com saída JSON forçada por responseSchema (formato OpenAPI).
+async function gerarGemini(env, inp) {
+  const modelo = env.IA_MODEL || GEMINI_PADRAO;
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelo)}:generateContent`, {
+    method: 'POST',
+    headers: { 'x-goog-api-key': env.GEMINI_API_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: SYSTEM }] },
+      contents: [{ role: 'user', parts: [{ text: montarPedido(inp) }] }],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        responseSchema: paraSchemaGemini(TOOL.input_schema),
+        temperature: 0.4,
+        maxOutputTokens: 8192
+      }
+    })
+  });
+  const data = await r.json().catch(() => ({}));
+  const texto = (data.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
+  let saida = null;
+  try { saida = JSON.parse(texto); } catch {}
+  return {
+    ok: r.ok && !!saida, saida, modelo, bruto: saida ? null : { status: r.status, data },
+    tokens_in: data.usageMetadata?.promptTokenCount ?? null,
+    tokens_out: data.usageMetadata?.candidatesTokenCount ?? null
+  };
+}
+
+// JSON Schema (minúsculo) → Schema do Gemini (OpenAPI: tipos em MAIÚSCULO, sem chaves não suportadas).
+function paraSchemaGemini(s) {
+  const o = { type: String(s.type).toUpperCase() };
+  if (s.description) o.description = s.description;
+  if (s.enum) o.enum = s.enum;
+  if (s.properties) {
+    o.properties = Object.fromEntries(Object.entries(s.properties).map(([k, v]) => [k, paraSchemaGemini(v)]));
+    o.propertyOrdering = Object.keys(s.properties);
+  }
+  if (s.items) o.items = paraSchemaGemini(s.items);
+  if (s.required) o.required = s.required;
+  return o;
+}
+
+// Anthropic · tool use forçado (mantido para trocar de provedor só por variável de ambiente).
+async function gerarAnthropic(env, inp) {
+  const modelo = env.IA_MODEL || ANTHROPIC_PADRAO;
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+    body: JSON.stringify({
+      model: modelo, max_tokens: 4096, system: SYSTEM,
+      tools: [TOOL], tool_choice: { type: 'tool', name: TOOL.name },
+      messages: [{ role: 'user', content: montarPedido(inp) }]
+    })
+  });
+  const data = await r.json().catch(() => ({}));
+  const bloco = (data.content || []).find(b => b.type === 'tool_use');
+  return {
+    ok: r.ok && !!bloco, saida: bloco?.input, modelo, bruto: bloco ? null : { status: r.status, data },
+    tokens_in: data.usage?.input_tokens ?? null, tokens_out: data.usage?.output_tokens ?? null
+  };
 }
 
 // GET → só o saldo de créditos (o front mostra "Restam N gerações").
