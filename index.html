@@ -2568,7 +2568,7 @@ function drawRot(){
   const ab=document.createElement('button');ab.className='bs';
   ab.style.cssText='width:100%;margin-bottom:12px;padding:10px;color:var(--teal);border-color:var(--teal);font-size:13px;font-weight:600';
   ab.textContent='+ Adicionar Dia';ab.onclick=()=>openDia(null);el.appendChild(ab);
-  if(!rDias.length){el.innerHTML+='<div style="text-align:center;padding:40px 0;color:#444"><div style="font-size:36px;margin-bottom:10px">🗺️</div><div>Nenhum dia</div></div>';return;}
+  if(!rDias.length){const emp=document.createElement('div');emp.style.cssText='text-align:center;padding:40px 0;color:#444';emp.innerHTML='<div style="font-size:36px;margin-bottom:10px">🗺️</div><div>Nenhum dia</div>';el.appendChild(emp);return;}
   rDias.forEach(dia=>{
     const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
     const ab2=dopen[dia.id]===true;
