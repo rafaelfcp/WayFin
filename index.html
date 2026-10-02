@@ -79,6 +79,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 }
 .trip-nm:active{opacity:.7}
 .bud-box{text-align:left;flex-shrink:0}
+.bud-main,.bud-acts{display:contents}
 .bud-lbl{font-size:9px;color:var(--mut);letter-spacing:1px;text-transform:uppercase}
 .bud-val{font-size:16px;font-weight:700;cursor:pointer;letter-spacing:-0.3px}
 .prog{margin-top:10px;background:var(--sur2);border-radius:99px;height:5px;overflow:hidden}
@@ -658,7 +659,15 @@ button{min-height:44px}
 .bi{min-width:44px;min-height:44px}.chip{min-height:38px;display:inline-flex;align-items:center}.pill{min-height:44px;font-size:13px}
 .tab:focus-visible,.chip:focus-visible,.pill:focus-visible,.bi:focus-visible,.bs:focus-visible,.bc:focus-visible,.bok:focus-visible,.fab:focus-visible,.m-btn:focus-visible,.m-sw-btn:focus-visible,.m-style-btn:focus-visible,.lf-btn:focus-visible,.lanc-mode-btn:focus-visible{outline:3px solid var(--amber2);outline-offset:3px}
 .budget-hero{background:var(--sur);border:1px solid var(--bor2);border-radius:var(--r);padding:16px;margin:0 0 18px;position:relative;overflow:hidden}.budget-hero:before{content:'';position:absolute;inset:0;background:var(--grd-subtle);pointer-events:none}.budget-hero>*{position:relative}.budget-hero h2{font-size:16px;margin-bottom:4px}.budget-hero p{font-size:13px;color:var(--mut2);line-height:1.5}.budget-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.budget-kpi{background:color-mix(in srgb,var(--bg) 78%,transparent);border-radius:10px;padding:10px}.budget-kpi span{display:block;font-size:12px;color:var(--mut2);margin-bottom:4px}.budget-kpi strong{font-size:17px}.budget-status{margin-top:12px;font-size:13px;font-weight:700;color:var(--teal)}
-@media (max-width:899px){#tabs{position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(var(--sb) + 8px);gap:5px;border-top:1px solid var(--bor);box-shadow:0 -8px 24px rgba(0,0,0,.18)}.tab{font-size:11px;border-radius:12px;padding:6px 3px;line-height:1.15}#pages{margin-bottom:68px}.pg{padding-bottom:22px}.fab{margin-bottom:calc(var(--sb) + 80px)}.user-menu{display:none}.user-menu.open{display:block}.acc-toggle{display:flex!important}}
+@media (max-width:899px){#tabs{position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(var(--sb) + 8px);gap:5px;border-top:1px solid var(--bor);box-shadow:0 -8px 24px rgba(0,0,0,.18)}.tab{font-size:11px;border-radius:12px;padding:6px 3px;line-height:1.15}#pages{margin-bottom:68px}.pg{padding-bottom:22px}.fab{margin-bottom:calc(var(--sb) + 80px)}
+  .bud-box{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:2px}
+  .bud-main,.bud-acts{display:flex;align-items:center;gap:8px}
+  .bud-main{flex-direction:column;align-items:flex-start;gap:0}
+  #theme-btn{margin:0!important;display:inline-flex!important;align-items:center;justify-content:center;width:32px;height:32px;flex-shrink:0}
+  .acc-toggle{display:flex!important;margin:0!important}
+  .user-menu{display:none;width:100%;order:3}
+  .user-menu.open{display:block}
+}
 @media (min-width:900px){#shell{display:grid;grid-template-columns:248px minmax(0,1fr);grid-template-rows:auto 1fr;padding:0}#topbar{grid-column:1;grid-row:1;padding:28px 18px 16px;border-right:1px solid var(--bor);min-height:210px}.tb-row{display:block}.bud-box{text-align:left;margin-top:22px}.bud-box button{margin-left:0!important}.chips{margin-top:8px}.prog{margin-top:20px}#tabs{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:stretch;padding:12px 14px 28px;border-right:1px solid var(--bor);gap:8px}.tab{flex:0;display:flex;align-items:center;justify-content:flex-start;padding:11px 14px;border-radius:10px;text-align:left}#pages{grid-column:2;grid-row:1 / span 2;background:var(--bg)}.pg{padding:32px clamp(28px,5vw,72px) 48px;max-width:1440px;margin:0 auto}.cat-grid{grid-template-columns:repeat(6,minmax(120px,1fr))}.sg{grid-template-columns:repeat(3,1fr)}.budget-kpis{grid-template-columns:repeat(3,1fr)}.budget-hero{padding:22px}.budget-hero h2{font-size:20px}.donut-w{max-width:720px}.sh{max-width:640px;border-radius:24px;margin-bottom:5vh;padding:24px}.ov{align-items:center}.hdl{display:none}#mapa-pg{padding-left:248px}.m-top,.m-dias,.m-switch,.m-style,#m-list{max-width:1200px;margin-left:auto;margin-right:auto}}
 .trip-nm{background:none;border:none;color:var(--txt);padding:0;min-height:44px;text-align:left}
 .user-menu{margin-top:14px;padding-top:12px;border-top:1px solid var(--bor)}.user-email{font-size:12px;color:var(--mut2);word-break:break-word;margin-bottom:6px}.logout-btn{background:none;border:1px solid var(--bor);border-radius:8px;color:var(--mut2);font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;min-height:44px;width:100%;text-align:left}.logout-btn:hover{border-color:var(--red);color:var(--red)}
@@ -1124,10 +1133,14 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <div class="chips" id="chips"></div>
       </div>
       <div class="bud-box">
-        <div class="bud-lbl">Orçamento</div>
-        <div class="bud-val" id="bval">—</div>
-        <button id="theme-btn" type="button" aria-label="Alternar tema" onclick="toggleTheme()" style="margin-top:6px;background:none;border:none;font-size:18px;cursor:pointer;display:block;margin-left:auto">🌙</button>
-        <button id="acc-btn" type="button" class="acc-toggle" aria-label="Conta">👤 Conta</button>
+        <div class="bud-main">
+          <div class="bud-lbl">Orçamento</div>
+          <div class="bud-val" id="bval">—</div>
+        </div>
+        <div class="bud-acts">
+          <button id="theme-btn" type="button" aria-label="Alternar tema" onclick="toggleTheme()" style="margin-top:6px;background:none;border:none;font-size:18px;cursor:pointer;display:block;margin-left:auto">🌙</button>
+          <button id="acc-btn" type="button" class="acc-toggle" aria-label="Conta">👤 Conta</button>
+        </div>
         <div class="user-menu" aria-label="Conta" id="user-menu-box"><div class="user-email" id="user-email"></div><div class="plan-badge" id="plan-badge"></div><button class="logout-btn" id="logout-btn" type="button" aria-label="Sair da conta">↪ Sair da conta</button></div>
       </div>
     </div>
