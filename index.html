@@ -1304,6 +1304,42 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   <div class="br"><button class="bc" id="pcnc">Cancelar</button><button class="bok" id="pok">Salvar Parada</button></div>
 </div></div>
 
+<!-- MODAL ROTEIRO COM IA — FORMULÁRIO -->
+<div class="ov" id="oia"><div class="sh">
+  <div class="hdl"></div><div class="mtit">✨ Montar roteiro com IA</div>
+  <div class="pw-status" id="oia-credits" style="margin-bottom:10px"></div>
+  <label class="fl">DESTINO PRINCIPAL</label><input class="fi" id="iad" type="text" autocomplete="off" placeholder="Ex: Lisboa, Portugal"/>
+  <div class="g2">
+    <div><label class="fl">DATA INÍCIO</label><input class="fi" id="iai" type="date" style="color-scheme:dark"/></div>
+    <div><label class="fl">DATA FIM</label><input class="fi" id="iaf" type="date" style="color-scheme:dark"/></div>
+  </div>
+  <label class="fl">OUTRAS CIDADES (opcional)</label><input class="fi" id="iaoc" type="text" autocomplete="off" placeholder="Ex: Porto, Sintra"/>
+  <label class="fl">TRANSPORTE</label><div class="tpills" id="iatp"></div>
+  <div class="g2">
+    <div><label class="fl">VIAJANTES</label><input class="fi" id="iav" type="number" min="1" value="1"/></div>
+    <div><label class="fl">ORÇAMENTO (R$)</label><input class="fi" id="iao" type="number" min="0" step="0.01" placeholder="Opcional"/></div>
+  </div>
+  <div class="tg-r" id="iactog"><span style="font-size:13px">👶 Viajando com crianças</span><div class="tg-sw" id="iacsw"></div></div>
+  <label class="fl">RITMO</label><div class="tpills" id="iarit"></div>
+  <label class="fl">INTERESSES</label><div class="tpills" id="iaint" style="grid-template-columns:repeat(2,1fr)"></div>
+  <label class="fl">LUGARES QUE JÁ QUER CONHECER (opcional)</label>
+  <textarea class="fi" id="iades" rows="2" style="resize:none;line-height:1.5;font-size:14px" placeholder="Ex: Torre de Belém, LX Factory..."></textarea>
+  <div class="pw-status" id="oia-status"></div>
+  <div class="br"><button class="bc" id="iacnc">Cancelar</button><button class="bok" id="iaok">Gerar sugestão</button></div>
+</div></div>
+
+<!-- MODAL ROTEIRO COM IA — RESULTADO -->
+<div class="cov" id="oiar"><div class="csh">
+  <div class="csh-h">
+    <div style="font-size:16px;font-weight:800">✨ Sugestão de roteiro</div>
+    <button class="bi" id="oiar-close" style="font-size:18px;color:var(--mut2)">✕</button>
+  </div>
+  <div id="oiar-resumo" style="font-size:13px;color:var(--mut2);margin-bottom:10px"></div>
+  <div id="oiar-dicas" style="margin-bottom:6px"></div>
+  <div class="csh-l" id="oiar-cidades"></div>
+  <div class="br"><button class="bc" id="oiar-cnc">Fechar</button><button class="bok" id="oiar-aplicar">Adicionar ao roteiro</button></div>
+</div></div>
+
 <!-- POPUP CAT -->
 <div class="cov" id="ocm"><div class="csh">
   <div class="hdl"></div>
@@ -1454,9 +1490,11 @@ const PAYWALL_REASONS={
   rota:'A otimização de rota é exclusiva do Premium.',
   categorias:'Categorias personalizadas são exclusivas do Premium.',
   explore:'Veja todos os locais próximos com o Premium.',
+  roteiro:'Montar roteiro (dias e paradas) é exclusivo do Premium.',
+  ia_creditos:'Suas gerações de roteiro com IA acabaram por agora.',
   geral:''
 };
-const PREMIUM_BENEFITS=['Viagens ilimitadas','Anexos e reservas ilimitados','Otimização de rota','Categorias personalizadas','Explorar arredores completo','Sem anúncios'];
+const PREMIUM_BENEFITS=['Viagens ilimitadas','Montar roteiro (dias e paradas)','Roteiro gerado com IA','Anexos e reservas ilimitados','Otimização de rota','Categorias personalizadas','Explorar arredores completo','Sem anúncios'];
 // Patrocinados/afiliados: preencha href com seus links. Itens sem href são ignorados.
 // Sem nenhum patrocinador ativo, o espaço mostra o convite ao Premium.
 const SPONSORS=[
@@ -2565,6 +2603,9 @@ async function loadRot(){
 }
 function drawRot(){
   const el=$('rw');el.innerHTML='';
+  const aiBtn=document.createElement('button');aiBtn.className='bs';
+  aiBtn.style.cssText='width:100%;margin-bottom:8px;padding:10px;color:#0C0C18;background:linear-gradient(135deg,#4ECDC4,#FFD166);border:none;font-size:13px;font-weight:700';
+  aiBtn.textContent='✨ Montar roteiro com IA';aiBtn.onclick=abrirIA;el.appendChild(aiBtn);
   const ab=document.createElement('button');ab.className='bs';
   ab.style.cssText='width:100%;margin-bottom:12px;padding:10px;color:var(--teal);border-color:var(--teal);font-size:13px;font-weight:600';
   ab.textContent='+ Adicionar Dia';ab.onclick=()=>openDia(null);el.appendChild(ab);
@@ -2801,6 +2842,176 @@ async function delDia(id){
   rDias=rDias.filter(d=>d.id!==id);rPars=rPars.filter(p=>p.dia_id!==id);
   drawRot();toast('Dia excluído ✓');await sb.from('roteiro_dias').delete().eq('id',id);
 }
+
+// ── ROTEIRO COM IA ────────────────────────────────────
+const IA_TRANSPORTE=[{id:'publico',label:'Só público/a pé'},{id:'carro',label:'Vou alugar carro'},{id:'ambos',label:'Mistura dos dois'}];
+const IA_RITMO=[{id:'tranquilo',label:'Tranquilo'},{id:'moderado',label:'Moderado'},{id:'intenso',label:'Intenso'}];
+const IA_INTERESSES=[{id:'natureza',label:'🌿 Natureza'},{id:'praia',label:'🏖️ Praia'},{id:'cultura',label:'🎭 Cultura'},{id:'história',label:'🏛️ História'},{id:'gastronomia',label:'🍴 Gastronomia'},{id:'vida noturna',label:'🌃 Vida noturna'},{id:'compras',label:'🛍️ Compras'},{id:'aventura',label:'🧗 Aventura'},{id:'relax',label:'🧘 Relax'},{id:'família',label:'👨‍👩‍👧 Família'}];
+let iaSugestao=null,iaSelecionados=new Set(),iaDataInicio=null,iaCriancas=false,iaPillsProntas=false;
+function montarPillsSingle(containerId,items,defaultId){
+  const el=$(containerId);el.innerHTML='';
+  items.forEach(it=>{
+    const p=document.createElement('div');p.className='pill'+(it.id===defaultId?' on':'');p.dataset.id=it.id;
+    p.style.setProperty('--pc','#4ECDC4');p.textContent=it.label;
+    p.onclick=()=>{el.querySelectorAll('.pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');};
+    el.appendChild(p);
+  });
+}
+function montarPillsMulti(containerId,items){
+  const el=$(containerId);el.innerHTML='';
+  items.forEach(it=>{
+    const p=document.createElement('div');p.className='pill';p.dataset.id=it.id;
+    p.style.setProperty('--pc','#FFD166');p.textContent=it.label;
+    p.onclick=()=>p.classList.toggle('on');
+    el.appendChild(p);
+  });
+}
+async function abrirIA(){
+  if(!iaPillsProntas){
+    montarPillsSingle('iatp',IA_TRANSPORTE,'publico');
+    montarPillsSingle('iarit',IA_RITMO,'moderado');
+    montarPillsMulti('iaint',IA_INTERESSES);
+    iaPillsProntas=true;
+  }
+  const v=viagens.find(x=>x.id===vid);
+  if(v&&!$('iad').value)$('iad').value=v.nome||'';
+  if(v&&!$('iao').value&&v.orcamento)$('iao').value=v.orcamento;
+  $('oia-status').className='pw-status';$('oia-status').textContent='';
+  $('oia-credits').className='pw-status';$('oia-credits').textContent='Verificando créditos de IA...';
+  $('oia').classList.add('on');
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    const r=await fetch('/api/roteiro-ia',{headers:{Authorization:'Bearer '+(session?.access_token||'')}});
+    const d=await r.json().catch(()=>({restantes:0}));
+    const rest=d.restantes??0;
+    $('oia-credits').textContent=rest>0?`Restam ${rest} geração${rest===1?'':'ões'} de IA.`:'Sem gerações de IA disponíveis no momento.';
+    if(!rest)$('oia-credits').className='pw-status error';
+  }catch{$('oia-credits').textContent='';}
+}
+$('iacnc').onclick=()=>$('oia').classList.remove('on');
+$('oia').onclick=e=>{if(e.target===$('oia'))$('oia').classList.remove('on');};
+$('iactog').onclick=()=>{iaCriancas=!iaCriancas;$('iacsw').classList.toggle('on',iaCriancas);};
+const IA_ERROS={
+  sessao_invalida:'Sessão expirada — entre novamente ⚠️',nao_autenticado:'Sessão expirada — entre novamente ⚠️',
+  viagem_sem_acesso:'Sem acesso a esta viagem ⚠️',viagem_invalida:'Viagem inválida ⚠️',
+  destino_obrigatorio:'Informe o destino ⚠️',datas_invalidas:'Datas inválidas ⚠️',periodo_invalido:'O período deve ter entre 1 e 30 dias ⚠️',
+  ia_nao_configurada:'A IA ainda não foi configurada no servidor ⚠️',ia_falhou:'Não foi possível gerar agora — tente novamente ⚠️',
+  erro_interno:'Erro interno — tente novamente ⚠️'
+};
+$('iaok').onclick=async()=>{
+  const destino=$('iad').value.trim();
+  const data_inicio=$('iai').value,data_fim=$('iaf').value;
+  const st=$('oia-status');st.className='pw-status';
+  if(!destino){st.className='pw-status error';st.textContent='Informe o destino ⚠️';$('iad').focus();return;}
+  if(!data_inicio||!data_fim){st.className='pw-status error';st.textContent='Informe as datas de início e fim ⚠️';return;}
+  if(data_fim<data_inicio){st.className='pw-status error';st.textContent='A data fim não pode ser antes da data início ⚠️';return;}
+  const payload={
+    viagem_id:vid,destino,data_inicio,data_fim,
+    transporte:document.querySelector('#iatp .pill.on')?.dataset.id||'publico',
+    orcamento:parseFloat($('iao').value)||0,
+    viajantes:parseInt($('iav').value)||1,
+    criancas:iaCriancas,
+    ritmo:document.querySelector('#iarit .pill.on')?.dataset.id||'moderado',
+    interesses:[...document.querySelectorAll('#iaint .pill.on')].map(p=>p.dataset.id),
+    desejos:$('iades').value.trim(),
+    outras_cidades:$('iaoc').value.trim()
+  };
+  const btn=$('iaok');btn.disabled=true;st.textContent='Gerando sugestão (pode levar até 30s)...';
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    const r=await fetch('/api/roteiro-ia',{method:'POST',
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+(session?.access_token||'')},
+      body:JSON.stringify(payload)});
+    const d=await r.json().catch(()=>({}));
+    if(r.status===402){$('oia').classList.remove('on');openPaywall('ia_creditos');return;}
+    if(!r.ok){st.className='pw-status error';st.textContent=IA_ERROS[d.error]||'Erro ao gerar sugestão ⚠️';return;}
+    iaSugestao=d.sugestao;iaDataInicio=data_inicio;
+    iaSelecionados=new Set();
+    iaSugestao.cidades.forEach((c,ci)=>c.lugares.forEach((l,li)=>iaSelecionados.add(ci+':'+li)));
+    $('oia').classList.remove('on');
+    drawIAResultado();
+    $('oiar').classList.add('on');
+  }catch(e){st.className='pw-status error';st.textContent='Falha de conexão — tente novamente ⚠️';}
+  finally{btn.disabled=false;}
+};
+function drawIAResultado(){
+  $('oiar-resumo').textContent=iaSugestao.resumo||'';
+  const dicasEl=$('oiar-dicas');dicasEl.innerHTML='';
+  if(iaSugestao.dicas?.length){
+    const ul=document.createElement('ul');ul.style.cssText='font-size:12px;color:var(--mut2);padding-left:18px;margin:0';
+    iaSugestao.dicas.forEach(dc=>{const li=document.createElement('li');li.textContent=dc;li.style.marginBottom='3px';ul.appendChild(li);});
+    dicasEl.appendChild(ul);
+  }
+  const wrap=$('oiar-cidades');wrap.innerHTML='';
+  iaSugestao.cidades.forEach((c,ci)=>{
+    const sec=document.createElement('div');sec.style.cssText='margin-bottom:16px';
+    const h=document.createElement('div');h.style.cssText='font-weight:800;font-size:14px;margin-bottom:2px';
+    h.textContent=`📍 ${c.nome}${c.pais?', '+c.pais:''} — ${c.dias} dia${c.dias>1?'s':''}`;sec.appendChild(h);
+    c.lugares.forEach((l,li)=>{
+      const key=ci+':'+li;
+      const row=document.createElement('label');
+      row.style.cssText='display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--bor);cursor:pointer';
+      const cb=document.createElement('input');cb.type='checkbox';cb.checked=iaSelecionados.has(key);
+      cb.style.cssText='margin-top:3px;flex-shrink:0';
+      cb.onchange=()=>{if(cb.checked)iaSelecionados.add(key);else iaSelecionados.delete(key);};
+      row.appendChild(cb);
+      const t=TIPOS.find(x=>x.id===l.categoria)||TIPOS[5];
+      const info=document.createElement('div');info.style.cssText='min-width:0';
+      const nm=document.createElement('div');nm.style.cssText='font-weight:700;font-size:13px';nm.textContent=`${t.e} ${l.nome}`;info.appendChild(nm);
+      const desc=document.createElement('div');desc.style.cssText='font-size:12px;color:var(--mut2);margin-top:2px';
+      desc.textContent=[l.descricao,l.motivo].filter(Boolean).join(' — ');info.appendChild(desc);
+      const meta=document.createElement('div');meta.style.cssText='font-size:11px;color:var(--mut);margin-top:2px';
+      meta.textContent=`⏱️ ${l.duracao_min}min · ${l.custo==='gratis'?'grátis':l.custo}`;info.appendChild(meta);
+      row.appendChild(info);
+      sec.appendChild(row);
+    });
+    wrap.appendChild(sec);
+  });
+}
+$('oiar-close').onclick=()=>$('oiar').classList.remove('on');
+$('oiar-cnc').onclick=()=>$('oiar').classList.remove('on');
+$('oiar').onclick=e=>{if(e.target===$('oiar'))$('oiar').classList.remove('on');};
+$('oiar-aplicar').onclick=async()=>{
+  const btn=$('oiar-aplicar');const txtOrig=btn.textContent;btn.disabled=true;btn.textContent='Adicionando...';
+  try{
+    const baseNum=rDias.length?Math.max(...rDias.map(d=>d.numero))+1:1;
+    let diaCount=0;const novosDias=[];
+    iaSugestao.cidades.forEach((c,ci)=>{
+      const sel=c.lugares.map((l,li)=>({l,li})).filter(x=>iaSelecionados.has(ci+':'+x.li));
+      if(!sel.length)return;
+      const nDiasCidade=Math.max(1,c.dias);
+      const porDia=Array.from({length:nDiasCidade},()=>[]);
+      sel.forEach((x,i)=>porDia[i%nDiasCidade].push(x.l));
+      porDia.forEach(lugares=>{
+        if(!lugares.length)return;
+        novosDias.push({cidade:c.nome,pais:c.pais,numero:baseNum+diaCount,lugares});
+        diaCount++;
+      });
+    });
+    if(!novosDias.length){toast('Selecione ao menos um lugar ⚠️');return;}
+    let dataAtual=iaDataInicio?new Date(iaDataInicio+'T12:00'):null;
+    for(const nd of novosDias){
+      const dataStr=dataAtual?dataAtual.toISOString().slice(0,10):null;
+      if(dataAtual)dataAtual.setDate(dataAtual.getDate()+1);
+      const{data:diaIns,error:e1}=await sb.from('roteiro_dias').insert({viagem_id:vid,titulo:nd.cidade,numero:nd.numero,data:dataStr,descricao:null}).select().single();
+      if(e1){if(!handlePlanError(e1))toast('Erro ao criar dia ⚠️');continue;}
+      rDias.push(diaIns);
+      const paradasPayload=nd.lugares.map((l,i)=>({
+        dia_id:diaIns.id,nome:l.nome,tipo:l.categoria,
+        endereco:`${l.nome}, ${nd.cidade}${nd.pais?', '+nd.pais:''}`,
+        observacao:[l.descricao,l.motivo].filter(Boolean).join(' — ')||null,
+        horario:null,gmaps_link:null,realizado:false,ordem:i+1
+      }));
+      const{data:parsIns,error:e2}=await sb.from('roteiro_paradas').insert(paradasPayload).select();
+      if(e2){toast('Dia criado, mas falha ao salvar as paradas ⚠️');continue;}
+      rPars.push(...(parsIns||[]));
+    }
+    rDias.sort((a,b)=>a.numero-b.numero);
+    drawRot();
+    $('oiar').classList.remove('on');
+    toast(`✓ Roteiro adicionado — ${novosDias.length} dia${novosDias.length>1?'s':''}`);
+  }finally{btn.disabled=false;btn.textContent=txtOrig;}
+};
 
 // ── MODAL PARADA ──────────────────────────────────────
 TIPOS.forEach(t=>{
