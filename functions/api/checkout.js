@@ -15,9 +15,9 @@
 // Os preços aqui são a fonte da verdade pro valor cobrado — nunca confie no
 // valor vindo do front-end. Mantenha isto em sincronia com PRICING no index.html.
 const PRICES = {
-  monthly:   { title: 'Wayfin Premium — Mensal', amount: 9.90,  recurring: { frequency: 1, frequency_type: 'months' } },
-  annual:    { title: 'Wayfin Premium — Anual',  amount: 69.90, recurring: { frequency: 1, frequency_type: 'years' } },
-  trip_pass: { title: 'Wayfin — Passe de Viagem (30 dias)', amount: 19.90, recurring: null }
+  monthly:   { title: 'Wayfin Premium — Mensal', amount: 21.90, recurring: { frequency: 1, frequency_type: 'months' } },
+  annual:    { title: 'Wayfin Premium — Anual',  amount: 119.90, recurring: { frequency: 1, frequency_type: 'years' } },
+  trip_pass: { title: 'Wayfin — Passe de Viagem (30 dias)', amount: 34.90, recurring: null }
 };
 
 export async function onRequestPost({ request, env }) {
