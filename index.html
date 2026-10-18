@@ -789,7 +789,7 @@ body.show-landing #landing-screen{display:block}
 .ld-plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:stretch}
 .ld-plan{background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:22px;display:flex;flex-direction:column}
 .ld-plan.hl{border-color:var(--teal);box-shadow:0 16px 40px rgba(78,205,196,.18);position:relative}
-.ld-plan.hl:before{content:'MAIS POPULAR';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--teal);color:#0C0C18;font-size:10px;font-weight:800;letter-spacing:.04em;padding:4px 12px;border-radius:99px}
+.ld-plan.hl:before{content:'MELHOR VALOR';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--teal);color:#0C0C18;font-size:10px;font-weight:800;letter-spacing:.04em;padding:4px 12px;border-radius:99px}
 .ld-plan h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--mut2);margin:4px 0 10px}
 .ld-plan .ld-price{font-size:30px;font-weight:800;margin-bottom:2px}
 .ld-plan .ld-price small{font-size:13px;font-weight:600;color:var(--mut2)}
@@ -949,8 +949,8 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         </div>
         <div class="ld-plan hl">
           <h3>Anual</h3>
-          <div class="ld-price">R$69<small>,90/ano</small></div>
-          <div class="ld-price-sub">≈ R$ 5,83 por mês</div>
+          <div class="ld-price">R$119<small>,90/ano</small></div>
+          <div class="ld-price-sub">≈ R$ 9,99 por mês · economize R$ 142,90</div>
           <ul>
             <li>Viagens e anexos ilimitados</li>
             <li>Reservas ilimitadas por viagem</li>
@@ -962,7 +962,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         </div>
         <div class="ld-plan">
           <h3>Mensal</h3>
-          <div class="ld-price">R$9<small>,90/mês</small></div>
+          <div class="ld-price">R$21<small>,90/mês</small></div>
           <div class="ld-price-sub">cancele quando quiser</div>
           <ul>
             <li>Tudo do plano Anual</li>
@@ -973,7 +973,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         </div>
         <div class="ld-plan">
           <h3>Passe de viagem</h3>
-          <div class="ld-price">R$19<small>,90</small></div>
+          <div class="ld-price">R$34<small>,90</small></div>
           <div class="ld-price-sub">30 dias, sem renovação</div>
           <ul>
             <li>Tudo do Premium por 30 dias</li>
@@ -1104,7 +1104,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       </ul>
 
       <h2>5. Plano gratuito e assinatura</h2>
-      <p>O Wayfin oferece um plano Free permanente, com uso limitado (1 viagem ativa, com limites de anexos e reservas por viagem). Para viagens ilimitadas e recursos adicionais (otimização de rota, categorias personalizadas, anexos e reservas ilimitados, sem anúncios), os planos pagos disponíveis são: Mensal (R$ 9,90/mês), Anual (R$ 69,90/ano, equivalente a ≈ R$ 5,83/mês) e Passe de viagem (R$ 19,90 por 30 dias, sem renovação automática). Valores e condições podem ser atualizados e são sempre exibidos na tela de assinatura no momento da contratação. O cancelamento de qualquer plano pago pode ser feito a qualquer momento, sem perda de acesso ao plano Free.</p>
+      <p>O Wayfin oferece um plano Free permanente, com uso limitado (1 viagem ativa, com limites de anexos e reservas por viagem). Para viagens ilimitadas e recursos adicionais (otimização de rota, categorias personalizadas, anexos e reservas ilimitados, sem anúncios), os planos pagos disponíveis são: Mensal (R$ 21,90/mês), Anual (R$ 119,90/ano, cobrado anualmente, equivalente a ≈ R$ 9,99/mês) e Passe de viagem (R$ 34,90 por 30 dias, sem renovação automática). Valores e condições podem ser atualizados e são sempre exibidos na tela de assinatura no momento da contratação. O cancelamento de qualquer plano pago pode ser feito a qualquer momento, sem perda de acesso ao plano Free.</p>
 
       <h2>6. Limitação de responsabilidade</h2>
       <p>O Wayfin não se responsabiliza por:</p>
@@ -1647,9 +1647,9 @@ const PLAN_LIMITS={
   premium:{viagens:Infinity,anexos_por_viagem:Infinity,reservas_por_viagem:Infinity,explore_itens:15,categorias_custom:true,otimizar_rota:true}
 };
 const PRICING=[ // hipótese inicial: validar com teste de preço antes de fixar
-  {id:'annual',nome:'Anual',preco:'R$ 69,90',sub:'≈ R$ 5,83 por mês',destaque:true},
-  {id:'monthly',nome:'Mensal',preco:'R$ 9,90',sub:'cancele quando quiser'},
-  {id:'trip_pass',nome:'Passe de viagem',preco:'R$ 19,90',sub:'30 dias, sem renovação'}
+  {id:'annual',nome:'Anual',preco:'R$ 119,90',sub:'≈ R$ 9,99 por mês · cobrado anualmente',destaque:true},
+  {id:'monthly',nome:'Mensal',preco:'R$ 21,90',sub:'cancele quando quiser'},
+  {id:'trip_pass',nome:'Passe de viagem',preco:'R$ 34,90',sub:'30 dias, sem renovação'}
 ];
 const PAYWALL_REASONS={
   viagens:'O plano Free inclui 1 viagem.',
