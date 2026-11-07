@@ -15,5 +15,7 @@
   },
   // mantém as variáveis cadastradas no painel (as secrets já são sempre mantidas)
   "keep_vars": true,
+  // link de prévia por branch (ex.: worker-funcoes-wayfin.raf-fcp.workers.dev)
+  "preview_urls": true,
   "observability": { "enabled": true }
 }
