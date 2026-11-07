@@ -786,7 +786,7 @@ body.show-landing #landing-screen{display:block}
 .ld-step h3{font-size:15px;margin:2px 0 6px}
 .ld-step p{font-size:13px;color:var(--mut2);line-height:1.55;margin:0}
 .ld-pricing-toplist{display:flex;justify-content:center;gap:20px;margin-bottom:28px;font-size:12px;color:var(--mut2)}
-.ld-plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:stretch}
+.ld-plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:stretch;max-width:880px;margin:0 auto}
 .ld-plan{background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:22px;display:flex;flex-direction:column}
 .ld-plan.hl{border-color:var(--teal);box-shadow:0 16px 40px rgba(78,205,196,.18);position:relative}
 .ld-plan.hl:before{content:'MELHOR VALOR';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--teal);color:#0C0C18;font-size:10px;font-weight:800;letter-spacing:.04em;padding:4px 12px;border-radius:99px}
@@ -876,7 +876,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       </div>
       <div class="ld-nav-actions">
         <button class="ld-btn ld-btn-ghost sm" type="button" id="ld-nav-entrar">Entrar</button>
-        <button class="ld-btn ld-btn-primary sm" type="button" id="ld-nav-comecar">Começar grátis</button>
+        <button class="ld-btn ld-btn-primary sm" type="button" id="ld-nav-comecar">Criar conta</button>
       </div>
     </div>
   </nav>
@@ -886,10 +886,10 @@ body.light .wf-logo{--wf-dot:var(--amber)}
     <h1>Sua próxima viagem,<br><em>sem planilha e sem bagunça.</em></h1>
     <p class="ld-sub">O Wayfin junta roteiro no mapa, controle de gastos por orçamento, documentos da viagem e checklist de mala — e ainda deixa você compartilhar tudo com quem for junto.</p>
     <div class="ld-hero-ctas">
-      <button class="ld-btn ld-btn-primary" type="button" id="ld-hero-comecar">Começar grátis</button>
+      <button class="ld-btn ld-btn-primary" type="button" id="ld-hero-comecar">Ver a viagem de exemplo</button>
       <button class="ld-btn ld-btn-ghost" type="button" id="ld-hero-entrar">Já tenho conta</button>
     </div>
-    <div class="ld-reassure">Grátis para começar · sem cartão de crédito · cancele quando quiser</div>
+    <div class="ld-reassure">Crie a conta e explore uma viagem de exemplo · assine para planejar as suas · cancele quando quiser</div>
 
     <div class="ld-preview" aria-hidden="true">
       <div class="ld-preview-card"><span>Orçamento restante</span><strong>R$ 3.240</strong><small>68% da viagem</small></div>
@@ -933,21 +933,8 @@ body.light .wf-logo{--wf-dot:var(--amber)}
     <div class="ld-wrap">
       <span class="ld-kicker">Preços</span>
       <h2>Simples e sem pegadinha</h2>
-      <p class="ld-lede">Comece de graça. Assine só quando precisar de mais espaço.</p>
+      <p class="ld-lede">Crie sua conta e veja uma viagem de exemplo completa. Para planejar as suas viagens, escolha um plano.</p>
       <div class="ld-plans">
-        <div class="ld-plan">
-          <h3>Gratuito</h3>
-          <div class="ld-price">R$0</div>
-          <div class="ld-price-sub">para sempre</div>
-          <ul>
-            <li>1 viagem por vez</li>
-            <li>Até 3 anexos por viagem</li>
-            <li>Até 2 reservas por viagem</li>
-            <li>Roteiro, mapa e mala sem limite</li>
-            <li>Compartilhamento de viagem incluso</li>
-          </ul>
-          <button class="ld-btn ld-btn-ghost" type="button" data-ld-plan="free">Criar conta grátis</button>
-        </div>
         <div class="ld-plan hl">
           <h3>Anual</h3>
           <div class="ld-price">R$119<small>,90/ano</small></div>
@@ -1002,8 +989,8 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 
   <section class="ld-cta-final ld-wrap">
     <h2>Pronto pra organizar sua próxima viagem?</h2>
-    <p>Crie sua conta grátis e monte o roteiro antes mesmo de fazer a mala.</p>
-    <button class="ld-btn ld-btn-primary" type="button" id="ld-final-comecar">Criar minha conta grátis</button>
+    <p>Crie sua conta, veja como funciona com a viagem de exemplo e assine quando for planejar a sua.</p>
+    <button class="ld-btn ld-btn-primary" type="button" id="ld-final-comecar">Criar minha conta</button>
   </section>
 
   <section class="ld-avail ld-wrap">
@@ -1104,8 +1091,8 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <li>Notificar imediatamente em caso de acesso não autorizado à sua conta</li>
       </ul>
 
-      <h2>5. Plano gratuito e assinatura</h2>
-      <p>O Wayfin oferece um plano Free permanente, com uso limitado (1 viagem ativa, com limites de anexos e reservas por viagem). Para viagens ilimitadas e recursos adicionais (otimização de rota, categorias personalizadas, anexos e reservas ilimitados, sem anúncios), os planos pagos disponíveis são: Mensal (R$ 21,90/mês), Anual (R$ 119,90/ano, cobrado anualmente, equivalente a ≈ R$ 9,99/mês) e Passe de viagem (R$ 34,90 por 30 dias, sem renovação automática). Valores e condições podem ser atualizados e são sempre exibidos na tela de assinatura no momento da contratação. O cancelamento de qualquer plano pago pode ser feito a qualquer momento, sem perda de acesso ao plano Free.</p>
+      <h2>5. Acesso sem assinatura e planos</h2>
+      <p>Sem assinatura ativa, a conta do Wayfin dá acesso apenas à visualização de uma viagem de exemplo, sem criar ou editar dados. Para criar e editar viagens, gastos, roteiros, reservas, documentos e mala, é necessária uma assinatura. Os planos disponíveis são: Mensal (R$ 21,90/mês), Anual (R$ 119,90/ano, cobrado anualmente, equivalente a ≈ R$ 9,99/mês) e Passe de viagem (R$ 34,90 por 30 dias, sem renovação automática). Valores e condições podem ser atualizados e são sempre exibidos na tela de assinatura no momento da contratação. O cancelamento de qualquer plano pago pode ser feito a qualquer momento; depois do fim do período pago, a conta volta ao modo de leitura, e as viagens criadas continuam salvas e visíveis.</p>
 
       <h2>6. Limitação de responsabilidade</h2>
       <p>O Wayfin não se responsabiliza por:</p>
@@ -1644,7 +1631,7 @@ let mSelDia=null;           // 'all' ou objeto dia atualmente selecionado
 // ── WAYFIN · PLANOS, LIMITES E MONETIZAÇÃO ─────────────
 // Gating no cliente é só UX. A trava real está no banco (supabase/001_planos.sql).
 const PLAN_LIMITS={
-  free:{viagens:1,anexos_por_viagem:3,reservas_por_viagem:2,explore_itens:5,categorias_custom:false,otimizar_rota:false},
+  free:{viagens:0,anexos_por_viagem:0,reservas_por_viagem:0,explore_itens:5,categorias_custom:false,otimizar_rota:false}, // sem assinatura: só a viagem de exemplo, em modo leitura
   premium:{viagens:Infinity,anexos_por_viagem:Infinity,reservas_por_viagem:Infinity,explore_itens:15,categorias_custom:true,otimizar_rota:true}
 };
 const PRICING=[ // hipótese inicial: validar com teste de preço antes de fixar
@@ -1653,9 +1640,13 @@ const PRICING=[ // hipótese inicial: validar com teste de preço antes de fixar
   {id:'trip_pass',nome:'Passe de viagem',preco:'R$ 34,90',sub:'30 dias, sem renovação'}
 ];
 const PAYWALL_REASONS={
-  viagens:'O plano Free inclui 1 viagem.',
-  anexos:'O plano Free inclui até 3 anexos por viagem.',
-  reservas:'O plano Free inclui até 2 reservas por viagem.',
+  viagens:'Para criar suas viagens, escolha um plano.',
+  anexos:'Para anexar documentos, escolha um plano.',
+  reservas:'Para adicionar reservas, escolha um plano.',
+  assinatura:'Sem assinatura você vê a viagem de exemplo. Para criar e editar as suas viagens, escolha um plano.',
+  gastos:'Para lançar gastos, escolha um plano.',
+  mala:'Para montar a mala, escolha um plano.',
+  compartilhar:'Para compartilhar viagens, escolha um plano.',
   rota:'A otimização de rota é exclusiva do Premium.',
   categorias:'Categorias personalizadas são exclusivas do Premium.',
   explore:'Veja todos os locais próximos com o Premium.',
@@ -1684,23 +1675,24 @@ async function loadPlan(){
     const vivo=data&&['active','trialing'].includes(data.status)&&(!data.current_period_end||new Date(data.current_period_end)>new Date());
     if(vivo)currentPlan={tier:'premium',plan:data.plan,expires:data.current_period_end};
   }catch(e){/* tabela ausente ou sem permissão: segue como Free (falha fechada) */}
-  renderPlanBadge();
+  renderPlanBadge();syncModoLeitura();
 }
 function renderPlanBadge(){
   const el=$('plan-badge');if(!el)return;
   el.textContent='';
   const lbl=document.createElement('span');
-  lbl.textContent=isPremium()?'Plano Premium ✓':'Plano Free';
+  lbl.textContent=isPremium()?'Plano Premium ✓':'Sem assinatura · só leitura';
   if(isPremium()&&currentPlan.expires)lbl.title='Válido até '+new Date(currentPlan.expires).toLocaleDateString('pt-BR');
   el.appendChild(lbl);
   if(!isPremium()){
-    const b=document.createElement('button');b.type='button';b.className='plan-up';b.textContent='⭐ Upgrade';
+    const b=document.createElement('button');b.type='button';b.className='plan-up';b.textContent='⭐ Assinar';
     b.onclick=()=>openPaywall('geral');el.appendChild(b);
   }
 }
 function handlePlanError(error){
   const m=/limite_plano_free:(\w+)/.exec(error?.message||'');
   if(!m)return false;
+  if(m[1]==='assinatura'||m[1]==='exemplo')return true; // já avisado pela guarda do modo leitura
   openPaywall(m[1]);return true;
 }
 function drawPlans(){
@@ -1745,11 +1737,68 @@ async function startCheckout(){
     st.className='pw-status error';st.textContent='Pagamento ainda não está disponível. Tente novamente em breve.';
   }finally{btn.disabled=false;}
 }
+// ── MODO LEITURA ───────────────────────────────────
+// Sem assinatura: o app mostra a viagem de exemplo e não grava nada.
+// Com assinatura, a viagem de exemplo continua só leitura (no banco ela não pertence a ninguém).
+// A trava real está no banco (triggers enforce_free_limits + RLS); isto aqui é UX e rede de segurança.
+const TRIP_TABLES=new Set(['gastos','reservas','documentos','roteiro_dias','roteiro_paradas','mala_itens','viagem_membros']);
+const viagemAtual=()=>viagens.find(v=>v.id===vid)||null;
+const viagemExemplo=()=>!!viagemAtual()?.is_demo;
+const somenteLeitura=()=>!isPremium()||viagemExemplo();
+let bloqueioTs=0;
+function avisarBloqueio(){
+  const agora=Date.now();if(agora-bloqueioTs<800)return;bloqueioTs=agora;
+  if(!isPremium())openPaywall('assinatura');
+  else toast('Esta é a viagem de exemplo — crie a sua para editar ✏️');
+}
+// Formulários de edição: com o app em leitura, abrir um deles leva ao convite para assinar.
+const EDIT_OVERLAYS=['og','orv','od','op','oia','oiar','oev','ocfg','omem'];
+const ovObs=new MutationObserver(ms=>{
+  for(const m of ms){
+    const el=m.target;
+    if(!el.classList.contains('on')||m.oldValue?.split(' ').includes('on'))continue;
+    const global=el.id==='ocfg'||el.id==='oev';          // categorias e dados da viagem
+    const bloqueia=global?(!isPremium()||(el.id==='oev'&&viagemExemplo())):somenteLeitura();
+    if(bloqueia){el.classList.remove('on');avisarBloqueio();}
+  }
+});
+EDIT_OVERLAYS.forEach(id=>{const el=$(id);if(el)ovObs.observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true});});
+function syncModoLeitura(){document.body.classList.toggle('ro',!!currentUser&&somenteLeitura());}
+// Rede de segurança: qualquer gravação no modo leitura vira aviso, sem chamar o banco.
+function blindarEscritas(client){
+  const from=client.from.bind(client);
+  const negado=reason=>{
+    const res={data:null,error:{message:'limite_plano_free:'+reason,code:'P0001'}};
+    const chain=new Proxy(function(){},{
+      get:(t,k)=>k==='then'?(ok,ko)=>Promise.resolve(res).then(ok,ko):()=>chain,
+      apply:()=>chain
+    });
+    return chain;
+  };
+  client.from=table=>{
+    const q=from(table);
+    for(const op of['insert','update','upsert','delete']){
+      const orig=q[op].bind(q);
+      q[op]=(...a)=>{
+        const travado=TRIP_TABLES.has(table)?somenteLeitura():(table==='viagens'&&op!=='insert'?somenteLeitura():!isPremium());
+        if(travado){avisarBloqueio();return negado(isPremium()?'exemplo':'assinatura');}
+        return orig(...a);
+      };
+    }
+    return q;
+  };
+  const rpc=client.rpc.bind(client);
+  client.rpc=(fn,args)=>{
+    if((fn==='convidar_membro'||fn==='remover_membro')&&somenteLeitura()){avisarBloqueio();return negado('compartilhar');}
+    return rpc(fn,args);
+  };
+  return client;
+}
 $('opw-cancel').onclick=closePaywall;
 $('opw-go').onclick=startCheckout;
 $('opw').onclick=e=>{if(e.target===$('opw'))closePaywall();};
 
-// Espaço de anúncio (só no Free). Sem scripts de terceiros: patrocinado = link de afiliado.
+// Espaço de anúncio (só sem assinatura). Sem scripts de terceiros: patrocinado = link de afiliado.
 function adSlotEl(placement){
   if(isPremium())return null;
   const pool=SPONSORS.filter(x=>x.href&&(!x.placements||x.placements.includes(placement)));
@@ -1830,7 +1879,7 @@ document.querySelectorAll('#auth-screen .wf-logo').forEach(l=>{
 });
 $('auth-back-btn').onclick=()=>document.body.classList.add('show-landing');
 document.querySelectorAll('[data-ld-plan]').forEach(b=>{
-  // qualquer plano pago também cria conta grátis primeiro — a assinatura acontece dentro do app
+  // qualquer plano cria a conta primeiro — a assinatura acontece dentro do app
   b.onclick=()=>hideLanding('signup');
 });
 $('auth-form').addEventListener('submit',async e=>{
@@ -1934,6 +1983,7 @@ $('acc-btn').onclick=()=>$('user-menu-box').classList.toggle('open');
     'https://evvvzmnguhgqaopvquhs.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2dnZ6bW5ndWhncWFvcHZxdWhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMTMzODYsImV4cCI6MjA5NDc4OTM4Nn0.FSuRZjedHmJs4QRiCrk_DS1tzEO-tOU3pN8HG15Iw5g'
   );
+  blindarEscritas(sb);
   await initAuth();
 })();
 async function loadCategorias(){
@@ -2118,6 +2168,7 @@ async function criarViagem(){
   viagens.unshift(data);vid=data.id;drawChips();await loadGastos();drawDash();
 }
 function drawChips(){
+  syncModoLeitura();
   const el=$('chips');el.innerHTML='';
   viagens.forEach(v=>{
     const c=document.createElement('div');c.className='chip'+(v.id===vid?' on':'');
