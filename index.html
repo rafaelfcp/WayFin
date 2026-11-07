@@ -1759,8 +1759,13 @@ const ovObs=new MutationObserver(ms=>{
   for(const m of ms){
     const el=m.target;
     if(!el.classList.contains('on')||m.oldValue?.split(' ').includes('on'))continue;
-    const global=el.id==='ocfg'||el.id==='oev';          // categorias e dados da viagem
-    const bloqueia=global?(!isPremium()||(el.id==='oev'&&viagemExemplo())):somenteLeitura();
+    // categorias são globais (valem para todos): só admin edita — trava no banco (policy categorias_admin_write)
+    if(el.id==='ocfg'&&currentProfile?.role!=='admin'){
+      el.classList.remove('on');
+      if(!isPremium())avisarBloqueio();else toast('Categorias personalizadas por conta chegam em breve ✨');
+      continue;
+    }
+    const bloqueia=el.id==='oev'?(!isPremium()||viagemExemplo()):somenteLeitura();
     if(bloqueia){el.classList.remove('on');avisarBloqueio();}
   }
 });
@@ -1782,7 +1787,11 @@ function blindarEscritas(client){
     for(const op of['insert','update','upsert','delete']){
       const orig=q[op].bind(q);
       q[op]=(...a)=>{
-        const travado=TRIP_TABLES.has(table)?somenteLeitura():(table==='viagens'&&op!=='insert'?somenteLeitura():!isPremium());
+        const travado=table==='categorias'?currentProfile?.role!=='admin'
+          :TRIP_TABLES.has(table)?somenteLeitura()
+          :(table==='viagens'&&op!=='insert'&&op!=='delete')?somenteLeitura()
+          :(table==='viagens'&&op==='delete')?false   // o dono sempre pode apagar a própria viagem
+          :!isPremium();
         if(travado){avisarBloqueio();return negado(isPremium()?'exemplo':'assinatura');}
         return orig(...a);
       };
