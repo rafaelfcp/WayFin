@@ -3,7 +3,7 @@
 # (CDN, API, blocos de mapa), inclua-o aqui, senão o navegador bloqueia.
 # - connect-src também vale para o service worker, que guarda libs e fontes em cache.
 # - 'unsafe-inline' é necessário porque o app é um arquivo único com <script>/<style> inline.
-# Teste: scratch csp_test (Chrome headless com a política em bloqueio).
+# Teste: python tools/csp_test.py (Chromium headless com a política em bloqueio).
 
 /*
   X-Content-Type-Options: nosniff
