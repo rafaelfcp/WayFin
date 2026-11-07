@@ -846,7 +846,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 .ad-cta{font-size:12px;font-weight:700;color:var(--teal);white-space:nowrap}
 .ad-slot:focus-visible,.pw-plan:focus-visible,.plan-up:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 </style>
-<link rel="stylesheet" href="/css/wayfin-v2.css?v=3">
+<link rel="stylesheet" href="/css/wayfin-v2.css?v=4">
 </head>
 <body class="auth-required">
 <!-- LOGO WAYFIN (sprite): wordmark segue a cor do texto; ponto do "i" segue --wf-dot -->
@@ -1325,6 +1325,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 
 <!-- MAPA FULLSCREEN -->
 <div id="mapa-pg">
+  <div class="m-bar">
   <div class="m-top">
     <button id="mback" style="background:var(--sur);border:1px solid var(--bor);border-radius:99px;color:var(--txt);font-size:12px;padding:6px 13px;cursor:pointer;flex-shrink:0">← Voltar</button>
     <div id="mhdr" style="font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 Rota do Dia</div>
@@ -1343,6 +1344,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
     <button class="m-style-btn" id="mst-dark">🌙 Escuro</button>
     <button class="m-style-btn" id="mst-light">☀️ Claro</button>
     <button class="m-style-btn" id="mst-sat">🛰️ Satélite</button>
+  </div>
   </div>
   <div id="m-map"></div>
   <div class="m-status" id="mst" style="display:none"></div>
