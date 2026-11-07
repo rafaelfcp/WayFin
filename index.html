@@ -846,7 +846,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 .ad-cta{font-size:12px;font-weight:700;color:var(--teal);white-space:nowrap}
 .ad-slot:focus-visible,.pw-plan:focus-visible,.plan-up:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 </style>
-<link rel="stylesheet" href="/css/wayfin-v2.css?v=5">
+<link rel="stylesheet" href="/css/wayfin-v2.css?v=6">
 </head>
 <body class="auth-required">
 <!-- LOGO WAYFIN (sprite): wordmark segue a cor do texto; ponto do "i" segue --wf-dot -->
@@ -1295,6 +1295,11 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   </div>
 
   <div id="pages">
+    <div id="ro-banner" class="ro-banner" role="status" hidden>
+      <span class="ro-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></span>
+      <span id="ro-banner-txt" class="ro-txt">Viagem de exemplo · só leitura</span>
+      <button id="ro-banner-btn" class="ro-btn" type="button">Assinar para editar</button>
+    </div>
     <div class="pg on" id="pg-dash"></div>
     <div class="pg" id="pg-lanc">
       <!-- toolbar: modo + contador -->
@@ -1646,6 +1651,7 @@ const PAYWALL_REASONS={
   anexos:'Para anexar documentos, escolha um plano.',
   reservas:'Para adicionar reservas, escolha um plano.',
   assinatura:'Sem assinatura você vê a viagem de exemplo. Para criar e editar as suas viagens, escolha um plano.',
+  exemplo:'Esta é a viagem de exemplo, só para leitura. Para criar e editar as suas viagens, escolha um plano.',
   gastos:'Para lançar gastos, escolha um plano.',
   mala:'Para montar a mala, escolha um plano.',
   compartilhar:'Para compartilhar viagens, escolha um plano.',
@@ -1747,11 +1753,43 @@ const TRIP_TABLES=new Set(['gastos','reservas','documentos','roteiro_dias','rote
 const viagemAtual=()=>viagens.find(v=>v.id===vid)||null;
 const viagemExemplo=()=>!!viagemAtual()?.is_demo;
 const somenteLeitura=()=>!isPremium()||viagemExemplo();
+// Dono da viagem de exemplo (ou admin): nela, o app se comporta exatamente como para quem não assina,
+// para simular e testar a experiência do visitante.
+const simulaVisitante=()=>viagemExemplo()&&(viagemAtual()?.owner_id===currentUser?.id||currentProfile?.role==='admin');
+const comoVisitante=()=>!isPremium()||simulaVisitante();
 let bloqueioTs=0;
 function avisarBloqueio(){
   const agora=Date.now();if(agora-bloqueioTs<800)return;bloqueioTs=agora;
-  if(!isPremium())openPaywall('assinatura');
+  if(comoVisitante())openPaywall(viagemExemplo()?'exemplo':'assinatura');
   else toast('Esta é a viagem de exemplo — crie a sua para editar ✏️');
+  recarregarAposBloqueio();
+}
+// Algumas telas mudam antes de gravar (marcar item da mala, reordenar, excluir).
+// Se a gravação foi barrada, recarrega a viagem para a tela voltar ao estado real.
+let recargaTimer=null;
+function recarregarAposBloqueio(){
+  clearTimeout(recargaTimer);
+  recargaTimer=setTimeout(async()=>{
+    if(!vid)return;
+    try{
+      await loadGastos();
+      if($('pg-rot')?.classList.contains('on')){await loadRot();drawRot();}
+      if($('pg-mala')?.classList.contains('on')){await loadMala();drawMala();}
+    }catch(e){}
+  },400);
+}
+// Aviso fixo no topo das páginas enquanto a viagem estiver em modo leitura
+function syncAvisoLeitura(){
+  const b=$('ro-banner');if(!b)return;
+  const ro=!!currentUser&&somenteLeitura();
+  b.hidden=!ro;if(!ro)return;
+  const visit=comoVisitante();
+  $('ro-banner-txt').textContent=viagemExemplo()
+    ?(simulaVisitante()&&isPremium()?'Viagem de exemplo · você está vendo como um visitante (sem assinatura)':'Viagem de exemplo · só leitura')
+    :'Sem assinatura · só leitura';
+  const bt=$('ro-banner-btn');
+  bt.textContent=visit?'Assinar para editar':'Criar minha viagem';
+  bt.onclick=visit?()=>openPaywall(viagemExemplo()?'exemplo':'assinatura'):()=>criarViagem();
 }
 // Formulários de edição: com o app em leitura, abrir um deles leva ao convite para assinar.
 const EDIT_OVERLAYS=['og','orv','od','op','oia','oiar','oev','ocfg','omem'];
@@ -1762,7 +1800,7 @@ const ovObs=new MutationObserver(ms=>{
     // categorias são globais (valem para todos): só admin edita — trava no banco (policy categorias_admin_write)
     if(el.id==='ocfg'&&currentProfile?.role!=='admin'){
       el.classList.remove('on');
-      if(!isPremium())avisarBloqueio();else toast('Categorias personalizadas por conta chegam em breve ✨');
+      if(comoVisitante())avisarBloqueio();else toast('Categorias personalizadas por conta chegam em breve ✨');
       continue;
     }
     const bloqueia=el.id==='oev'?(!isPremium()||viagemExemplo()):somenteLeitura();
@@ -1770,7 +1808,7 @@ const ovObs=new MutationObserver(ms=>{
   }
 });
 EDIT_OVERLAYS.forEach(id=>{const el=$(id);if(el)ovObs.observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true});});
-function syncModoLeitura(){document.body.classList.toggle('ro',!!currentUser&&somenteLeitura());}
+function syncModoLeitura(){document.body.classList.toggle('ro',!!currentUser&&somenteLeitura());syncAvisoLeitura();}
 // Rede de segurança: qualquer gravação no modo leitura vira aviso, sem chamar o banco.
 function blindarEscritas(client){
   const from=client.from.bind(client);
@@ -1792,7 +1830,7 @@ function blindarEscritas(client){
           :(table==='viagens'&&op!=='insert'&&op!=='delete')?somenteLeitura()
           :(table==='viagens'&&op==='delete')?false   // o dono sempre pode apagar a própria viagem
           :!isPremium();
-        if(travado){avisarBloqueio();return negado(isPremium()?'exemplo':'assinatura');}
+        if(travado){avisarBloqueio();return negado(comoVisitante()?'assinatura':'exemplo');}
         return orig(...a);
       };
     }
@@ -2426,8 +2464,8 @@ function openCat(cid){
         <div class="ci-right">
           <span class="ci-val" style="color:${c.c}">${R(Number(g.valor))}</span>
           <div class="ci-acts">
-            <button class="bi" style="font-size:14px">✏️</button>
-            <button class="bi" style="font-size:14px">🗑️</button>
+            <button class="bi ed" style="font-size:14px">✏️</button>
+            <button class="bi ed" style="font-size:14px">🗑️</button>
           </div>
         </div>`;
       item.querySelectorAll('.bi')[0].onclick=()=>{$('ocm').classList.remove('on');editG(g.id);};
@@ -2520,8 +2558,8 @@ function drawList(){
           </div>
           <div class="cgi-right">
             <span class="cgi-val" style="color:${c.c}">${R(Number(g.valor))}</span>
-            <button class="bi" style="font-size:14px">✏️</button>
-            <button class="bi" style="font-size:14px">🗑️</button>
+            <button class="bi ed" style="font-size:14px">✏️</button>
+            <button class="bi ed" style="font-size:14px">🗑️</button>
           </div>`;
         row.querySelectorAll('.bi')[0].onclick=e=>{e.stopPropagation();editG(g.id);};
         row.querySelectorAll('.bi')[1].onclick=e=>{e.stopPropagation();delG(g.id);};
@@ -2568,7 +2606,7 @@ function drawList(){
         <div class="gr">
           <span style="font-size:14px;font-weight:700;color:${c.c}">${R(Number(g.valor))}</span>
           <div style="display:flex;gap:4px">
-            <button class="bi">✏️</button><button class="bi">🗑️</button>
+            <button class="bi ed">✏️</button><button class="bi ed">🗑️</button>
           </div>
         </div>`;
       d.querySelectorAll('.bi')[0].onclick=()=>editG(g.id);
@@ -2700,7 +2738,7 @@ function drawDocList(){
     const btns=document.createElement('div');btns.className='doc-btns';
     const ob=document.createElement('button');ob.className='bi';ob.textContent='👁️';ob.style.fontSize='14px';
     ob.onclick=()=>abrirDocumento(doc);btns.appendChild(ob);
-    const db=document.createElement('button');db.className='bi';db.textContent='🗑️';db.style.fontSize='14px';
+    const db=document.createElement('button');db.className='bi ed';db.textContent='🗑️';db.style.fontSize='14px';
     db.onclick=()=>excluirDocumento(doc);btns.appendChild(db);
     item.appendChild(btns);
     el.appendChild(item);
@@ -2893,7 +2931,7 @@ function drawRot(){
     const hg=document.createElement('span');hg.className='db-g';hg.textContent='Dia '+dia.numero;hdr.appendChild(hg);
     const ht=document.createElement('span');ht.className='db-t';ht.textContent=dia.titulo;hdr.appendChild(ht);
     const hd=document.createElement('span');hd.className='db-d';hd.textContent=dtf;hdr.appendChild(hd);
-    const heb=document.createElement('button');heb.className='bi';heb.textContent='✏️';heb.style.cssText='font-size:14px;flex-shrink:0';
+    const heb=document.createElement('button');heb.className='bi ed';heb.textContent='✏️';heb.style.cssText='font-size:14px;flex-shrink:0';
     heb.onclick=e=>{e.stopPropagation();openDia(dia.id);};hdr.appendChild(heb);
     const hchev=document.createElement('span');hchev.style.cssText='color:var(--mut);font-size:10px;flex-shrink:0';hchev.textContent=ab2?'▲':'▼';hdr.appendChild(hchev);
     hdr.onclick=()=>{dopen[dia.id]=!ab2;drawRot();};card.appendChild(hdr);
@@ -2944,7 +2982,7 @@ function drawRot(){
           const ar2=document.createElement('div');ar2.className='p-br';
           const ck=document.createElement('button');ck.className='ck'+(p.realizado?' done':'');ck.textContent=p.realizado?'✓':'';
           ck.onclick=()=>togReal(p.id,p.realizado);ar2.appendChild(ck);
-          const eb=document.createElement('button');eb.className='bi';eb.textContent='✏️';eb.style.fontSize='14px';eb.onclick=()=>openPar(dia.id,p.id);ar2.appendChild(eb);
+          const eb=document.createElement('button');eb.className='bi ed';eb.textContent='✏️';eb.style.fontSize='14px';eb.onclick=()=>openPar(dia.id,p.id);ar2.appendChild(eb);
           const db2=document.createElement('button');db2.className='bi';db2.textContent='🗑️';db2.style.fontSize='14px';db2.onclick=()=>delPar(p.id);ar2.appendChild(db2);
           btns.appendChild(ar2);row.appendChild(btns);pw.appendChild(row);
           if(i<pars.length-1){
@@ -4225,6 +4263,7 @@ if(localStorage.getItem('theme')==='light'){
 
 // ── TOAST ─────────────────────────────────────────────
 function toast(msg,dur=2000){
+  if(Date.now()-bloqueioTs<1500&&/⚠️|[Ee]rro/.test(msg))return; // o bloqueio do modo leitura já avisou
   const el=$('toast');el.textContent=msg;el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),dur);
 }

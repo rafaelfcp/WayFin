@@ -233,3 +233,36 @@ body.light #theme-btn .ic-moon { display: none; }
   /* mala: campo com fonte de 16px evita o zoom automático do iPhone */
   .mala-add input { font-size: 16px; }
 }
+
+/* ── Modo leitura (sem assinatura / viagem de exemplo) ──
+ * Faixa fixa no topo + sem botões de editar/excluir nas listas.
+ * Os botões de criar (Adicionar, Montar roteiro, +nova) continuam: levam ao convite para assinar. */
+.ro-banner {
+  /* #pages tem as páginas em position:absolute; a faixa fica por cima e as páginas descem */
+  position: absolute; top: 10px; left: 16px; right: 16px; z-index: 40;
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--teal) 35%, var(--bor));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--teal) 9%, var(--sur));
+  box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  font-size: 12.5px; color: var(--txt);
+}
+body.ro .pg { padding-top: 82px; }
+.ro-banner[hidden] { display: none; }
+.ro-ic { width: 18px; height: 18px; color: var(--teal); flex: none; }
+.ro-ic svg { width: 100%; height: 100%; display: block; }
+.ro-txt { flex: 1; min-width: 0; line-height: 1.3; }
+.ro-btn {
+  flex: none; border: 0; border-radius: 99px; cursor: pointer;
+  background: var(--grd); color: #0C0C18; font: inherit; font-size: 12px; font-weight: 700;
+  padding: 7px 12px;
+}
+@media (min-width: 900px) {
+  .ro-banner { top: 16px; left: clamp(28px, 5vw, 72px); right: clamp(28px, 5vw, 72px); font-size: 13px; }
+  body.ro .pg { padding-top: 84px; }
+}
+body.ro .ed,
+body.ro .mala-del,
+body.ro .mala-add { display: none !important; }
+body.ro .mala-check { pointer-events: none; }
