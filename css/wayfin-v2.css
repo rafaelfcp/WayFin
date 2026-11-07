@@ -163,12 +163,73 @@ body { font-variant-numeric: tabular-nums; }
   }
 
   /* Explorar arredores: centralizado sobre o mapa, não sobre a tela toda */
-  .m-explore-btn { left: calc(248px + (100vw - 248px - 400px) / 2); }
-  #mapa-pg:has(#m-map.h) .m-explore-btn { left: calc(248px + (100vw - 248px) / 2); }
+  #mapa-pg > .m-explore-btn { left: calc(248px + (100vw - 248px) / 2); }   /* modo Lista */
   .m-explore-sheet {
     left: calc(248px + (100vw - 248px - 400px) / 2);
     right: auto;
     width: min(560px, calc(100vw - 248px - 400px - 48px));
     transform: translateX(-50%);
   }
+}
+
+/* ── Cabeçalho: ícones de traço, um padrão só ────────
+ * ⚙️ 🤝 🌙 👤 viraram SVG; no celular ficam na mesma linha do nome da viagem. */
+.tb-ic { width: 20px; height: 20px; flex: none; display: block; }
+.tb-icon-btn, .acc-toggle {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  opacity: 1; color: var(--mut2);
+  transition: color .15s, background .15s;
+}
+.tb-icon-btn:hover, .acc-toggle:hover { color: var(--txt); }
+#theme-btn .ic-sun { display: none; }
+body.light #theme-btn .ic-sun { display: inline; }
+body.light #theme-btn .ic-moon { display: none; }
+.trip-nm { display: flex; align-items: center; gap: 6px; min-width: 0; }
+#tnmt { min-width: 0; }
+.tnm-ed { font-size: 12px; opacity: .45; flex: none; }
+
+/* Grupos / Lista */
+.lanc-mode-btn { display: inline-flex; align-items: center; gap: 5px; }
+.lm-ic { width: 14px; height: 14px; flex: none; }
+
+/* Explorar arredores quando está dentro do mapa */
+#m-map > .m-explore-btn { position: absolute; bottom: 14px; z-index: 1001; }
+
+@media (max-width: 899px) {
+  #topbar { padding-top: 6px; }
+  .tb-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 6px;
+    row-gap: 4px;
+  }
+  .tb-top { grid-column: 1; min-width: 0; gap: 8px; }
+  /* só o símbolo "W" (o SVG corta o texto "wayfin"): sobra espaço para o nome da viagem */
+  .tb-top .wf-logo.sm { width: 28px; height: 28px; margin: 0; }
+  .trip-nm { font-size: 17px; min-height: 40px; }
+  #tnmt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tb-icons { grid-column: 2; margin: 0; gap: 0; flex-wrap: nowrap; }
+  .tb-icon-btn, .acc-toggle {
+    width: 38px; height: 38px; min-height: 38px; padding: 0;
+    border: 0; border-radius: 10px; background: none;
+  }
+  .tb-icon-btn:active, .acc-toggle:active { background: var(--sur2); }
+  .acc-lbl { display: none; }
+  .user-menu, .chips, .bud-box { grid-column: 1 / -1; }
+
+  /* viagens numa linha só, rolando para o lado */
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin: 0 -16px;
+    padding: 2px 16px 10px;
+    scroll-padding: 0 16px;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: none; white-space: nowrap; }
+
+  /* mala: campo com fonte de 16px evita o zoom automático do iPhone */
+  .mala-add input { font-size: 16px; }
 }

@@ -5,8 +5,8 @@
  *   para o app conseguir abrir sem rede.
  * - Supabase, tiles, Nominatim, Overpass, Wikipedia: NÃO passam pelo SW (sempre rede).
  * Para forçar atualização do shell, incremente VERSION. */
-const VERSION = 'wayfin-v5';
-const SHELL = ['/', '/index.html', '/css/wayfin-v2.css?v=4', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
+const VERSION = 'wayfin-v6';
+const SHELL = ['/', '/index.html', '/css/wayfin-v2.css?v=5', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
 const CDN_HOSTS = ['unpkg.com', 'cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', e => {
