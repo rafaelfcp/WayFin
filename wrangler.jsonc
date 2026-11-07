@@ -1,0 +1,19 @@
+// Configuração do Worker "wayfin" (Cloudflare Workers Builds).
+// Deploy de produção:  npx wrangler deploy
+// Prévia de branches:  npx wrangler versions upload
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "wayfin",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-18",
+  // site estático = raiz do repositório (o que não deve ser público está no .assetsignore)
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    // só /api/* passa pelo Worker; o resto é servido direto como arquivo (mais rápido e barato)
+    "run_worker_first": ["/api/*"]
+  },
+  // mantém as variáveis cadastradas no painel (as secrets já são sempre mantidas)
+  "keep_vars": true,
+  "observability": { "enabled": true }
+}

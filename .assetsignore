@@ -1,0 +1,11 @@
+# Arquivos do repositório que NÃO podem ser servidos como site público
+.git
+.github
+.assetsignore
+.wrangler
+node_modules
+functions
+src
+wrangler.jsonc
+smoke_membros.js
+*.md
