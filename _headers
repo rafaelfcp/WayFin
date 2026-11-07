@@ -1,8 +1,9 @@
-# Cloudflare Pages — cabeçalhos de segurança e cache
-# CSP está em modo REPORT-ONLY: viola => aparece no Console, mas nada quebra.
-# Depois de navegar por todas as telas sem violações, renomeie para
-# "Content-Security-Policy" (remova o "-Report-Only").
-# 'unsafe-inline' é necessário porque o app é um arquivo único com <script>/<style> inline.
+# Cabeçalhos de segurança e cache (Cloudflare Workers, assets estáticos)
+# CSP em modo de BLOQUEIO desde 07/11/2026. Antes de usar um domínio novo
+# (CDN, API, blocos de mapa), inclua-o aqui, senão o navegador bloqueia.
+# - connect-src também vale para o service worker, que guarda libs e fontes em cache.
+# - 'unsafe-inline' é necessário porque o app é um arquivo único com <script>/<style> inline.
+# Teste: scratch csp_test (Chrome headless com a política em bloqueio).
 
 /*
   X-Content-Type-Options: nosniff
@@ -10,7 +11,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Permissions-Policy: camera=(), microphone=(), geolocation=(self)
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://unpkg.com https://*.tile.openstreetmap.org https://server.arcgisonline.com https://upload.wikimedia.org; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://nominatim.openstreetmap.org https://overpass-api.de https://overpass.kumi.systems https://*.wikipedia.org https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://unpkg.com https://*.tile.openstreetmap.org https://server.arcgisonline.com https://upload.wikimedia.org; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://nominatim.openstreetmap.org https://overpass-api.de https://overpass.kumi.systems https://*.wikipedia.org https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
 
 /sw.js
   Cache-Control: no-cache
