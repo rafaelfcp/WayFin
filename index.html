@@ -846,7 +846,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 .ad-cta{font-size:12px;font-weight:700;color:var(--teal);white-space:nowrap}
 .ad-slot:focus-visible,.pw-plan:focus-visible,.plan-up:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 </style>
-<link rel="stylesheet" href="/css/wayfin-v2.css?v=7">
+<link rel="stylesheet" href="/css/wayfin-v2.css?v=8">
 </head>
 <body class="auth-required">
 <!-- LOGO WAYFIN (sprite): wordmark segue a cor do texto; ponto do "i" segue --wf-dot -->
@@ -1483,6 +1483,11 @@ body.light .wf-logo{--wf-dot:var(--amber)}
     <div><label class="fl">ORÇAMENTO (R$)</label><input class="fi" id="iao" type="number" min="0" step="0.01" placeholder="Opcional"/></div>
   </div>
   <div class="tg-r" id="iactog"><span style="font-size:13px">👶 Viajando com crianças</span><div class="tg-sw" id="iacsw"></div></div>
+  <label class="fl">HOSPEDAGEM (opcional)</label><input class="fi" id="iahs" type="text" autocomplete="off" maxlength="120" placeholder="Ex: hotel na Baixa ou bairro do Chiado"/>
+  <div class="g2">
+    <div><label class="fl">COMEÇAR O DIA ÀS</label><input class="fi" id="iahi" type="time" value="09:00" style="color-scheme:dark"/></div>
+    <div><label class="fl">RESTRIÇÕES</label><input class="fi" id="iarest" type="text" autocomplete="off" maxlength="300" placeholder="Opcional: vegetariano"/></div>
+  </div>
   <label class="fl">RITMO</label><div class="tpills" id="iarit"></div>
   <label class="fl">INTERESSES</label><div class="tpills" id="iaint" style="grid-template-columns:repeat(2,1fr)"></div>
   <label class="fl">LUGARES QUE JÁ QUER CONHECER (opcional)</label>
@@ -2969,6 +2974,9 @@ function drawRot(){
     const hd=document.createElement('span');hd.className='db-d';hd.textContent=dtf;hdr.appendChild(hd);
     const heb=document.createElement('button');heb.className='bi ed';heb.textContent='✏️';heb.style.cssText='font-size:14px;flex-shrink:0';
     heb.onclick=e=>{e.stopPropagation();openDia(dia.id);};hdr.appendChild(heb);
+    const hia=document.createElement('button');hia.className='bi ed';hia.textContent='✨';hia.title='Refazer este dia com IA';
+    hia.setAttribute('aria-label','Refazer o Dia '+dia.numero+' com IA');hia.style.cssText='font-size:14px;flex-shrink:0';
+    hia.onclick=e=>{e.stopPropagation();refazerDiaIA(dia);};hdr.appendChild(hia);
     const hchev=document.createElement('span');hchev.style.cssText='color:var(--mut);font-size:10px;flex-shrink:0';hchev.textContent=ab2?'▲':'▼';hdr.appendChild(hchev);
     hdr.onclick=()=>{dopen[dia.id]=!ab2;drawRot();};card.appendChild(hdr);
     if(ab2){
@@ -3224,6 +3232,16 @@ async function abrirIA(){
   const v=viagens.find(x=>x.id===vid);
   if(v&&!$('iad').value)$('iad').value=v.nome||'';
   if(v&&!$('iao').value&&v.orcamento)$('iao').value=v.orcamento;
+  const pref=iaPrefs();
+  if(!$('iahs').value){
+    const hotel=(reservas||[]).find(r=>r.tipo==='hotel');
+    $('iahs').value=pref.hospedagem||(hotel?[hotel.titulo||hotel.nome,hotel.endereco].filter(Boolean).join(', '):'');
+  }
+  if(pref.inicio_dia)$('iahi').value=pref.inicio_dia;
+  if(pref.restricoes&&!$('iarest').value)$('iarest').value=pref.restricoes;
+  if(pref.ritmo)document.querySelectorAll('#iarit .pill').forEach(p=>p.classList.toggle('on',p.dataset.id===pref.ritmo));
+  if(pref.transporte)document.querySelectorAll('#iatp .pill').forEach(p=>p.classList.toggle('on',p.dataset.id===pref.transporte));
+  if(pref.interesses?.length)document.querySelectorAll('#iaint .pill').forEach(p=>p.classList.toggle('on',pref.interesses.includes(p.dataset.id)));
   $('oia-status').className='pw-status';$('oia-status').textContent='';
   $('oia-credits').className='pw-status';$('oia-credits').textContent='Verificando créditos de IA...';
   $('oia').classList.add('on');
@@ -3262,8 +3280,13 @@ $('iaok').onclick=async()=>{
     ritmo:document.querySelector('#iarit .pill.on')?.dataset.id||'moderado',
     interesses:[...document.querySelectorAll('#iaint .pill.on')].map(p=>p.dataset.id),
     desejos:$('iades').value.trim(),
-    outras_cidades:$('iaoc').value.trim()
+    outras_cidades:$('iaoc').value.trim(),
+    hospedagem:$('iahs').value.trim(),
+    inicio_dia:$('iahi').value||'09:00',
+    restricoes:$('iarest').value.trim()
   };
+  iaUltimaEntrada=payload;
+  salvarIaPrefs(payload);
   const btn=$('iaok');btn.disabled=true;st.textContent='Gerando sugestão (pode levar até 30s)...';
   try{
     const{data:{session}}=await sb.auth.getSession();
@@ -3290,6 +3313,9 @@ function drawIAResultado(){
     iaSugestao.dicas.forEach(dc=>{const li=document.createElement('li');li.textContent=dc;li.style.marginBottom='3px';ul.appendChild(li);});
     dicasEl.appendChild(ul);
   }
+  const como=document.createElement('div');como.className='ia-como';
+  como.textContent='Os dias são montados por proximidade, a partir da hospedagem, com horários sugeridos e almoço perto do meio-dia.';
+  dicasEl.appendChild(como);
   const wrap=$('oiar-cidades');wrap.innerHTML='';
   iaSugestao.cidades.forEach((c,ci)=>{
     const sec=document.createElement('div');sec.style.cssText='margin-bottom:16px';
@@ -3309,12 +3335,109 @@ function drawIAResultado(){
       const desc=document.createElement('div');desc.style.cssText='font-size:12px;color:var(--mut2);margin-top:2px';
       desc.textContent=[l.descricao,l.motivo].filter(Boolean).join(' — ');info.appendChild(desc);
       const meta=document.createElement('div');meta.style.cssText='font-size:11px;color:var(--mut);margin-top:2px';
-      meta.textContent=`⏱️ ${l.duracao_min}min · ${l.custo==='gratis'?'grátis':l.custo}`;info.appendChild(meta);
+      meta.textContent=`⏱️ ${l.duracao_min}min · ${l.custo==='gratis'?'grátis':l.custo}${l.bairro?' · 📍 '+l.bairro:''}`;info.appendChild(meta);
       row.appendChild(info);
       sec.appendChild(row);
     });
     wrap.appendChild(sec);
   });
+}
+// ── ROTEIRO IA · montagem dos dias ─────────────────────
+// O modelo sugere lugares (com coordenadas aproximadas); quem monta os dias é este código:
+// 1) agrupa por proximidade (k-means com capacidade igual entre os dias),
+// 2) ordena cada dia pelo vizinho mais próximo, saindo da hospedagem,
+// 3) põe horários (duração + 20 min de deslocamento) e o restaurante perto do meio-dia.
+let iaUltimaEntrada=null;
+const IA_POR_DIA={tranquilo:3,moderado:4,intenso:6};
+const IA_DESLOC_MIN=20;
+const iaPrefsKey=()=>'wf-ia-'+vid;
+function iaPrefs(){try{return JSON.parse(localStorage.getItem(iaPrefsKey())||'{}')}catch(e){return{}}}
+function salvarIaPrefs(p){try{localStorage.setItem(iaPrefsKey(),JSON.stringify({ritmo:p.ritmo,transporte:p.transporte,interesses:p.interesses,inicio_dia:p.inicio_dia,restricoes:p.restricoes,hospedagem:p.hospedagem,viajantes:p.viajantes,criancas:p.criancas}))}catch(e){}}
+const temCoord=l=>l&&Number.isFinite(l.lat)&&Number.isFinite(l.lng);
+function distKm(a,b){
+  const R=6371,r=x=>x*Math.PI/180,dLa=r(b.lat-a.lat),dLo=r(b.lng-a.lng);
+  const h=Math.sin(dLa/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dLo/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function centroide(pts){return{lat:pts.reduce((s,p)=>s+p.lat,0)/pts.length,lng:pts.reduce((s,p)=>s+p.lng,0)/pts.length};}
+// divide 'lugares' em nDias grupos de lugares próximos, com tamanhos parecidos
+function agruparPorProximidade(lugares,nDias,base){
+  nDias=Math.max(1,Math.min(nDias,lugares.length));
+  if(nDias===1)return[lugares.slice()];
+  const com=lugares.filter(temCoord),sem=lugares.filter(l=>!temCoord(l));
+  const grupos=Array.from({length:nDias},()=>[]);
+  if(com.length){
+    const ref=temCoord(base)?base:centroide(com);
+    // centros iniciais: o mais longe da referência, depois o mais longe dos já escolhidos
+    const centros=[com.reduce((m,p)=>distKm(p,ref)>distKm(m,ref)?p:m)];
+    while(centros.length<Math.min(nDias,com.length)){
+      centros.push(com.reduce((m,p)=>{const d=Math.min(...centros.map(c=>distKm(p,c)));return d>m.d?{p,d}:m},{p:null,d:-1}).p);
+    }
+    let cs=centros.map(c=>({lat:c.lat,lng:c.lng})),atrib=[];
+    // folga de 1 lugar por dia: a geografia pesa mais que o equilíbrio exato
+    const cap=Math.ceil(com.length/cs.length)+(com.length>=cs.length*3?1:0);
+    for(let it=0;it<10;it++){
+      // atribuição gulosa pela menor distância, respeitando a capacidade de cada dia
+      const pares=[];com.forEach((p,i)=>cs.forEach((c,j)=>pares.push([distKm(p,c),i,j])));
+      pares.sort((a,b)=>a[0]-b[0]);
+      atrib=new Array(com.length).fill(-1);const cont=new Array(cs.length).fill(0);
+      for(const[,i,j]of pares){if(atrib[i]===-1&&cont[j]<cap){atrib[i]=j;cont[j]++;}}
+      const novos=cs.map((c,j)=>{const g=com.filter((_,i)=>atrib[i]===j);return g.length?centroide(g):c;});
+      const mudou=novos.some((c,j)=>distKm(c,cs[j])>0.01);cs=novos;if(!mudou)break;
+    }
+    com.forEach((p,i)=>grupos[atrib[i]].push(p));
+  }
+  // sem coordenada: vão para os dias com menos tempo ocupado
+  const minutos=g=>g.reduce((s,l)=>s+(l.duracao_min||90),0);
+  sem.forEach(l=>grupos.reduce((m,g)=>minutos(g)<minutos(m)?g:m).push(l));
+  // dias mais perto da hospedagem primeiro
+  const refBase=temCoord(base)?base:null;
+  const fil=grupos.filter(g=>g.length);
+  if(refBase)fil.sort((a,b)=>{const ca=a.filter(temCoord),cb=b.filter(temCoord);
+    return (ca.length?distKm(centroide(ca),refBase):999)-(cb.length?distKm(centroide(cb),refBase):999);});
+  return fil;
+}
+// ordem e horários de um dia
+const hhmm=m=>{m=Math.min(m,23*60+59);return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');};
+const minDe=h=>{const[a,b]=(h||'09:00').split(':').map(Number);return(a||0)*60+(b||0);};
+function montarUmDia(lugares,base,inicio){
+  const rest=lugares.filter(l=>l.categoria==='restaurante'),vis=lugares.filter(l=>l.categoria!=='restaurante');
+  // vizinho mais próximo saindo da hospedagem (ou do lugar mais ao norte, sem hospedagem)
+  const rota=[];let pos=temCoord(base)?base:null;const pend=vis.slice();
+  while(pend.length){
+    let k=0;
+    if(pos){let melhor=Infinity;pend.forEach((l,i)=>{const d=temCoord(l)?distKm(pos,l):500;if(d<melhor){melhor=d;k=i;}});}
+    else{const ci=pend.findIndex(temCoord);if(ci>=0){k=pend.reduce((m,l,i)=>temCoord(l)&&l.lat>(temCoord(pend[m])?pend[m].lat:-99)?i:m,ci);}}
+    const l=pend.splice(k,1)[0];rota.push(l);if(temCoord(l))pos=l;
+  }
+  // almoço: o restaurante mais perto da rota entra na posição (a partir de ~11h30) que menos desvia o caminho
+  const chegadas=[];{let t=minDe(inicio);rota.forEach(l=>{chegadas.push(t);t+=(l.duracao_min||90)+IA_DESLOC_MIN;});chegadas.push(t);}
+  const fila=rest.slice(),ordem=rota.slice();
+  if(fila.length){
+    let melhor={custo:Infinity,r:0,k:ordem.length};
+    fila.forEach((rr,ri)=>{
+      for(let k=0;k<=ordem.length;k++){
+        if(chegadas[k]<11*60+30&&k<ordem.length)continue;          // não almoça antes das 11h30
+        const ant=k?ordem[k-1]:(temCoord(base)?base:null),prox=ordem[k];
+        const d=(a,b)=>a&&b&&temCoord(a)&&temCoord(b)?distKm(a,b):0;
+        const custo=d(ant,rr)+d(rr,prox)-d(ant,prox)+(chegadas[k]>14*60?3:0); // almoço muito tarde pesa
+        if(custo<melhor.custo)melhor={custo,r:ri,k};
+      }
+    });
+    ordem.splice(melhor.k,0,fila.splice(melhor.r,1)[0]);
+  }
+  // horários; restaurante que sobrar vira jantar (19h30)
+  const saida=[];let t=minDe(inicio);
+  const add=(l,ini)=>{saida.push({...l,horario:hhmm(ini)});return ini+(l.duracao_min||90)+IA_DESLOC_MIN;};
+  ordem.forEach(l=>{t=add(l,l.categoria==='restaurante'?Math.max(t,12*60):t);});
+  fila.forEach(l=>{t=add(l,Math.max(t,19*60+30));});
+  return saida;
+}
+// título do dia: cidade + até 2 bairros mais presentes
+function tituloDia(cidade,lugares){
+  const cont={};lugares.forEach(l=>{if(l.bairro)cont[l.bairro]=(cont[l.bairro]||0)+1;});
+  const b=Object.keys(cont).sort((a,b)=>cont[b]-cont[a]).slice(0,2);
+  return b.length?`${cidade} · ${b.join(', ')}`:cidade;
 }
 $('oiar-close').onclick=()=>$('oiar').classList.remove('on');
 $('oiar-cnc').onclick=()=>$('oiar').classList.remove('on');
@@ -3324,15 +3447,13 @@ $('oiar-aplicar').onclick=async()=>{
   try{
     const baseNum=rDias.length?Math.max(...rDias.map(d=>d.numero))+1:1;
     let diaCount=0;const novosDias=[];
+    const inicio=iaUltimaEntrada?.inicio_dia||'09:00';
     iaSugestao.cidades.forEach((c,ci)=>{
-      const sel=c.lugares.map((l,li)=>({l,li})).filter(x=>iaSelecionados.has(ci+':'+x.li));
+      const sel=c.lugares.filter((l,li)=>iaSelecionados.has(ci+':'+li));
       if(!sel.length)return;
-      const nDiasCidade=Math.max(1,c.dias);
-      const porDia=Array.from({length:nDiasCidade},()=>[]);
-      sel.forEach((x,i)=>porDia[i%nDiasCidade].push(x.l));
-      porDia.forEach(lugares=>{
-        if(!lugares.length)return;
-        novosDias.push({cidade:c.nome,pais:c.pais,numero:baseNum+diaCount,lugares});
+      agruparPorProximidade(sel,Math.max(1,c.dias),c.base).forEach(grupo=>{
+        const lugares=montarUmDia(grupo,c.base,inicio);
+        novosDias.push({cidade:c.nome,pais:c.pais,titulo:tituloDia(c.nome,lugares),numero:baseNum+diaCount,lugares});
         diaCount++;
       });
     });
@@ -3341,14 +3462,14 @@ $('oiar-aplicar').onclick=async()=>{
     for(const nd of novosDias){
       const dataStr=dataAtual?dataAtual.toISOString().slice(0,10):null;
       if(dataAtual)dataAtual.setDate(dataAtual.getDate()+1);
-      const{data:diaIns,error:e1}=await sb.from('roteiro_dias').insert({viagem_id:vid,titulo:nd.cidade,numero:nd.numero,data:dataStr,descricao:null}).select().single();
+      const{data:diaIns,error:e1}=await sb.from('roteiro_dias').insert({viagem_id:vid,titulo:nd.titulo,numero:nd.numero,data:dataStr,descricao:null}).select().single();
       if(e1){if(!handlePlanError(e1))toast('Erro ao criar dia ⚠️');continue;}
       rDias.push(diaIns);
       const paradasPayload=nd.lugares.map((l,i)=>({
         dia_id:diaIns.id,nome:l.nome,tipo:l.categoria,
         endereco:`${l.nome}, ${nd.cidade}${nd.pais?', '+nd.pais:''}`,
         observacao:[l.descricao,l.motivo].filter(Boolean).join(' — ')||null,
-        horario:null,gmaps_link:null,realizado:false,ordem:i+1
+        horario:l.horario||null,gmaps_link:null,realizado:false,ordem:i+1
       }));
       const{data:parsIns,error:e2}=await sb.from('roteiro_paradas').insert(paradasPayload).select();
       if(e2){toast('Dia criado, mas falha ao salvar as paradas ⚠️');continue;}
@@ -3360,6 +3481,61 @@ $('oiar-aplicar').onclick=async()=>{
     toast(`✓ Roteiro adicionado — ${novosDias.length} dia${novosDias.length>1?'s':''}`);
   }finally{btn.disabled=false;btn.textContent=txtOrig;}
 };
+
+// ── Refazer UM dia com IA ──────────────────────────────
+// Pede ao servidor só os lugares de um dia (sem repetir os outros dias), monta a rota e
+// substitui as paradas do dia. Usa 1 geração de IA.
+async function refazerDiaIA(dia){
+  if(comoVisitante()||somenteLeitura()){avisarBloqueio();return;}
+  const pars=rPars.filter(p=>p.dia_id===dia.id);
+  const v=viagens.find(x=>x.id===vid);
+  const cidade=((dia.titulo||'').split('·')[0].trim())||v?.nome||'';
+  if(!cidade){toast('Dê um título ao dia com a cidade primeiro ⚠️');return;}
+  const pref=iaPrefs();
+  const ritmo=pref.ritmo||'moderado';
+  const quantidade=Math.max(2,Math.min(pars.filter(p=>!p.realizado).length||IA_POR_DIA[ritmo]||4,8));
+  // anexos ligados às paradas são apagados junto (FK em cascata): avisa antes
+  let anexos=0;
+  if(pars.length){const{count}=await sb.from('documentos').select('id',{count:'exact',head:true}).in('parada_id',pars.map(p=>p.id));anexos=count||0;}
+  const pedido=prompt(
+    `Refazer o Dia ${dia.numero} (${cidade}) com IA?\n`+
+    (pars.length?`As ${pars.length} paradas atuais serão substituídas${anexos?` e ${anexos} anexo${anexos>1?'s':''} delas serão apagados`:''}.\n`:'')+
+    `Usa 1 geração de IA.\n\nQuer algo específico neste dia? (opcional, ex: "mais museus", "perto do rio")`,'');
+  if(pedido===null)return;
+  const evitar=rPars.filter(p=>p.dia_id!==dia.id).map(p=>p.nome).slice(0,60);
+  toast('✨ Montando um novo dia...',30000);
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    const r=await fetch('/api/roteiro-ia',{method:'POST',
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+(session?.access_token||'')},
+      body:JSON.stringify({viagem_id:vid,destino:cidade,escopo:'dia',quantidade,evitar,desejos:pedido.trim(),
+        ritmo,transporte:pref.transporte,interesses:pref.interesses||[],inicio_dia:pref.inicio_dia||'09:00',
+        restricoes:pref.restricoes||'',hospedagem:pref.hospedagem||'',viajantes:pref.viajantes||1,criancas:!!pref.criancas})});
+    const d=await r.json().catch(()=>({}));
+    $('toast').classList.remove('show');
+    if(r.status===402){openPaywall('ia_creditos');return;}
+    if(!r.ok){toast(IA_ERROS[d.error]||'Erro ao gerar o dia ⚠️');return;}
+    const c=d.sugestao.cidades[0];
+    const lugares=montarUmDia(c.lugares,c.base,pref.inicio_dia||'09:00');
+    if(!lugares.length){toast('A IA não trouxe lugares para este dia ⚠️');return;}
+    // troca: apaga as paradas antigas e grava as novas
+    if(pars.length){
+      const{error:eDel}=await sb.from('roteiro_paradas').delete().eq('dia_id',dia.id);
+      if(eDel){if(!handlePlanError(eDel))toast('Erro ao apagar as paradas antigas ⚠️');return;}
+    }
+    const payload=lugares.map((l,i)=>({dia_id:dia.id,nome:l.nome,tipo:l.categoria,
+      endereco:`${l.nome}, ${c.nome}${c.pais?', '+c.pais:''}`,
+      observacao:[l.descricao,l.motivo].filter(Boolean).join(' — ')||null,
+      horario:l.horario||null,gmaps_link:null,realizado:false,ordem:i+1}));
+    const{data:ins,error:eIns}=await sb.from('roteiro_paradas').insert(payload).select();
+    if(eIns){toast('Paradas antigas apagadas, mas falhou ao salvar as novas ⚠️');await loadRot();drawRot();return;}
+    const novoTitulo=tituloDia(cidade,lugares);
+    if(novoTitulo!==dia.titulo){await sb.from('roteiro_dias').update({titulo:novoTitulo}).eq('id',dia.id);dia.titulo=novoTitulo;}
+    rPars=rPars.filter(p=>p.dia_id!==dia.id).concat(ins||[]);
+    dopen[dia.id]=true;drawRot();
+    toast(`✓ Dia ${dia.numero} refeito — ${lugares.length} paradas · restam ${d.restantes} gerações`,3500);
+  }catch(e){$('toast').classList.remove('show');toast('Falha de conexão — tente novamente ⚠️');}
+}
 
 // ── MODAL PARADA ──────────────────────────────────────
 TIPOS.forEach(t=>{

@@ -9,17 +9,21 @@
 //   GEMINI_API_KEY             → chave do Google AI Studio (aistudio.google.com → Get API key)  ← padrão
 //   ANTHROPIC_API_KEY          → alternativa paga (console.anthropic.com)
 //   IA_PROVIDER (opcional)     → gemini | anthropic. Sem ela: usa a que tiver chave, Gemini primeiro
-//   IA_MODEL (opcional)        → padrão Gemini: gemini-2.5-flash · padrão Anthropic: claude-haiku-4-5-20251001
+//   IA_MODEL (opcional)        → padrão Gemini: gemini-2.5-flash · padrão Anthropic: claude-haiku-5-5
 //   SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY → as mesmas do checkout/webhook
 //
 // Contrato:
 //   POST { viagem_id, destino, data_inicio, data_fim, transporte, orcamento,
-//          viajantes, criancas, ritmo, interesses[], desejos, outras_cidades }
-//   200  { sugestao: {resumo, dicas[], cidades[{nome,pais,dias,lugares[...]}]}, restantes }
+//          viajantes, criancas, ritmo, interesses[], desejos, outras_cidades,
+//          hospedagem, inicio_dia, restricoes,
+//          escopo: 'viagem' (padrão) | 'dia',  quantidade, evitar[]  ← só no escopo 'dia' }
+//   200  { sugestao: {resumo, dicas[], cidades[{nome,pais,dias,base{nome,lat,lng},lugares[{...,bairro,lat,lng}]}]}, restantes }
+//   No escopo 'dia' (refazer um dia): devolve UMA cidade, com 'quantidade' lugares, sem repetir 'evitar'.
+//   As coordenadas do modelo são aproximadas: o front usa só para agrupar lugares próximos no mesmo dia.
 //   402  { error:'sem_creditos' } · 401 sessão · 403 viagem · 400 entrada · 502 modelo
 
 const GEMINI_PADRAO = 'gemini-2.5-flash';
-const ANTHROPIC_PADRAO = 'claude-haiku-4-5-20251001';
+const ANTHROPIC_PADRAO = 'claude-haiku-5-5';
 const CATEGORIAS = ['atração', 'restaurante', 'compras', 'outro'];
 const CUSTOS = ['gratis', '$', '$$', '$$$'];
 
@@ -40,6 +44,16 @@ const TOOL = {
             nome: { type: 'string' },
             pais: { type: 'string' },
             dias: { type: 'integer', description: 'Dias sugeridos nesta cidade. A soma deve bater com a duração da viagem.' },
+            base: {
+              type: 'object',
+              description: 'Ponto de partida dos dias nesta cidade: a hospedagem informada ou, sem ela, um bairro central bom para se hospedar.',
+              properties: {
+                nome: { type: 'string' },
+                lat: { type: 'number', description: 'Latitude aproximada (5 casas decimais).' },
+                lng: { type: 'number', description: 'Longitude aproximada (5 casas decimais).' }
+              },
+              required: ['nome', 'lat', 'lng']
+            },
             lugares: {
               type: 'array',
               items: {
@@ -50,9 +64,12 @@ const TOOL = {
                   descricao: { type: 'string', description: 'Uma frase sobre o lugar.' },
                   duracao_min: { type: 'integer', description: 'Tempo médio de visita em minutos.' },
                   custo: { type: 'string', enum: CUSTOS },
-                  motivo: { type: 'string', description: 'Por que combina com este viajante (curto).' }
+                  motivo: { type: 'string', description: 'Por que combina com este viajante (curto).' },
+                  bairro: { type: 'string', description: 'Bairro ou região da cidade onde fica.' },
+                  lat: { type: 'number', description: 'Latitude aproximada (5 casas decimais).' },
+                  lng: { type: 'number', description: 'Longitude aproximada (5 casas decimais).' }
                 },
-                required: ['nome', 'categoria', 'descricao', 'duracao_min', 'custo']
+                required: ['nome', 'categoria', 'descricao', 'duracao_min', 'custo', 'bairro', 'lat', 'lng']
               }
             }
           },
@@ -139,7 +156,7 @@ async function gerarGemini(env, inp) {
         responseMimeType: 'application/json',
         responseSchema: paraSchemaGemini(TOOL.input_schema),
         temperature: 0.4,
-        maxOutputTokens: 8192
+        maxOutputTokens: 16384          // o 2.5-flash também gasta tokens pensando; 8192 cortava o JSON com coordenadas
       }
     })
   });
@@ -175,7 +192,7 @@ async function gerarAnthropic(env, inp) {
     method: 'POST',
     headers: { 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
     body: JSON.stringify({
-      model: modelo, max_tokens: 4096, system: SYSTEM,
+      model: modelo, max_tokens: 8192, system: SYSTEM,
       tools: [TOOL], tool_choice: { type: 'tool', name: TOOL.name },
       messages: [{ role: 'user', content: montarPedido(inp) }]
     })
@@ -206,21 +223,38 @@ Nunca invente lugares. Prefira atrações consolidadas a modismos. Considere o m
 (sem carro: lugares próximos entre si e acessíveis por transporte público), o ritmo, o orçamento
 e as crianças, se houver. Inclua obrigatoriamente os lugares que o viajante pediu, se existirem.
 Por cidade, sugira de 6 a 10 lugares (mais do que cabe nos dias: o viajante vai escolher).
-Inclua 1 ou 2 restaurantes típicos por cidade. Escreva em português do Brasil.`;
+Inclua 1 ou 2 restaurantes típicos por cidade. Respeite as restrições do viajante (mobilidade,
+alimentação, etc.): não sugira o que conflita com elas. Para cada lugar informe o bairro e a
+latitude/longitude aproximadas; elas são usadas para juntar lugares próximos no mesmo dia.
+Escreva em português do Brasil.`;
 
 function montarPedido(i) {
-  const dias = Math.round((Date.parse(i.data_fim) - Date.parse(i.data_inicio)) / 864e5) + 1;
   const transp = { carro: 'vai alugar carro', publico: 'só transporte público/a pé', ambos: 'carro em parte da viagem' }[i.transporte];
+  const perfil = [
+    `Transporte: ${transp}`,
+    `Viajantes: ${i.viajantes} pessoa(s) · Crianças: ${i.criancas ? 'sim' : 'não'}`,
+    `Ritmo: ${i.ritmo} · Começa o dia às ${i.inicio_dia}`,
+    `Interesses: ${i.interesses.join(', ') || 'gerais'}`,
+    `Restrições: ${i.restricoes || 'nenhuma'}`,
+    `Hospedagem: ${i.hospedagem || 'ainda não definida'}`
+  ];
+  if (i.escopo === 'dia') {
+    return [
+      `Refazer UM dia de passeio em: ${i.destino}`,
+      `Sugira exatamente ${i.quantidade} lugares próximos entre si, que caibam em um dia, em uma única cidade (dias = 1).`,
+      `Não repita nenhum destes, já usados em outros dias: ${i.evitar.join('; ') || 'nenhum'}`,
+      `Pedido específico para este dia: ${i.desejos || 'nenhum'}`,
+      ...perfil
+    ].join('\n');
+  }
+  const dias = Math.round((Date.parse(i.data_fim) - Date.parse(i.data_inicio)) / 864e5) + 1;
   return [
     `Destino principal: ${i.destino}`,
     `Período: ${i.data_inicio} a ${i.data_fim} (${dias} dias)`,
     `Outras cidades que quer incluir: ${i.outras_cidades || 'nenhuma — pode sugerir bate-voltas se fizer sentido'}`,
-    `Transporte: ${transp}`,
-    `Dinheiro disponível para a viagem: R$ ${i.orcamento.toLocaleString('pt-BR')} (${i.viajantes} pessoa(s))`,
-    `Crianças: ${i.criancas ? 'sim' : 'não'}`,
-    `Ritmo: ${i.ritmo}`,
-    `Interesses: ${i.interesses.join(', ') || 'gerais'}`,
-    `Lugares que quer conhecer: ${i.desejos || 'sem preferência'}`
+    `Dinheiro disponível para a viagem: R$ ${i.orcamento.toLocaleString('pt-BR')}`,
+    `Lugares que quer conhecer: ${i.desejos || 'sem preferência'}`,
+    ...perfil
   ].join('\n');
 }
 
@@ -240,14 +274,28 @@ function sanitizarEntrada(b) {
     ritmo: ['tranquilo', 'moderado', 'intenso'].includes(b.ritmo) ? b.ritmo : 'moderado',
     interesses: (Array.isArray(b.interesses) ? b.interesses : []).slice(0, 10).map(x => txt(x, 30)).filter(Boolean),
     desejos: txt(b.desejos, 500),
-    outras_cidades: txt(b.outras_cidades, 200)
+    outras_cidades: txt(b.outras_cidades, 200),
+    hospedagem: txt(b.hospedagem, 120),
+    inicio_dia: /^([01]\d|2[0-3]):[0-5]\d$/.test(b.inicio_dia) ? b.inicio_dia : '09:00',
+    restricoes: txt(b.restricoes, 300),
+    escopo: b.escopo === 'dia' ? 'dia' : 'viagem',
+    quantidade: Math.max(2, Math.min(parseInt(b.quantidade) || 4, 8)),
+    evitar: (Array.isArray(b.evitar) ? b.evitar : []).slice(0, 60).map(x => txt(x, 100)).filter(Boolean)
   };
   if (!/^[0-9a-f-]{36}$/i.test(i.viagem_id)) return { erro: 'viagem_invalida' };
   if (i.destino.length < 2) return { erro: 'destino_obrigatorio' };
+  if (i.escopo === 'dia') return i;                       // refazer um dia: não precisa de datas
   if (!dataOk(i.data_inicio) || !dataOk(i.data_fim)) return { erro: 'datas_invalidas' };
   const dias = (Date.parse(i.data_fim) - Date.parse(i.data_inicio)) / 864e5 + 1;
   if (dias < 1 || dias > 30) return { erro: 'periodo_invalido' };
   return i;
+}
+
+// coordenada válida (número dentro da faixa) ou null
+function coord(lat, lng) {
+  const a = Number(lat), b = Number(lng);
+  if (!Number.isFinite(a) || !Number.isFinite(b) || Math.abs(a) > 90 || Math.abs(b) > 180 || (a === 0 && b === 0)) return null;
+  return { lat: Math.round(a * 1e5) / 1e5, lng: Math.round(b * 1e5) / 1e5 };
 }
 
 // Nunca confia no formato do modelo: corta, normaliza enums e descarta lixo.
@@ -256,13 +304,16 @@ function sanitizarSaida(o) {
     nome: txt(c.nome, 60),
     pais: txt(c.pais, 40),
     dias: Math.max(1, Math.min(parseInt(c.dias) || 1, 30)),
+    base: c.base && coord(c.base.lat, c.base.lng) ? { nome: txt(c.base.nome, 100), ...coord(c.base.lat, c.base.lng) } : null,
     lugares: (Array.isArray(c.lugares) ? c.lugares : []).slice(0, 12).map(l => ({
       nome: txt(l.nome, 100),
       categoria: CATEGORIAS.includes(l.categoria) ? l.categoria : 'atração',
       descricao: txt(l.descricao, 240),
       duracao_min: Math.max(15, Math.min(parseInt(l.duracao_min) || 90, 600)),
       custo: CUSTOS.includes(l.custo) ? l.custo : '$',
-      motivo: txt(l.motivo, 160)
+      motivo: txt(l.motivo, 160),
+      bairro: txt(l.bairro, 60),
+      ...(coord(l.lat, l.lng) || { lat: null, lng: null })
     })).filter(l => l.nome)
   })).filter(c => c.nome && c.lugares.length);
   return {

@@ -275,3 +275,8 @@ body.ro .mala-check { pointer-events: none; }
 /* selo e lixeira com a mesma largura: setas e interruptor alinhados em todas as linhas */
 .cfg-cat-pad, #cfg-list .cfg-cat-row > .bi { flex: none; width: 64px; text-align: center; box-sizing: border-box; }
 .cfg-cat-pad { padding: 3px 0; }
+
+/* Roteiro com IA: aviso de como os dias são montados */
+.ia-como { margin-top: 8px; padding: 8px 10px; border-radius: 10px; font-size: 12px; line-height: 1.4;
+  color: var(--mut2); background: color-mix(in srgb, var(--teal) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--teal) 25%, var(--bor)); }
