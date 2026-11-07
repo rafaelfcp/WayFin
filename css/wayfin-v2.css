@@ -11,6 +11,15 @@
 
 body { font-variant-numeric: tabular-nums; }
 
+/* Ícones do menu: tamanho fixo em QUALQUER largura.
+ * Sem isso, no desktop (>=900px) o <svg> não tinha width/height e ocupava a coluna inteira. */
+.tab .tab-ic { width: 20px; height: 20px; flex: none; }
+
+@media (min-width: 900px) {
+  .tab { gap: 12px; }
+  .tab.on .tab-ic { color: inherit; }
+}
+
 @media (max-width: 899px) {
   /* ── menu inferior ─────────────────────────────── */
   #tabs {
