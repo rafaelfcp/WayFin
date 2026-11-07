@@ -123,7 +123,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 
 /* ── PAGES ── */
 #pages{flex:1;overflow:hidden;position:relative;min-height:0}
-.pg{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 16px calc(var(--sb)+84px);display:none}
+.pg{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 16px calc(var(--sb) + 84px);display:none}
 .pg.on{display:block}
 
 /* ── SECTION LABEL ── */
@@ -336,7 +336,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 #m-map[data-map-style="sat"] .leaflet-control-attribution a{color:#2b6cb0!important}
 
 /* checklist de mala */
-#pg-mala{padding:14px 16px calc(var(--sb)+90px)}
+#pg-mala{padding:14px 16px calc(var(--sb) + 90px)}
 .mala-hdr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
 .mala-prog-txt{font-size:12px;color:var(--mut2);font-weight:600}
 .mala-actions{display:flex;flex-wrap:wrap;gap:8px}
@@ -357,7 +357,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 .mala-empty button{margin-top:14px}
 
 #m-map{flex-shrink:0;width:100%;height:min(42vh,360px);background:var(--sur);overflow:hidden;position:relative}
-#m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+64px)}
+#m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb) + 64px)}
 #m-map.h,#m-list.h{display:none!important}
 .m-status{padding:4px 0 8px;font-size:11px;color:var(--mut2);text-align:center;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
 .m-spin{width:11px;height:11px;border:2px solid var(--bor2);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
@@ -413,7 +413,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 /* ── FAB ── */
 .fab{
   position:fixed;bottom:0;left:0;right:0;
-  margin:0 auto calc(var(--sb)+18px);
+  margin:0 auto calc(var(--sb) + 18px);
   width:fit-content;
   background:var(--grd);
   border:none;border-radius:99px;
@@ -434,7 +434,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 .ov.on{display:flex}
 .sh{
   background:var(--sur);border-radius:24px 24px 0 0;
-  padding:18px 16px calc(var(--sb)+22px);
+  padding:18px 16px calc(var(--sb) + 22px);
   width:100%;max-height:92dvh;overflow-y:auto;
   animation:sup .28s cubic-bezier(.4,0,.2,1);
   border-top:1px solid var(--bor2);
@@ -500,7 +500,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 .tg-sw.on::after{left:21px}
 .cov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:600;align-items:flex-end;justify-content:center}
 .cov.on{display:flex}
-.csh{background:var(--sur);border-radius:24px 24px 0 0;padding:18px 16px calc(var(--sb)+18px);width:100%;max-height:80dvh;display:flex;flex-direction:column;animation:sup .28s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--bor2)}
+.csh{background:var(--sur);border-radius:24px 24px 0 0;padding:18px 16px calc(var(--sb) + 18px);width:100%;max-height:80dvh;display:flex;flex-direction:column;animation:sup .28s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--bor2)}
 .csh-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .csh-t{font-size:12px;color:var(--mut2);margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--bor);font-weight:500}
 .csh-l{overflow-y:auto;flex:1}
@@ -510,7 +510,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 .ebox{background:var(--sur);border-radius:20px;padding:24px;width:100%;max-width:360px;animation:zin .22s ease;border:1px solid var(--bor2)}
 .ebox h3{font-size:16px;font-weight:800;margin-bottom:18px;letter-spacing:-0.3px}
 .toast{
-  position:fixed;bottom:calc(var(--sb)+94px);left:50%;
+  position:fixed;bottom:calc(var(--sb) + 94px);left:50%;
   transform:translateX(-50%) translateY(16px);
   background:var(--sur2);border:1px solid var(--bor2);
   border-radius:99px;padding:10px 20px;font-size:12px;font-weight:600;
@@ -846,6 +846,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 .ad-cta{font-size:12px;font-weight:700;color:var(--teal);white-space:nowrap}
 .ad-slot:focus-visible,.pw-plan:focus-visible,.plan-up:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 </style>
+<link rel="stylesheet" href="/css/wayfin-v2.css">
 </head>
 <body class="auth-required">
 <!-- LOGO WAYFIN (sprite): wordmark segue a cor do texto; ponto do "i" segue --wf-dot -->
@@ -1299,11 +1300,11 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   </div>
 
   <div id="tabs">
-    <button class="tab on" type="button" data-t="dash" aria-current="page" aria-label="Visão geral">📊 <span class="tab-lbl-l">Visão geral</span><span class="tab-lbl-s" aria-hidden="true">Visão</span></button>
-    <button class="tab" type="button" data-t="lanc">💳 <span>Gastos</span></button>
-    <button class="tab" type="button" data-t="rot">🗺️ <span>Plano</span></button>
-    <button class="tab" type="button" data-t="mala">🎒 <span>Mala</span></button>
-    <button class="tab" type="button" data-t="mapa">📍 <span>Mapa</span></button>
+    <button class="tab on" type="button" data-t="dash" aria-current="page" aria-label="Visão geral"><svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h6V4H4zm0 7h6v-5H4zm10 0h6v-9h-6zm0-16v5h6V4z" fill="currentColor" stroke="none"/></svg><span class="tab-lbl-l">Visão geral</span><span class="tab-lbl-s" aria-hidden="true">Visão</span></button>
+    <button class="tab" type="button" data-t="lanc"><svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg><span>Gastos</span></button>
+    <button class="tab" type="button" data-t="rot"><svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5zM9 4v13.5M15 6.5V20"/></svg><span>Plano</span></button>
+    <button class="tab" type="button" data-t="mala"><svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2.5"/><path d="M9 7V5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5v2M4 12h16"/></svg><span>Mala</span></button>
+    <button class="tab" type="button" data-t="mapa"><svg class="tab-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Mapa</span></button>
   </div>
 
   <div id="pages">
