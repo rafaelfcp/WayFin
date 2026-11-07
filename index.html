@@ -846,7 +846,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
 .ad-cta{font-size:12px;font-weight:700;color:var(--teal);white-space:nowrap}
 .ad-slot:focus-visible,.pw-plan:focus-visible,.plan-up:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 </style>
-<link rel="stylesheet" href="/css/wayfin-v2.css?v=6">
+<link rel="stylesheet" href="/css/wayfin-v2.css?v=7">
 </head>
 <body class="auth-required">
 <!-- LOGO WAYFIN (sprite): wordmark segue a cor do texto; ponto do "i" segue --wf-dot -->
@@ -1797,10 +1797,9 @@ const ovObs=new MutationObserver(ms=>{
   for(const m of ms){
     const el=m.target;
     if(!el.classList.contains('on')||m.oldValue?.split(' ').includes('on'))continue;
-    // categorias são globais (valem para todos): só admin edita — trava no banco (policy categorias_admin_write)
-    if(el.id==='ocfg'&&currentProfile?.role!=='admin'){
-      el.classList.remove('on');
-      if(comoVisitante())avisarBloqueio();else toast('Categorias personalizadas por conta chegam em breve ✨');
+    // categorias personalizadas são do assinante (trava no banco: policies de categorias/categorias_prefs)
+    if(el.id==='ocfg'){
+      if(!isPremium()){el.classList.remove('on');bloqueioTs=0;openPaywall('categorias');}
       continue;
     }
     const bloqueia=el.id==='oev'?(!isPremium()||viagemExemplo()):somenteLeitura();
@@ -1825,7 +1824,7 @@ function blindarEscritas(client){
     for(const op of['insert','update','upsert','delete']){
       const orig=q[op].bind(q);
       q[op]=(...a)=>{
-        const travado=table==='categorias'?currentProfile?.role!=='admin'
+        const travado=(table==='categorias'||table==='categorias_prefs')?!isPremium()
           :TRIP_TABLES.has(table)?somenteLeitura()
           :(table==='viagens'&&op!=='insert'&&op!=='delete')?somenteLeitura()
           :(table==='viagens'&&op==='delete')?false   // o dono sempre pode apagar a própria viagem
@@ -2035,31 +2034,60 @@ $('acc-btn').onclick=()=>$('user-menu-box').classList.toggle('open');
   blindarEscritas(sb);
   await initAuth();
 })();
+// Categorias: padrão (dono = null), as suas e as do dono da viagem aberta (quando você é convidado).
+// Ativa/ordem vêm das suas preferências (categorias_prefs); sem preferência, vale o padrão da categoria.
+let categoriasTodas=[],categoriasPrefs={};
 async function loadCategorias(){
-  const{data,error}=await sb.from('categorias').select('*').order('ordem');
-  categorias=error?[]:(data||[]).map(r=>({id:r.id,label:r.label,e:r.emoji,c:r.cor,ordem:r.ordem,ativo:r.ativo}));
+  const[{data,error},{data:prefs}]=await Promise.all([
+    sb.from('categorias').select('*').order('ordem'),
+    currentUser?sb.from('categorias_prefs').select('categoria_id,ativo,ordem'):Promise.resolve({data:[]})
+  ]);
+  categoriasPrefs={};(prefs||[]).forEach(p=>{categoriasPrefs[p.categoria_id]=p;});
+  categoriasTodas=error?[]:(data||[]).map(r=>({id:r.id,label:r.label,e:r.emoji,c:r.cor,dono:r.user_id||null,
+    ordem:categoriasPrefs[r.id]?.ordem??r.ordem,ativo:categoriasPrefs[r.id]?.ativo??r.ativo}));
+  filtrarCategorias();
+}
+function filtrarCategorias(){
+  const donoViagem=viagens.find(x=>x.id===vid)?.owner_id;
+  categorias=categoriasTodas
+    .filter(c=>!c.dono||c.dono===currentUser?.id||c.dono===donoViagem)
+    .sort((a,b)=>a.ordem-b.ordem);
+}
+// as que você pode configurar: padrão + as suas
+const categoriasConfig=()=>categorias.filter(c=>!c.dono||c.dono===currentUser?.id);
+async function salvarPrefCategoria(id,campos){
+  categoriasPrefs[id]={...(categoriasPrefs[id]||{}),...campos};
+  const{error}=await sb.from('categorias_prefs').upsert({user_id:currentUser.id,categoria_id:id,...campos},{onConflict:'user_id,categoria_id'});
+  if(error&&!handlePlanError(error))toast('Erro ao salvar a preferência ⚠️');
+  return !error;
 }
 
 // ── CONFIGURAÇÕES DE CATEGORIAS (Fase 6) ───────────────
 let cfgSelectedColor=PC[0];
 function drawCfgList(){
   const el=$('cfg-list');el.innerHTML='';
-  if(!categorias.length){el.innerHTML='<div style="text-align:center;padding:16px;color:var(--mut2);font-size:12px">Nenhuma categoria</div>';return;}
-  categorias.forEach((c,i)=>{
+  const lista=categoriasConfig();
+  if(!lista.length){el.innerHTML='<div style="text-align:center;padding:16px;color:var(--mut2);font-size:12px">Nenhuma categoria</div>';return;}
+  lista.forEach((c,i)=>{
     const row=document.createElement('div');row.className='cfg-cat-row';
     const ic=document.createElement('span');ic.className='cfg-cat-ic';ic.textContent=c.e;row.appendChild(ic);
     const nm=document.createElement('span');nm.className='cfg-cat-nm'+(c.ativo?'':' inativa');nm.textContent=c.label;row.appendChild(nm);
     const ar=document.createElement('div');ar.className='p-br';
     const u=document.createElement('button');u.className='ob';u.textContent='▲';u.disabled=i===0;
     u.onclick=()=>moverCategoria(i,-1);
-    const d=document.createElement('button');d.className='ob';d.textContent='▼';d.disabled=i===categorias.length-1;
+    const d=document.createElement('button');d.className='ob';d.textContent='▼';d.disabled=i===lista.length-1;
     d.onclick=()=>moverCategoria(i,1);
     ar.appendChild(u);ar.appendChild(d);row.appendChild(ar);
     const sw=document.createElement('div');sw.className='tg-sw'+(c.ativo?' on':'');
     sw.title=c.ativo?'Ativa — clique para desativar':'Inativa — clique para reativar';
     sw.onclick=()=>toggleCategoriaAtiva(c);row.appendChild(sw);
-    const del=document.createElement('button');del.className='bi';del.textContent='🗑️';del.style.fontSize='14px';
-    del.onclick=()=>excluirCategoria(c);row.appendChild(del);
+    if(c.dono===currentUser?.id){
+      const del=document.createElement('button');del.className='bi';del.textContent='🗑️';del.style.fontSize='14px';
+      del.title='Excluir categoria';del.onclick=()=>excluirCategoria(c);row.appendChild(del);
+    }else{
+      const pad=document.createElement('span');pad.className='cfg-cat-pad';pad.textContent='padrão';
+      pad.title='Categoria padrão: pode ser desativada, não excluída';row.appendChild(pad);
+    }
     el.appendChild(row);
   });
 }
@@ -2076,28 +2104,32 @@ async function toggleCategoriaAtiva(c){
   const novoAtivo=!c.ativo;
   const i=categorias.findIndex(x=>x.id===c.id);
   categorias[i]={...categorias[i],ativo:novoAtivo};
+  const t=categoriasTodas.find(x=>x.id===c.id);if(t)t.ativo=novoAtivo;
   drawCfgList();drawDash();drawList();
   renderCatPills(document.querySelector('#cpills .pill.on')?.dataset.id||null);
-  await sb.from('categorias').update({ativo:novoAtivo}).eq('id',c.id);
+  if(!await salvarPrefCategoria(c.id,{ativo:novoAtivo})){await loadCategorias();drawCfgList();drawDash();drawList();}
 }
 async function moverCategoria(idx,dir){
-  const ni=idx+dir;if(ni<0||ni>=categorias.length)return;
-  const a=categorias[idx],b=categorias[ni];
-  const oa=a.ordem,ob=b.ordem;
-  categorias[idx]={...a,ordem:ob};categorias[ni]={...b,ordem:oa};
-  categorias.sort((x,y)=>x.ordem-y.ordem);
-  drawCfgList();drawDash();drawList();
-  await sb.from('categorias').update({ordem:ob}).eq('id',a.id);
-  await sb.from('categorias').update({ordem:oa}).eq('id',b.id);
+  // reordena só as suas + padrão; grava a ordem completa nas suas preferências (evita empates)
+  const lista=categoriasConfig();
+  const ni=idx+dir;if(ni<0||ni>=lista.length)return;
+  [lista[idx],lista[ni]]=[lista[ni],lista[idx]];
+  lista.forEach((c,i)=>{c.ordem=i+1;const t=categoriasTodas.find(x=>x.id===c.id);if(t)t.ordem=i+1;});
+  filtrarCategorias();drawCfgList();drawDash();drawList();
+  const linhas=lista.map((c,i)=>({user_id:currentUser.id,categoria_id:c.id,ordem:i+1}));
+  linhas.forEach(l=>{categoriasPrefs[l.categoria_id]={...(categoriasPrefs[l.categoria_id]||{}),ordem:l.ordem};});
+  const{error}=await sb.from('categorias_prefs').upsert(linhas,{onConflict:'user_id,categoria_id'});
+  if(error){if(!handlePlanError(error))toast('Erro ao salvar a ordem ⚠️');await loadCategorias();drawCfgList();drawDash();drawList();}
 }
 async function excluirCategoria(c){
+  if(c.dono!==currentUser?.id){toast('Categorias padrão não podem ser excluídas — desative ⚠️');return;}
   const{count}=await sb.from('gastos').select('id',{count:'exact',head:true}).eq('categoria',c.id);
   if(count>0){toast(`Em uso em ${count} lançamento${count!==1?'s':''} — desative em vez de excluir ⚠️`);return;}
   if(!confirm(`Excluir a categoria "${c.label}"? Não pode ser desfeito.`))return;
-  const bk=[...categorias];categorias=categorias.filter(x=>x.id!==c.id);
+  const bk=[...categoriasTodas];categoriasTodas=categoriasTodas.filter(x=>x.id!==c.id);filtrarCategorias();
   drawCfgList();drawDash();drawList();renderCatPills(null);
   const{error}=await sb.from('categorias').delete().eq('id',c.id);
-  if(error){categorias=bk;drawCfgList();toast('Erro ao excluir ⚠️');}
+  if(error){categoriasTodas=bk;filtrarCategorias();drawCfgList();toast('Erro ao excluir ⚠️');}
   else toast('Categoria excluída ✓');
 }
 // ── MEMBROS DA VIAGEM (compartilhamento) ────────────────
@@ -2185,16 +2217,19 @@ $('cfgaddbtn').onclick=async()=>{
   const emoji=$('cfgemoji').value.trim()||'📦';
   const label=$('cfglabel').value.trim();
   if(!label){toast('Digite um nome ⚠️');return;}
-  const slug=(label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''))||('cat_'+Date.now());
-  if(categorias.some(c=>c.id===slug)){toast('Já existe uma categoria com esse nome ⚠️');return;}
+  if(categoriasConfig().some(c=>c.label.trim().toLowerCase()===label.toLowerCase())){toast('Já existe uma categoria com esse nome ⚠️');return;}
+  // id único entre todos os usuários: nome + sufixo aleatório (a chave da tabela é global)
+  const base=(label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')).slice(0,24)||'cat';
+  const slug=base+'_'+Math.random().toString(36).slice(2,8);
   const ordem=categorias.length?Math.max(...categorias.map(c=>c.ordem))+1:1;
-  const payload={id:slug,label,emoji,cor:cfgSelectedColor,ordem,ativo:true};
-  categorias.push({id:slug,label,e:emoji,c:cfgSelectedColor,ordem,ativo:true});
+  const payload={id:slug,label,emoji,cor:cfgSelectedColor,ordem,ativo:true,user_id:currentUser.id};
+  categoriasTodas.push({id:slug,label,e:emoji,c:cfgSelectedColor,ordem,ativo:true,dono:currentUser.id});filtrarCategorias();
   drawCfgList();renderCatPills(document.querySelector('#cpills .pill.on')?.dataset.id||null);drawDash();
   $('cfgemoji').value='';$('cfglabel').value='';
-  toast('Categoria adicionada ✓');
   const{error}=await sb.from('categorias').insert(payload);
-  if(error){categorias=categorias.filter(c=>c.id!==slug);drawCfgList();toast('Erro ao salvar ⚠️');}
+  if(error){categoriasTodas=categoriasTodas.filter(c=>c.id!==slug);filtrarCategorias();drawCfgList();
+    if(!handlePlanError(error))toast('Erro ao salvar ⚠️');return;}
+  toast('Categoria adicionada ✓');
 };
 
 // ── VIAGENS ───────────────────────────────────────────
@@ -2255,6 +2290,7 @@ $('evok').onclick=async()=>{
 // ── GASTOS ────────────────────────────────────────────
 async function loadGastos(){
   const v=viagens.find(x=>x.id===vid);if(!v)return;
+  filtrarCategorias();
   $('tnmt').textContent=v.nome;
   const{data}=await sb.from('gastos').select('*').eq('viagem_id',vid).order('data',{ascending:false});
   gastos=data||[];
