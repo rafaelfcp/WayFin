@@ -1,23 +1,25 @@
-// Cloudflare Pages Function — POST /api/checkout
+// POST /api/checkout
 //
 // Cria a cobrança no Mercado Pago e devolve { url } pro front-end redirecionar
-// (é exatamente o contrato que o index.html já espera). Duas rotas dentro do
-// mesmo endpoint, dependendo do plano escolhido:
-//   - "trip_pass" (30 dias, sem renovação) → Checkout Pro (pagamento único)
-//   - "monthly" / "annual" (recorrente)    → Preapproval (assinatura)
+// (contrato que o index.html já espera). Duas rotas, conforme o plano:
+//   - "trip_pass" (30 dias) e "annual" (12 meses) → Checkout Pro, PAGAMENTO ÚNICO (Pix + cartão)
+//   - "monthly"                                    → Preapproval (assinatura recorrente, só cartão)
 //
-// Variáveis de ambiente esperadas (Cloudflare Pages → Settings → Environment
-// variables, em Production E Preview):
-//   MP_ACCESS_TOKEN          → Access Token do Mercado Pago (Credenciais de produção)
-//   SUPABASE_URL             → https://evvvzmnguhgqaopvquhs.supabase.co
-//   SUPABASE_ANON_KEY        → a mesma anon key que já está no index.html
+// O Anual é pagamento único de propósito: aceita Pix (0,99% vs ~5% no cartão) e elimina
+// os problemas de recorrência (cartão vencido, falha de renovação). Renovação = nova compra,
+// que o webhook empilha sobre o acesso que ainda resta.
 //
-// Os preços aqui são a fonte da verdade pro valor cobrado — nunca confie no
-// valor vindo do front-end. Mantenha isto em sincronia com PRICING no index.html.
-const PRICES = {
-  monthly:   { title: 'Wayfin Premium — Mensal', amount: 21.90, recurring: { frequency: 1, frequency_type: 'months' } },
-  annual:    { title: 'Wayfin Premium — Anual',  amount: 119.90, recurring: { frequency: 1, frequency_type: 'years' } },
-  trip_pass: { title: 'Wayfin — Passe de Viagem (30 dias)', amount: 34.90, recurring: null }
+// Variáveis de ambiente (Worker "wayfin" → Settings → Variables and Secrets):
+//   MP_ACCESS_TOKEN   → Access Token do Mercado Pago (Credenciais de produção)  [secret]
+//   SUPABASE_URL      → https://evvvzmnguhgqaopvquhs.supabase.co
+//   SUPABASE_ANON_KEY → a mesma anon key que já está no index.html
+//
+// Os preços aqui são a fonte da verdade — o webhook também confere o valor pago contra eles.
+// Mantenha em sincronia com PRICING no index.html.
+export const PRICES = {
+  monthly:   { title: 'Wayfin Premium — Mensal',            amount: 21.90,  recurring: { frequency: 1, frequency_type: 'months' } },
+  annual:    { title: 'Wayfin Premium — Anual (12 meses)',  amount: 119.90, recurring: null },
+  trip_pass: { title: 'Wayfin — Passe de Viagem (30 dias)', amount: 34.90,  recurring: null }
 };
 
 export async function onRequestPost({ request, env }) {
@@ -30,7 +32,7 @@ export async function onRequestPost({ request, env }) {
     const token = authHeader.replace(/^Bearer\s+/i, '').trim();
     if (!token) return json({ error: 'sem_sessao' }, 401);
 
-    // Valida o usuário direto no Supabase Auth (sem precisar de SDK aqui).
+    // Valida o usuário direto no Supabase Auth (sem SDK).
     const userResp = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
       headers: { Authorization: `Bearer ${token}`, apikey: env.SUPABASE_ANON_KEY }
     });
@@ -47,16 +49,25 @@ export async function onRequestPost({ request, env }) {
     const origin = new URL(request.url).origin;
     // "userId:plan" — é o que o webhook usa pra saber quem pagou o quê.
     const externalRef = `${user.id}:${plan}`;
+    // source_news=webhooks: só a notificação nova (assinada), sem o IPN legado duplicado.
+    const notificationUrl = `${origin}/api/webhook/mercadopago?source_news=webhooks`;
+    const mpHeaders = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${env.MP_ACCESS_TOKEN}`,
+      // Mesmo clique duplicado gera a mesma cobrança (janela de ~1 min)
+      'X-Idempotency-Key': `${externalRef}:${Math.floor(Date.now() / 60000)}`
+    };
 
     if (price.recurring) {
       const r = await fetch('https://api.mercadopago.com/preapproval', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.MP_ACCESS_TOKEN}` },
+        headers: mpHeaders,
         body: JSON.stringify({
           reason: price.title,
           external_reference: externalRef,
           payer_email: user.email,
           back_url: `${origin}/?checkout=success`,
+          notification_url: notificationUrl,
           auto_recurring: {
             frequency: price.recurring.frequency,
             frequency_type: price.recurring.frequency_type,
@@ -67,17 +78,22 @@ export async function onRequestPost({ request, env }) {
         })
       });
       const data = await r.json();
-      if (!r.ok || !data.init_point) return json({ error: 'mp_preapproval_falhou', detail: data }, 502);
+      if (!r.ok || !data.init_point) {
+        console.error('mp_preapproval_falhou', r.status, JSON.stringify(data));
+        return json({ error: 'mp_preapproval_falhou' }, 502);
+      }
       return json({ url: data.init_point });
     }
 
     const r = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.MP_ACCESS_TOKEN}` },
+      headers: mpHeaders,
       body: JSON.stringify({
-        items: [{ title: price.title, quantity: 1, unit_price: price.amount, currency_id: 'BRL' }],
+        items: [{ id: plan, title: price.title, quantity: 1, unit_price: price.amount, currency_id: 'BRL' }],
         external_reference: externalRef,
         payer: { email: user.email },
+        notification_url: notificationUrl,
+        statement_descriptor: 'WAYFIN',
         back_urls: {
           success: `${origin}/?checkout=success`,
           failure: `${origin}/?checkout=failure`,
@@ -87,10 +103,14 @@ export async function onRequestPost({ request, env }) {
       })
     });
     const data = await r.json();
-    if (!r.ok || !data.init_point) return json({ error: 'mp_preference_falhou', detail: data }, 502);
+    if (!r.ok || !data.init_point) {
+      console.error('mp_preference_falhou', r.status, JSON.stringify(data));
+      return json({ error: 'mp_preference_falhou' }, 502);
+    }
     return json({ url: data.init_point });
   } catch (e) {
-    return json({ error: 'erro_interno', detail: String(e && e.message || e) }, 500);
+    console.error('checkout_erro', e);
+    return json({ error: 'erro_interno' }, 500);
   }
 }
 

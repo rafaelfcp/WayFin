@@ -1647,7 +1647,7 @@ const PLAN_LIMITS={
   premium:{viagens:Infinity,anexos_por_viagem:Infinity,reservas_por_viagem:Infinity,explore_itens:15,categorias_custom:true,otimizar_rota:true}
 };
 const PRICING=[ // hipótese inicial: validar com teste de preço antes de fixar
-  {id:'annual',nome:'Anual',preco:'R$ 119,90',sub:'≈ R$ 9,99 por mês · cobrado anualmente',destaque:true},
+  {id:'annual',nome:'Anual',preco:'R$ 119,90',sub:'≈ R$ 9,99 por mês · pagamento único, 12 meses',destaque:true},
   {id:'monthly',nome:'Mensal',preco:'R$ 21,90',sub:'cancele quando quiser'},
   {id:'trip_pass',nome:'Passe de viagem',preco:'R$ 34,90',sub:'30 dias, sem renovação'}
 ];
@@ -1683,7 +1683,7 @@ async function loadPlan(){
   currentPlan={tier:'free',plan:null,expires:null};
   try{
     const{data,error}=await sb.from('subscriptions').select('plan,status,current_period_end')
-      .eq('user_id',currentUser.id).order('current_period_end',{ascending:false,nullsFirst:true}).limit(1).maybeSingle();
+      .eq('user_id',currentUser.id).in('status',['active','trialing']).order('current_period_end',{ascending:false,nullsFirst:true}).limit(1).maybeSingle();
     if(error)throw error;
     const vivo=data&&['active','trialing'].includes(data.status)&&(!data.current_period_end||new Date(data.current_period_end)>new Date());
     if(vivo)currentPlan={tier:'premium',plan:data.plan,expires:data.current_period_end};
